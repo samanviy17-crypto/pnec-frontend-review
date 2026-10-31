@@ -1,0 +1,1736 @@
+// Migrated from assets/css/chatbot.css; preserve selector order and runtime tokens.
+@import "beasts/foundation/tokens";
+@import "beasts/foundation/responsive";
+
+/* ──────────────────────────────────────────────────────────────────
+   PNEC Helper Bot v3 — full visual rewrite
+   See _includes/chatbot/chatbot-widget.html for markup,
+       assets/js/chatbot/index.js for behavior.
+   ────────────────────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
+
+/* ─── Tokens ───────────────────────────────────────────────────── */
+:root {
+  --pb-bg-fab:        linear-gradient(135deg, #1e8449 0%, #145a32 100%);
+  /* v3.7: panel + rail + glass surfaces are now FULLY opaque since
+     backdrop-filter blurs were removed for perf. The translucent
+     versions are kept around as comments for future reference but
+     the live values are solid colors. */
+  --pb-bg-panel:       rgba(255, 255, 255, 0.96);  /* docked panel */
+  --pb-bg-panel-solid: #ffffff;                    /* full-opacity for modal/expanded */
+  --pb-bg-rail:        #f8f5f0;                    /* was rgba(248,245,240,0.85) */
+  --pb-bg-glass:       #fafaf6;                    /* was rgba(255,255,255,0.72) */
+  --pb-bg-input:      #ffffff;
+  --pb-bg-bot-msg:    #f4f7f5;
+  --pb-bg-user-msg:   linear-gradient(135deg, #1e8449 0%, #145a32 100%);
+  --pb-fg:            #0a1628;
+  /* v3.19 a11y: darkened muted + faint so contrast ratio passes WCAG AA
+     against the cream/white surfaces. Was #5a6975 / #8b96a1 — failed
+     contrast 2.77:1 on settings help text and segmented buttons. */
+  --pb-fg-muted:      #475569;
+  --pb-fg-faint:      #5a6470;
+  --pb-fg-on-green:   #ffffff;
+  --pb-fg-link:       #145a32;
+  --pb-border:        rgba(15, 30, 25, 0.10);
+  --pb-border-strong: rgba(15, 30, 25, 0.18);
+  --pb-green:         #1e8449;
+  --pb-green-deep:    #145a32;
+  --pb-green-soft:    #d4efdf;
+  --pb-green-glow:    rgba(30, 132, 73, 0.18);
+  --pb-amber:         #d97706;
+  --pb-red:           #c0392b;
+  --pb-red-soft:      #fef2f2;
+  --pb-shadow-fab:    0 6px 16px rgba(20, 90, 50, 0.30), 0 14px 32px rgba(20, 90, 50, 0.22), 0 1px 0 rgba(255,255,255,0.25) inset;
+  --pb-shadow-panel:  0 1px 0 rgba(255,255,255,0.65) inset, 0 8px 22px rgba(0,0,0,0.10), 0 28px 56px rgba(0,0,0,0.18), 0 48px 96px rgba(0,0,0,0.14);
+  --pb-radius-panel:  20px;
+  --pb-radius-msg:    16px;
+  --pb-font:          'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --pb-z-fab:         9990;
+  --pb-z-panel:       9995;
+  --pb-z-backdrop:    9994;
+  --pb-z-modal:       9996;
+}
+
+/* v3.25: auto-dark now requires `html.pb-theme-auto` so the JS-set
+   class `pb-theme-light` (used on phones — see _applyAppearance in
+   chatbot/index.js) can short-circuit the system dark-mode override.
+   Without this scope, mobile users with system dark mode saw a black
+   chat panel even though we'd forced light theme in JS.
+   pb-theme-dark gets its own rule block lower in the file. */
+@media (prefers-color-scheme: dark) {
+  html.pb-theme-auto {
+    --pb-bg-panel:       #141c1a;
+    --pb-bg-panel-solid: #141c1a;
+    --pb-bg-rail:        #0e1614;
+    --pb-bg-glass:       #1a2421;
+    --pb-bg-input:      rgba(255, 255, 255, 0.06);
+    --pb-bg-bot-msg:    rgba(255, 255, 255, 0.06);
+    --pb-fg:            #f5f7f6;
+    --pb-fg-muted:      #aab5be;
+    --pb-fg-faint:      #6f7c87;
+    --pb-fg-link:       #b9f6ca;
+    --pb-border:        rgba(255, 255, 255, 0.10);
+    --pb-border-strong: rgba(255, 255, 255, 0.18);
+    --pb-green-soft:    rgba(30, 132, 73, 0.20);
+    --pb-shadow-panel:  0 1px 0 rgba(255,255,255,0.12) inset, 0 8px 22px rgba(0,0,0,0.40), 0 28px 56px rgba(0,0,0,0.50);
+  }
+}
+
+/* ─── FAB (floating action button) ─────────────────────────────── */
+.pnec-bot-fab {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: var(--pb-z-fab);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 18px 13px 14px;
+  font-family: var(--pb-font);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--pb-fg-on-green);
+  background: var(--pb-bg-fab);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: var(--pb-shadow-fab);
+  transition: transform 220ms cubic-bezier(.2,.85,.25,1), box-shadow 320ms ease, opacity 200ms ease;
+}
+.pnec-bot-fab:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 22px rgba(20, 90, 50, 0.42), 0 18px 40px rgba(20, 90, 50, 0.32), 0 1px 0 rgba(255,255,255,0.32) inset; }
+.pnec-bot-fab:active { transform: translateY(0) scale(0.98); }
+.pnec-bot-fab:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.pnec-bot-fab[aria-expanded="true"] { transform: scale(0); opacity: 0; pointer-events: none; }
+
+.pnec-bot-fab-icon {
+  position: relative;
+  width: 26px; height: 26px;
+  display: grid; place-items: center;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.pnec-bot-fab-icon svg { width: 16px; height: 16px; color: $beasts-white; }
+
+.pnec-bot-fab-pulse {
+  position: absolute; top: -4px; right: -4px;
+  width: 12px; height: 12px;
+  background: #b9f6ca;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  animation: pb-fab-pulse 2.4s ease-out infinite;
+}
+@keyframes pb-fab-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(185, 246, 202, 0.6); }
+  50%      { box-shadow: 0 0 0 6px rgba(185, 246, 202, 0.0); }
+}
+.pnec-bot-fab-badge {
+  display: inline-grid; place-items: center;
+  min-width: 18px; height: 18px; padding: 0 5px;
+  background: $beasts-white; color: var(--pb-green-deep);
+  border-radius: 999px;
+  font-size: 0.70rem;
+  font-weight: 800;
+  margin-left: 2px;
+}
+
+@media (max-width: 540px) {
+  .pnec-bot-fab-label { display: none; }
+  .pnec-bot-fab { padding: 13px; }
+}
+
+/* ─── Backdrop ─────────────────────────────────────────────────── */
+.pnec-bot-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--pb-z-backdrop);
+  /* v3.7 PERF: dropped backdrop-filter blur — was a heavy GPU op
+     stacked on top of the panel's own blur and the chatbot widgets'
+     animations. Solid darken reads cleanly enough as "modal context."
+     Bumped opacity 0.50 → 0.62 to compensate for the lost blur. */
+  background: rgba(10, 22, 40, 0.62);
+  animation: pb-fade-in 220ms ease;
+}
+@keyframes pb-fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* ─── Panel (default = docked, bottom-right card) ──────────────── */
+.pnec-bot-panel {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: var(--pb-z-panel);
+  width: 380px;
+  height: 600px;
+  max-height: calc(100vh - 60px);
+  display: grid;
+  grid-template-columns: 0fr 1fr 0fr;
+  /* v3.7 PERF: was running `background: rgba(255,255,255,0.92)` +
+     `backdrop-filter: blur(20px) saturate(150%)`. The 20px blur + 1.5x
+     saturation on a panel that fills 92% of the viewport in modal mode
+     was the #1 cause of the "intense lag when opening" the chatbot.
+     The blurred backdrop forced the GPU to capture, blur, saturate,
+     and recomposite the entire viewport every frame the panel was
+     visible — open, scroll, ANY underlying paint.
+     Fix: drop the backdrop-filter entirely and bump panel bg to
+     fully opaque. The visual goes from "frosted glass" to "solid
+     surface" — costs nothing per frame, opens instantly. */
+  background: var(--pb-bg-panel-solid);
+  border: 1px solid var(--pb-border);
+  border-radius: var(--pb-radius-panel);
+  box-shadow: var(--pb-shadow-panel);
+  overflow: hidden;
+  font-family: var(--pb-font);
+  color: var(--pb-fg);
+  /* v3.7: opacity-only fade-in, no transform. transform animation
+     promotes the panel to its own GPU layer for the duration of the
+     animation (then released). With backdrop-filter gone we don't
+     need that — opacity is composite-only and cheap. */
+  animation: pb-panel-in 180ms ease-out;
+}
+@keyframes pb-panel-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pnec-bot-panel,
+  .pnec-bot-fab,
+  .pnec-bot-fab-pulse { animation: none !important; }
+}
+
+/* v3.7: user-controlled reduced motion via Settings → "Reduced motion".
+   When the toggle is on, JS adds .pb-reduced-motion to <html>. These
+   rules then strip transitions + animations from every chatbot element.
+   Independent from the system's prefers-reduced-motion media query —
+   that one fires when the OS-level setting is on; this one fires when
+   the user explicitly clicks the toggle in chatbot settings. */
+html.pb-reduced-motion .pnec-bot-fab,
+html.pb-reduced-motion .pnec-bot-fab-pulse,
+html.pb-reduced-motion .pnec-bot-panel,
+html.pb-reduced-motion [class^="pnec-bot-"],
+html.pb-reduced-motion [class*=" pnec-bot-"] {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Expanded mode — wider docked panel with rail visible */
+.pnec-bot-panel.is-expanded {
+  width: 720px;
+  height: 740px;
+  grid-template-columns: 240px 1fr 0fr;
+}
+.pnec-bot-panel.is-expanded.is-rail-open { grid-template-columns: 240px 1fr 0fr; }
+
+/* Modal mode — centered, large */
+.pnec-bot-panel.is-modal {
+  inset: 4vh 4vw;
+  right: 4vw; bottom: 4vh;
+  width: auto; height: auto;
+  max-height: 92vh;
+  z-index: var(--pb-z-modal);
+  grid-template-columns: 280px 1fr 0fr;
+  border-radius: 24px;
+}
+.pnec-bot-panel.is-settings-open { grid-template-columns: 0fr 1fr 280px; }
+.pnec-bot-panel.is-modal.is-settings-open { grid-template-columns: 280px 1fr 320px; }
+.pnec-bot-panel.is-expanded.is-settings-open { grid-template-columns: 240px 1fr 280px; }
+
+/* Mobile — almost full-width */
+@media (max-width: 720px) {
+  .pnec-bot-panel,
+  .pnec-bot-panel.is-expanded,
+  .pnec-bot-panel.is-modal {
+    inset: 12px 8px 8px;
+    right: 8px;
+    bottom: 8px;
+    width: auto;
+    height: auto;
+    max-height: calc(100vh - 20px);
+    grid-template-columns: 0fr 1fr 0fr;
+    border-radius: 18px;
+  }
+  .pnec-bot-panel.is-rail-open { grid-template-columns: 1fr 0fr 0fr; }
+  .pnec-bot-panel.is-settings-open { grid-template-columns: 0fr 0fr 1fr; }
+  .pnec-bot-panel.is-rail-open .pnec-bot-main,
+  .pnec-bot-panel.is-settings-open .pnec-bot-main { display: none; }
+}
+
+/* ─── Side rail ────────────────────────────────────────────────── */
+.pnec-bot-rail {
+  background: var(--pb-bg-rail);
+  border-right: 1px solid var(--pb-border);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.pnec-bot-panel:not(.is-expanded):not(.is-modal):not(.is-rail-open) .pnec-bot-rail { display: none; }
+.pnec-bot-rail-head {
+  padding: 14px 14px 8px;
+  border-bottom: 1px solid var(--pb-border);
+}
+.pnec-bot-new-chat {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  padding: 9px 12px;
+  font-family: var(--pb-font);
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--pb-fg-on-green);
+  background: linear-gradient(135deg, var(--pb-green) 0%, var(--pb-green-deep) 100%);
+  border: 0;
+  border-radius: 9px;
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.20) inset, 0 4px 10px rgba(20, 90, 50, 0.25);
+  transition: transform 180ms ease, box-shadow 240ms ease, filter 180ms ease;
+}
+.pnec-bot-new-chat:hover { transform: translateY(-1px); filter: brightness(1.05); box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 6px 14px rgba(20, 90, 50, 0.35); }
+
+.pnec-bot-rail-search {
+  position: relative;
+  margin: 8px 14px;
+}
+.pnec-bot-rail-search svg {
+  position: absolute;
+  top: 50%; left: 10px;
+  margin-top: -7px;
+  color: var(--pb-fg-faint);
+  pointer-events: none;
+}
+.pnec-bot-rail-search input {
+  width: 100%;
+  padding: 8px 10px 8px 30px;
+  font-family: var(--pb-font);
+  font-size: 0.84rem;
+  color: var(--pb-fg);
+  background: var(--pb-bg-input);
+  border: 1px solid var(--pb-border);
+  border-radius: 8px;
+  -webkit-appearance: none; appearance: none;
+}
+.pnec-bot-rail-search input:focus {
+  outline: none;
+  border-color: var(--pb-green);
+  box-shadow: 0 0 0 3px var(--pb-green-glow);
+}
+
+.pnec-bot-rail-list {
+  flex: 1;
+  margin: 0;
+  padding: 4px 8px 14px;
+  list-style: none;
+  overflow-y: auto;
+}
+.pnec-bot-rail-item {
+  padding: 9px 10px;
+  margin-bottom: 2px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.84rem;
+  color: var(--pb-fg);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px;
+  align-items: center;
+  transition: background 140ms ease;
+}
+.pnec-bot-rail-item:hover { background: rgba(30, 132, 73, 0.08); }
+.pnec-bot-rail-item.is-active { background: rgba(30, 132, 73, 0.14); font-weight: 600; }
+.pnec-bot-rail-item-title {
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pnec-bot-rail-item-time {
+  font-size: 0.72rem;
+  color: var(--pb-fg-faint);
+  white-space: nowrap;
+}
+.pnec-bot-rail-item-delete {
+  border: 0; background: transparent; color: var(--pb-fg-faint);
+  cursor: pointer; padding: 2px; border-radius: 4px;
+  display: none;
+}
+.pnec-bot-rail-item:hover .pnec-bot-rail-item-delete { display: inline-grid; place-items: center; }
+.pnec-bot-rail-item-delete:hover { color: var(--pb-red); background: var(--pb-red-soft); }
+
+.pnec-bot-rail-empty {
+  padding: 24px 16px;
+  text-align: center;
+  color: var(--pb-fg-faint);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+/* ─── Main column ──────────────────────────────────────────────── */
+.pnec-bot-main {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto auto;
+  min-width: 0;
+  min-height: 0;
+}
+/* v3.34: the 5-track template assumed a fixed child arrangement, but the
+   regions are toggled with the `hidden` attribute (→ display:none, which
+   removes them from grid auto-placement). In an active chat only
+   [head, transcript, followups, composer] are visible, so auto-placement
+   slid the `1fr` flexible track onto #pnec-bot-followups — a flex-wrap
+   row whose default align-items:stretch then blew every follow-up chip
+   up to the full panel height (the "giant elongated vertical pills" in
+   full-screen). Pin every region to an explicit row so the flexible
+   track always belongs to the scroll area (empty/transcript) no matter
+   which siblings are hidden; followups + composer stay content-height. */
+.pnec-bot-head        { grid-row: 1; }
+.pnec-bot-action-drawer { grid-row: 2; }
+.pnec-bot-empty,
+.pnec-bot-transcript  { grid-row: 3; }   /* mutually exclusive scroll area */
+.pnec-bot-followups   { grid-row: 4; }
+.pnec-bot-composer    { grid-row: 5; }
+
+/* Header */
+.pnec-bot-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--pb-border);
+  /* v3.7 PERF: dropped backdrop-filter blur — the parent panel is now
+     fully opaque so the blur was blurring nothing visible (sat on top
+     of a solid bg) and just burning paint cycles. */
+  background: var(--pb-bg-glass);
+}
+.pnec-bot-head-id {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+.pnec-bot-head-avatar {
+  width: 36px; height: 36px;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--pb-green) 0%, var(--pb-green-deep) 100%);
+  color: $beasts-white;
+  border-radius: 10px;
+  flex-shrink: 0;
+  box-shadow: 0 1px 2px rgba(20, 90, 50, 0.25);
+}
+.pnec-bot-head-meta { min-width: 0; }
+.pnec-bot-title {
+  margin: 0;
+  font-family: var(--pb-font);
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: var(--pb-fg);
+  letter-spacing: -0.01em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pnec-bot-status {
+  margin: 1px 0 0;
+  font-size: 0.74rem;
+  color: var(--pb-fg-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.pnec-bot-status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--pb-green);
+  box-shadow: 0 0 0 3px var(--pb-green-glow);
+  animation: pb-status-pulse 2.6s ease-out infinite;
+}
+@keyframes pb-status-pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.18); }
+}
+.pnec-bot-status.is-emergency .pnec-bot-status-dot { background: var(--pb-red); box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.18); }
+.pnec-bot-status.is-streaming .pnec-bot-status-dot { background: var(--pb-amber); box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.18); }
+
+.pnec-bot-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.pnec-bot-icon-btn {
+  width: 32px; height: 32px;
+  display: grid; place-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  color: var(--pb-fg-muted);
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease;
+}
+.pnec-bot-icon-btn:hover { background: rgba(30, 132, 73, 0.10); color: var(--pb-green-deep); }
+.pnec-bot-icon-btn:focus-visible { outline: 2px solid var(--pb-green); outline-offset: 2px; }
+.pnec-bot-icon-btn.is-active { background: var(--pb-green-soft); color: var(--pb-green-deep); }
+
+@media (max-width: 720px) {
+  .pnec-bot-head { padding: 10px 12px; }
+  #pnec-bot-modal { display: none; } /* mobile only docked + modal stack */
+}
+
+/* ─── Action drawer (Phase 3 emergency shortcuts) ──────────────── */
+.pnec-bot-action-drawer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--pb-border);
+  background: linear-gradient(180deg, rgba(254, 242, 242, 0.65) 0%, rgba(254, 242, 242, 0.30) 100%);
+  animation: pb-drawer-in 220ms cubic-bezier(.2,.85,.25,1);
+}
+@keyframes pb-drawer-in {
+  from { transform: translateY(-8px); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+.pnec-bot-action-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  font-family: var(--pb-font);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--pb-fg);
+  background: $beasts-white;
+  border: 1px solid var(--pb-border-strong);
+  border-radius: 999px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease, box-shadow 200ms ease;
+}
+.pnec-bot-action-pill:hover {
+  transform: translateY(-1px);
+  background: var(--pb-green-soft);
+  border-color: var(--pb-green);
+  box-shadow: 0 4px 10px rgba(20, 90, 50, 0.14);
+}
+.pnec-bot-action-pill.pnec-bot-action-emergency {
+  background: linear-gradient(135deg, var(--pb-red) 0%, #962d22 100%);
+  color: $beasts-white;
+  border-color: transparent;
+  box-shadow: 0 4px 10px rgba(192, 57, 43, 0.30);
+}
+.pnec-bot-action-pill.pnec-bot-action-emergency svg { color: $beasts-white; }
+.pnec-bot-action-pill.pnec-bot-action-emergency:hover { background: linear-gradient(135deg, #b3382a 0%, #8a2820 100%); border-color: transparent; }
+
+/* ─── Empty state / welcome ────────────────────────────────────── */
+.pnec-bot-empty {
+  padding: 28px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow-y: auto;
+  min-height: 0;
+}
+.pnec-bot-empty-hero {
+  margin-bottom: 18px;
+}
+.pnec-bot-empty-wave {
+  display: inline-block;
+  font-size: 1.8rem;
+  margin-bottom: 6px;
+  animation: pb-wave 1.4s ease-out 1;
+  transform-origin: 70% 70%;
+}
+@keyframes pb-wave {
+  0%, 60%, 100% { transform: rotate(0); }
+  10%, 30%, 50% { transform: rotate(14deg); }
+  20%, 40%      { transform: rotate(-8deg); }
+}
+.pnec-bot-empty-greeting {
+  margin: 6px 0 4px;
+  font-family: var(--pb-font);
+  font-size: 1.32rem;
+  font-weight: 800;
+  letter-spacing: -0.022em;
+  color: var(--pb-fg);
+}
+.pnec-bot-empty-sub {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--pb-fg-muted);
+  line-height: 1.5;
+  max-width: 360px;
+}
+
+.pnec-bot-suggestions {
+  display: grid;
+  gap: 7px;
+  width: 100%;
+  max-width: 380px;
+  margin: 14px 0 18px;
+  /* v3.34: in full-screen / expanded mode the empty-state grid track is
+     much taller than these few chips. A default grid container resolves
+     `align-content` as `stretch` and `grid-auto-rows` as `auto`, so the
+     extra height was distributed INTO the rows — every example question
+     ballooned into a giant elongated vertical pill. Pin the rows to
+     their content height and pack them at the top so the chips stay the
+     same compact size at any panel height. */
+  align-content: start;
+  grid-auto-rows: max-content;
+}
+.pnec-bot-suggestion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  /* never let a stretched grid/flex parent inflate the chip height */
+  align-self: start;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 11px 13px;
+  font-family: var(--pb-font);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: left;
+  color: var(--pb-fg);
+  background: var(--pb-bg-glass);
+  border: 1px solid var(--pb-border);
+  border-radius: 11px;
+  cursor: pointer;
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease, box-shadow 200ms ease;
+}
+.pnec-bot-suggestion:hover {
+  transform: translateY(-1px);
+  background: rgba(30, 132, 73, 0.08);
+  border-color: rgba(30, 132, 73, 0.30);
+  box-shadow: 0 4px 10px rgba(20, 90, 50, 0.10);
+}
+.pnec-bot-suggestion-icon {
+  width: 28px; height: 28px;
+  flex-shrink: 0;
+  display: grid; place-items: center;
+  background: var(--pb-green-soft);
+  border-radius: 8px;
+  color: var(--pb-green-deep);
+}
+.pnec-bot-suggestion-text { flex: 1; }
+.pnec-bot-suggestion-arrow { color: var(--pb-fg-faint); flex-shrink: 0; }
+.pnec-bot-suggestion:hover .pnec-bot-suggestion-arrow { color: var(--pb-green); transform: translateX(2px); }
+
+/* ─── Browse all topics expander ──────────────────────────────── */
+.pnec-bot-browse-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 14px;
+  padding: 6px 10px;
+  background: transparent;
+  border: 0;
+  color: var(--pb-fg-link);
+  font-family: var(--pb-font);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 140ms ease, color 140ms ease;
+}
+.pnec-bot-browse-link:hover {
+  background: rgba(30, 132, 73, 0.08);
+  color: var(--pb-green-deep);
+}
+.pnec-bot-browse-link svg { color: currentColor; }
+.pnec-bot-browse-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 18px;
+  padding: 0 6px;
+  background: var(--pb-green-soft);
+  color: var(--pb-green-deep);
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.pnec-bot-topics-panel {
+  width: 100%;
+  text-align: left;
+  animation: pb-fade-in 220ms cubic-bezier(.2,.85,.25,1);
+}
+.pnec-bot-topics-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--pb-border);
+}
+.pnec-bot-topics-head h4 {
+  margin: 0;
+  font-family: var(--pb-font);
+  font-size: 0.96rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--pb-fg);
+}
+.pnec-bot-topics-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  background: var(--pb-bg-glass);
+  border: 1px solid var(--pb-border);
+  border-radius: 8px;
+  color: var(--pb-fg);
+  font-family: var(--pb-font);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+.pnec-bot-topics-back:hover {
+  background: rgba(30, 132, 73, 0.10);
+  border-color: rgba(30, 132, 73, 0.30);
+  color: var(--pb-green-deep);
+}
+
+.pnec-bot-topics-body {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+}
+.pnec-bot-topics-group {
+  display: grid;
+  gap: 5px;
+}
+.pnec-bot-topics-group-head {
+  font-family: var(--pb-font);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pb-green-deep);
+  margin: 6px 0 2px;
+  padding: 0 4px;
+}
+.pnec-bot-topic {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 9px 11px;
+  font-family: var(--pb-font);
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-align: left;
+  color: var(--pb-fg);
+  background: var(--pb-bg-glass);
+  border: 1px solid var(--pb-border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+}
+.pnec-bot-topic:hover {
+  transform: translateY(-1px);
+  background: rgba(30, 132, 73, 0.07);
+  border-color: rgba(30, 132, 73, 0.26);
+}
+.pnec-bot-topic-icon {
+  width: 24px; height: 24px;
+  flex-shrink: 0;
+  display: grid; place-items: center;
+  background: var(--pb-green-soft);
+  border-radius: 7px;
+  color: var(--pb-green-deep);
+}
+.pnec-bot-topic-text { flex: 1; }
+
+.pnec-bot-tips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--pb-border);
+  width: 100%;
+}
+.pnec-bot-tip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.70rem;
+  color: var(--pb-fg-faint);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* ─── Transcript ───────────────────────────────────────────────── */
+.pnec-bot-transcript {
+  padding: 18px 16px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 0;
+}
+
+.pnec-bot-msg {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 10px;
+  max-width: 100%;
+  animation: pb-msg-in 220ms cubic-bezier(.2,.85,.25,1);
+}
+@keyframes pb-msg-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.pnec-bot-msg-avatar {
+  width: 32px; height: 32px;
+  display: grid; place-items: center;
+  border-radius: 9px;
+  font-family: var(--pb-font);
+  font-weight: 800;
+  font-size: 0.78rem;
+  flex-shrink: 0;
+}
+.pnec-bot-msg-avatar svg { width: 16px; height: 16px; }
+
+.pnec-bot-msg.is-bot .pnec-bot-msg-avatar {
+  background: linear-gradient(135deg, var(--pb-green) 0%, var(--pb-green-deep) 100%);
+  color: $beasts-white;
+  box-shadow: 0 1px 2px rgba(20, 90, 50, 0.25);
+}
+.pnec-bot-msg.is-user .pnec-bot-msg-avatar {
+  background: linear-gradient(135deg, #fef2f2 0%, #fde6e1 100%);
+  color: var(--pb-red);
+  border: 1px solid rgba(192, 57, 43, 0.20);
+}
+
+.pnec-bot-msg-body {
+  min-width: 0;
+}
+.pnec-bot-msg-bubble {
+  padding: 10px 14px;
+  border-radius: var(--pb-radius-msg);
+  background: var(--pb-bg-bot-msg);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--pb-fg);
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+.pnec-bot-msg.is-user .pnec-bot-msg-bubble {
+  background: var(--pb-bg-user-msg);
+  color: var(--pb-fg-on-green);
+  box-shadow: 0 1px 2px rgba(20, 90, 50, 0.25);
+}
+.pnec-bot-msg.is-user .pnec-bot-msg-bubble a { color: #b9f6ca; }
+.pnec-bot-msg.is-user .pnec-bot-msg-bubble code { background: rgba(255,255,255,0.20); color: $beasts-white; }
+
+.pnec-bot-msg-bubble p { margin: 0 0 8px; }
+.pnec-bot-msg-bubble p:last-child { margin: 0; }
+.pnec-bot-msg-bubble strong { font-weight: 700; }
+.pnec-bot-msg-bubble em { font-style: italic; }
+.pnec-bot-msg-bubble a { color: var(--pb-fg-link); font-weight: 600; }
+.pnec-bot-msg-bubble a:hover { text-decoration: underline; text-underline-offset: 2px; }
+.pnec-bot-msg-bubble ul, .pnec-bot-msg-bubble ol { margin: 6px 0 8px; padding-left: 22px; }
+.pnec-bot-msg-bubble li { margin-bottom: 3px; }
+.pnec-bot-msg-bubble code {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.86em;
+  background: rgba(15, 30, 25, 0.06);
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+.pnec-bot-msg-bubble pre {
+  background: rgba(15, 30, 25, 0.06);
+  padding: 10px 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.84em;
+  margin: 8px 0;
+}
+.pnec-bot-msg-bubble pre code { background: transparent; padding: 0; }
+.pnec-bot-msg-bubble blockquote {
+  margin: 8px 0;
+  padding: 4px 12px;
+  border-left: 3px solid var(--pb-green);
+  color: var(--pb-fg-muted);
+  font-style: italic;
+}
+.pnec-bot-msg-bubble table {
+  border-collapse: collapse;
+  font-size: 0.86em;
+  margin: 8px 0;
+}
+.pnec-bot-msg-bubble th, .pnec-bot-msg-bubble td {
+  border: 1px solid var(--pb-border-strong);
+  padding: 5px 9px;
+}
+.pnec-bot-msg-bubble th { background: rgba(15, 30, 25, 0.04); font-weight: 700; }
+
+.pnec-bot-msg-meta {
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.70rem;
+  color: var(--pb-fg-faint);
+  flex-wrap: wrap;
+}
+.pnec-bot-msg-actions {
+  display: inline-flex;
+  gap: 0;
+  margin-left: 4px;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+.pnec-bot-msg:hover .pnec-bot-msg-actions { opacity: 1; }
+.pnec-bot-msg-action-btn {
+  width: 22px; height: 22px;
+  display: inline-grid; place-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 5px;
+  color: var(--pb-fg-faint);
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+.pnec-bot-msg-action-btn:hover { background: rgba(30, 132, 73, 0.12); color: var(--pb-green-deep); }
+.pnec-bot-msg-action-btn.is-up   { color: var(--pb-green-deep); }
+.pnec-bot-msg-action-btn.is-down { color: var(--pb-red); }
+
+/* Streaming cursor on the most recent bot message */
+.pnec-bot-msg.is-streaming .pnec-bot-msg-bubble::after {
+  content: '';
+  display: inline-block;
+  width: 7px; height: 14px;
+  margin-left: 2px;
+  margin-bottom: -2px;
+  background: var(--pb-green);
+  border-radius: 1px;
+  animation: pb-cursor 1.0s steps(2, end) infinite;
+}
+@keyframes pb-cursor { 50% { opacity: 0; } }
+
+/* Citations row */
+.pnec-bot-citations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 6px;
+}
+.pnec-bot-citation {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--pb-fg-link);
+  background: rgba(30, 132, 73, 0.08);
+  border: 1px solid rgba(30, 132, 73, 0.18);
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background 140ms ease, transform 140ms ease;
+}
+.pnec-bot-citation:hover { background: rgba(30, 132, 73, 0.18); transform: translateY(-1px); }
+.pnec-bot-citation-num {
+  display: inline-grid; place-items: center;
+  width: 14px; height: 14px;
+  background: var(--pb-green);
+  color: $beasts-white;
+  border-radius: 50%;
+  font-size: 0.62rem;
+  font-weight: 800;
+}
+
+/* v3.43: FAQ citation chips toggle an inline Q+A card under the
+   message — they no longer link to a dead URL. The chip itself is
+   styled to look identical to a normal citation (same shape, same
+   hover) but renders as <button>, so it needs to clear button UA
+   styling. */
+.pnec-bot-citation--faq {
+  appearance: none;
+  -webkit-appearance: none;
+  background: rgba(30, 132, 73, 0.10);
+  border: 1px solid rgba(30, 132, 73, 0.22);
+  font: inherit;
+  cursor: pointer;
+}
+.pnec-bot-citation--faq[aria-expanded="true"] {
+  background: rgba(30, 132, 73, 0.20);
+  border-color: rgba(30, 132, 73, 0.40);
+}
+/* News citations are non-clickable attribution badges — the LLM only
+   knows the source name, not the article URL. Same visual as the FAQ
+   chip but no pointer cursor and no hover lift. */
+.pnec-bot-citation--badge {
+  background: rgba(15, 30, 25, 0.06);
+  border: 1px solid rgba(15, 30, 25, 0.12);
+  cursor: default;
+}
+.pnec-bot-citation--badge:hover { transform: none; background: rgba(15, 30, 25, 0.06); }
+.pnec-bot-faq-card {
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: var(--pb-bg-glass);
+  border: 1px solid var(--pb-border);
+  border-left: 3px solid var(--pb-green);
+  border-radius: 8px;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--pb-fg);
+  max-height: 320px;
+  overflow-y: auto;
+}
+.pnec-bot-faq-card-head {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--pb-fg-muted);
+  margin-bottom: 6px;
+}
+.pnec-bot-faq-card-q { margin-bottom: 6px; }
+.pnec-bot-faq-card-q strong, .pnec-bot-faq-card-a strong {
+  color: var(--pb-green-deep);
+  margin-right: 4px;
+}
+.pnec-bot-faq-card-loading,
+.pnec-bot-faq-card-missing {
+  color: var(--pb-fg-muted);
+  font-style: italic;
+}
+
+/* Tool-call action card (Phase 2) */
+.pnec-bot-action-card {
+  margin-top: 8px;
+  padding: 12px;
+  background: linear-gradient(180deg, #fff 0%, #fbf8f1 100%);
+  border: 1px solid var(--pb-green);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(20, 90, 50, 0.10);
+}
+.pnec-bot-action-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.pnec-bot-action-card-icon {
+  width: 28px; height: 28px;
+  display: grid; place-items: center;
+  background: var(--pb-green);
+  color: $beasts-white;
+  border-radius: 7px;
+  flex-shrink: 0;
+}
+.pnec-bot-action-card-title {
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: var(--pb-fg);
+}
+.pnec-bot-action-card-body {
+  font-size: 0.84rem;
+  color: var(--pb-fg-muted);
+  line-height: 1.45;
+  margin-bottom: 10px;
+}
+.pnec-bot-action-card-actions {
+  display: flex;
+  gap: 6px;
+}
+.pnec-bot-action-card-btn {
+  flex: 1;
+  padding: 8px 12px;
+  font-family: var(--pb-font);
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 140ms ease, filter 140ms ease, box-shadow 200ms ease;
+}
+.pnec-bot-action-card-btn-primary {
+  color: $beasts-white;
+  background: linear-gradient(135deg, var(--pb-green) 0%, var(--pb-green-deep) 100%);
+  border: 0;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.20) inset, 0 4px 10px rgba(20, 90, 50, 0.25);
+}
+.pnec-bot-action-card-btn-primary:hover { transform: translateY(-1px); filter: brightness(1.05); }
+.pnec-bot-action-card-btn-secondary {
+  color: var(--pb-fg-muted);
+  background: $beasts-white;
+  border: 1px solid var(--pb-border-strong);
+}
+.pnec-bot-action-card-btn-secondary:hover { background: rgba(15, 30, 25, 0.04); color: var(--pb-fg); }
+.pnec-bot-action-card.is-done {
+  border-color: var(--pb-border);
+  opacity: 0.78;
+}
+.pnec-bot-action-card.is-done .pnec-bot-action-card-actions { display: none; }
+
+/* News / event / risk inline cards */
+.pnec-bot-data-card {
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: $beasts-white;
+  border: 1px solid var(--pb-border);
+  border-radius: 11px;
+  display: grid;
+  gap: 4px;
+}
+.pnec-bot-data-card-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--pb-green-deep);
+}
+.pnec-bot-data-card-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--pb-fg);
+}
+.pnec-bot-data-card-body {
+  font-size: 0.82rem;
+  color: var(--pb-fg-muted);
+  line-height: 1.45;
+}
+.pnec-bot-data-card a {
+  color: var(--pb-fg-link);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.pnec-bot-data-card a:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+/* Image attachment thumbnail */
+.pnec-bot-msg-image {
+  display: block;
+  max-width: 100%;
+  margin-bottom: 6px;
+  border-radius: 10px;
+  border: 1px solid var(--pb-border);
+}
+
+/* Loading message */
+.pnec-bot-msg.is-loading .pnec-bot-msg-bubble {
+  display: inline-flex;
+  gap: 4px;
+  padding: 14px 16px;
+}
+.pnec-bot-msg.is-loading .pnec-bot-msg-bubble::after { display: none; }
+.pnec-bot-loading-dot {
+  width: 6px; height: 6px;
+  background: var(--pb-green);
+  border-radius: 50%;
+  animation: pb-load 1.2s ease-in-out infinite;
+}
+.pnec-bot-loading-dot:nth-child(2) { animation-delay: 0.15s; }
+.pnec-bot-loading-dot:nth-child(3) { animation-delay: 0.30s; }
+@keyframes pb-load {
+  0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+  40%           { transform: scale(1.0); opacity: 1.0; }
+}
+
+/* ─── Followup chips above composer ────────────────────────────── */
+.pnec-bot-followups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 14px 0;
+  /* v3.34: never let a tall track stretch the wrapped flex lines or the
+     chips themselves — keep them packed at the top at their natural
+     height (defense-in-depth alongside the grid-row pinning above). */
+  align-items: flex-start;
+  align-content: flex-start;
+}
+.pnec-bot-followup { align-self: flex-start; }
+.pnec-bot-followup {
+  display: inline-block;
+  padding: 6px 11px;
+  font-family: var(--pb-font);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--pb-fg);
+  background: var(--pb-bg-glass);
+  border: 1px solid var(--pb-border);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
+  text-align: left;
+}
+.pnec-bot-followup:hover {
+  background: rgba(30, 132, 73, 0.10);
+  border-color: rgba(30, 132, 73, 0.30);
+  transform: translateY(-1px);
+}
+
+/* ─── Composer ─────────────────────────────────────────────────── */
+.pnec-bot-composer {
+  padding: 10px 14px 14px;
+  border-top: 1px solid var(--pb-border);
+  /* v3.7 PERF: dropped backdrop-filter — same reason as the head bar
+     (panel is opaque now, blur on a solid bg is wasted GPU work). */
+  background: var(--pb-bg-glass);
+}
+.pnec-bot-composer-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.pnec-bot-composer-attachment {
+  position: relative;
+  width: 60px; height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--pb-border-strong);
+}
+.pnec-bot-composer-attachment img { width: 100%; height: 100%; object-fit: cover; }
+.pnec-bot-composer-attachment-remove {
+  position: absolute;
+  top: 2px; right: 2px;
+  width: 18px; height: 18px;
+  background: rgba(0, 0, 0, 0.65);
+  color: $beasts-white;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  display: grid; place-items: center;
+  font-size: 0.7rem;
+}
+
+.pnec-bot-composer-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  background: var(--pb-bg-input);
+  border: 1.5px solid var(--pb-border-strong);
+  border-radius: 14px;
+  padding: 4px 4px 4px 6px;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.pnec-bot-composer-row:focus-within {
+  border-color: var(--pb-green);
+  box-shadow: 0 0 0 3px var(--pb-green-glow);
+}
+.pnec-bot-composer-btn { flex-shrink: 0; }
+
+.pnec-bot-input {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 6px;
+  font-family: var(--pb-font);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--pb-fg);
+  background: transparent;
+  border: 0;
+  resize: none;
+  max-height: 160px;
+  -webkit-appearance: none; appearance: none;
+}
+.pnec-bot-input:focus { outline: none; }
+.pnec-bot-input::placeholder { color: var(--pb-fg-faint); }
+
+.pnec-bot-mic.is-listening {
+  background: var(--pb-red);
+  color: $beasts-white !important;
+  animation: pb-mic-pulse 1.2s ease-in-out infinite;
+}
+@keyframes pb-mic-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.30); }
+  50%      { box-shadow: 0 0 0 6px rgba(192, 57, 43, 0); }
+}
+
+.pnec-bot-send {
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--pb-green) 0%, var(--pb-green-deep) 100%);
+  color: $beasts-white;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 160ms ease, filter 160ms ease, box-shadow 220ms ease, opacity 200ms ease;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.20) inset, 0 2px 6px rgba(20, 90, 50, 0.25);
+}
+.pnec-bot-send:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 4px 10px rgba(20, 90, 50, 0.35);
+}
+.pnec-bot-send:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.4);
+}
+
+.pnec-bot-composer-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  padding: 0 4px;
+}
+.pnec-bot-composer-hint,
+.pnec-bot-counter {
+  font-size: 0.70rem;
+  color: var(--pb-fg-faint);
+}
+.pnec-bot-counter.is-warn { color: var(--pb-amber); font-weight: 700; }
+
+/* ─── Settings drawer ──────────────────────────────────────────── */
+.pnec-bot-settings-drawer {
+  background: var(--pb-bg-rail);
+  border-left: 1px solid var(--pb-border);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+.pnec-bot-panel:not(.is-settings-open) .pnec-bot-settings-drawer { display: none; }
+
+.pnec-bot-settings-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--pb-border);
+}
+.pnec-bot-settings-head h3 {
+  margin: 0;
+  font-size: 0.94rem;
+  font-weight: 800;
+  color: var(--pb-fg);
+}
+.pnec-bot-settings-body {
+  flex: 1;
+  padding: 10px 14px;
+  overflow-y: auto;
+  display: grid;
+  gap: 10px;
+}
+.pnec-bot-settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 11px;
+  background: $beasts-white;
+  border: 1px solid var(--pb-border);
+  border-radius: 9px;
+  font-size: 0.84rem;
+  color: var(--pb-fg);
+}
+.pnec-bot-settings-label { font-weight: 600; }
+.pnec-bot-settings-input {
+  font-family: var(--pb-font);
+  font-size: 0.84rem;
+  color: var(--pb-fg);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.pnec-bot-settings-toggle { accent-color: var(--pb-green); width: 18px; height: 18px; cursor: pointer; }
+.pnec-bot-settings-action {
+  width: 100%;
+  padding: 10px 12px;
+  font-family: var(--pb-font);
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--pb-fg);
+  background: $beasts-white;
+  border: 1px solid var(--pb-border-strong);
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease;
+  text-align: left;
+}
+.pnec-bot-settings-action:hover { background: var(--pb-green-soft); color: var(--pb-green-deep); }
+.pnec-bot-settings-danger { color: var(--pb-red); border-color: rgba(192, 57, 43, 0.30); }
+.pnec-bot-settings-danger:hover { background: var(--pb-red-soft); color: var(--pb-red); }
+
+.pnec-bot-settings-foot {
+  padding: 10px 14px;
+  border-top: 1px solid var(--pb-border);
+  font-size: 0.72rem;
+  color: var(--pb-fg-faint);
+  text-align: center;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   v3.11 — Real-AI settings (sectioned groups, segmented controls,
+   swatches, textarea, theme/accent/textSize variants).
+   ═══════════════════════════════════════════════════════════════════ */
+
+.pnec-bot-settings-body {
+  padding: 0 !important;   /* group sections control their own padding */
+}
+
+.pnec-bot-settings-group {
+  padding: 18px 16px 14px;
+  border-bottom: 1px solid var(--pb-border);
+}
+.pnec-bot-settings-group:last-of-type { border-bottom: 0; }
+.pnec-bot-settings-group-title {
+  margin: 0 0 12px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pb-green-deep);
+}
+
+/* Row with the label stacked above the control (used by segmented + swatches + textarea) */
+.pnec-bot-settings-row--block {
+  display: block;
+  margin-bottom: 12px;
+}
+.pnec-bot-settings-row--block .pnec-bot-settings-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+.pnec-bot-settings-row + .pnec-bot-settings-row { margin-top: 2px; }
+
+.pnec-bot-settings-help {
+  margin: 6px 0 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--pb-fg-faint);
+}
+.pnec-bot-settings-help-inline {
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--pb-fg-faint);
+  letter-spacing: 0.005em;
+}
+.pnec-bot-settings-row .pnec-bot-settings-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* ─── Segmented control (3-button radio group) ─────────────── */
+.pnec-bot-segmented {
+  display: inline-flex;
+  width: 100%;
+  background: var(--pb-bg-rail);
+  border: 1px solid var(--pb-border);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 2px;
+}
+.pnec-bot-segmented .pb-seg {
+  flex: 1;
+  background: transparent;
+  border: 0;
+  padding: 7px 10px;
+  border-radius: 7px;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--pb-fg-faint);
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+.pnec-bot-segmented .pb-seg:hover {
+  background: rgba(30, 132, 73, 0.08);
+  color: var(--pb-green-deep);
+}
+.pnec-bot-segmented .pb-seg.is-selected,
+.pnec-bot-segmented .pb-seg[aria-checked="true"] {
+  background: $beasts-white;
+  color: var(--pb-green-deep);
+  box-shadow: 0 1px 0 rgba(20, 90, 50, 0.06), 0 2px 8px rgba(20, 90, 50, 0.08);
+}
+
+/* ─── Accent swatch row ────────────────────────────────────── */
+.pnec-bot-swatches {
+  display: flex;
+  gap: 10px;
+}
+.pnec-bot-swatches .pb-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  background: var(--pb-swatch, #1e8449);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  position: relative;
+}
+.pnec-bot-swatches .pb-swatch:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+.pnec-bot-swatches .pb-swatch.is-selected,
+.pnec-bot-swatches .pb-swatch[aria-checked="true"] {
+  border-color: var(--pb-fg);
+  box-shadow: 0 0 0 2px #ffffff inset, 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+.pnec-bot-swatches .pb-swatch:focus-visible {
+  outline: 3px solid rgba(30, 132, 73, 0.45);
+  outline-offset: 3px;
+}
+
+/* ─── Textarea for custom instructions ─────────────────────── */
+.pnec-bot-settings-textarea {
+  width: 100%;
+  min-height: 96px;
+  padding: 10px 12px;
+  background: var(--pb-bg-rail);
+  border: 1px solid var(--pb-border);
+  border-radius: 10px;
+  font: inherit;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--pb-fg);
+  resize: vertical;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+.pnec-bot-settings-textarea:focus {
+  outline: none;
+  border-color: var(--pb-green);
+  background: $beasts-white;
+  box-shadow: 0 0 0 3px rgba(30, 132, 73, 0.18);
+}
+.pnec-bot-settings-textarea-foot {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+.pnec-bot-settings-counter {
+  font-size: 0.72rem;
+  color: var(--pb-fg-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Storage stat (Memory & data) ─────────────────────────── */
+.pnec-bot-settings-stat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--pb-bg-rail);
+  border-radius: 10px;
+  margin: 8px 0 12px;
+  font-size: 0.84rem;
+}
+.pnec-bot-settings-stat-label { color: var(--pb-fg-faint); font-weight: 500; }
+.pnec-bot-settings-stat-value { color: var(--pb-fg); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ─── Action row (3 buttons side by side on wide drawers) ──── */
+.pnec-bot-settings-actions-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+@include beasts-above(map-get($beasts-breakpoints, phone)) {
+  .pnec-bot-settings-actions-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .pnec-bot-settings-actions-row > .pnec-bot-settings-danger {
+    grid-column: 1 / -1;
+  }
+}
+.pnec-bot-settings-warn {
+  color: #b45309;
+  border-color: rgba(180, 83, 9, 0.30);
+}
+.pnec-bot-settings-warn:hover {
+  background: rgba(217, 119, 6, 0.10);
+  color: #92400e;
+}
+
+/* ─── About section ────────────────────────────────────────── */
+.pnec-bot-settings-about {
+  margin: 0 0 10px;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 12px;
+  font-size: 0.84rem;
+}
+.pnec-bot-settings-about dt {
+  font-weight: 700;
+  color: var(--pb-fg-faint);
+}
+.pnec-bot-settings-about dd {
+  margin: 0;
+  color: var(--pb-fg);
+}
+.pnec-bot-settings-action--link {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   THEME VARIANTS — light (default) / dark / auto
+   Applied as .pb-theme-dark / .pb-theme-light on documentElement
+   (auto resolves via prefers-color-scheme below).
+   ═══════════════════════════════════════════════════════════════════ */
+
+html.pb-theme-dark .pnec-bot-panel,
+html.pb-theme-dark .pnec-bot-panel * {
+  --pb-bg-panel:       #1a2030;
+  --pb-bg-panel-solid: #1a2030;
+  --pb-bg-rail:        #232a3d;
+  --pb-bg-glass:       #1d243a;
+  /* v3.34: the bot bubble bg + input bg were never overridden for the
+     explicit dark theme, so they stayed on the light :root values
+     (#f4f7f5 / #ffffff) while --pb-fg flipped to a light cream — bot
+     replies rendered light-on-light and were invisible. Also remap the
+     muted / link / strong-border tokens so meta text, links and table
+     borders stay legible on the dark panel. */
+  --pb-bg-input:       rgba(255, 255, 255, 0.06);
+  --pb-bg-bot-msg:     rgba(255, 255, 255, 0.07);
+  --pb-fg:             #f0efe9;
+  --pb-fg-soft:        #c5c1b3;
+  --pb-fg-muted:       #aab2c0;
+  --pb-fg-faint:       #9aa1b0;
+  --pb-fg-link:        #7ee3a6;
+  --pb-border:         rgba(255, 255, 255, 0.10);
+  --pb-border-strong:  rgba(255, 255, 255, 0.20);
+  --pb-green-soft:     rgba(30, 132, 73, 0.22);
+}
+html.pb-theme-dark .pnec-bot-panel { background: #1a2030; color: #f0efe9; }
+html.pb-theme-dark .pnec-bot-msg-bubble code,
+html.pb-theme-dark .pnec-bot-msg-bubble pre,
+html.pb-theme-dark .pnec-bot-msg-bubble th {
+  background: rgba(255, 255, 255, 0.08);
+}
+html.pb-theme-dark .pnec-bot-settings-textarea,
+html.pb-theme-dark .pnec-bot-settings-stat,
+html.pb-theme-dark .pnec-bot-segmented {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.10);
+}
+html.pb-theme-dark .pnec-bot-segmented .pb-seg.is-selected {
+  background: rgba(255, 255, 255, 0.10);
+  color: #b9f6ca;
+}
+html.pb-theme-dark .pnec-bot-settings-textarea:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #27ae60;
+}
+
+@media (prefers-color-scheme: dark) {
+  html.pb-theme-auto .pnec-bot-panel,
+  html.pb-theme-auto .pnec-bot-panel * {
+    --pb-bg-panel:       #1a2030;
+    --pb-bg-panel-solid: #1a2030;
+    --pb-bg-rail:        #232a3d;
+    --pb-bg-glass:       #1d243a;
+    /* v3.34: keep this panel-scoped block self-complete (mirror of the
+       explicit pb-theme-dark fix) so bot bubbles never fall back to the
+       light :root surface under system dark mode. */
+    --pb-bg-input:       rgba(255, 255, 255, 0.06);
+    --pb-bg-bot-msg:     rgba(255, 255, 255, 0.07);
+    --pb-fg:             #f0efe9;
+    --pb-fg-soft:        #c5c1b3;
+    --pb-fg-muted:       #aab2c0;
+    --pb-fg-faint:       #9aa1b0;
+    --pb-fg-link:        #7ee3a6;
+    --pb-border:         rgba(255, 255, 255, 0.10);
+    --pb-border-strong:  rgba(255, 255, 255, 0.20);
+    --pb-green-soft:     rgba(30, 132, 73, 0.22);
+  }
+  html.pb-theme-auto .pnec-bot-panel { background: #1a2030; color: #f0efe9; }
+  html.pb-theme-auto .pnec-bot-msg-bubble code,
+  html.pb-theme-auto .pnec-bot-msg-bubble pre,
+  html.pb-theme-auto .pnec-bot-msg-bubble th {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  html.pb-theme-auto .pnec-bot-settings-textarea,
+  html.pb-theme-auto .pnec-bot-settings-stat,
+  html.pb-theme-auto .pnec-bot-segmented {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.10);
+  }
+  html.pb-theme-auto .pnec-bot-segmented .pb-seg.is-selected {
+    background: rgba(255, 255, 255, 0.10);
+    color: #b9f6ca;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   TEXT-SIZE VARIANTS — compact / comfortable / large
+   ═══════════════════════════════════════════════════════════════════ */
+html.pb-text-compact .pnec-bot-panel {
+  --pb-msg-font: 0.84rem;
+  --pb-msg-line: 1.45;
+}
+html.pb-text-large .pnec-bot-panel {
+  --pb-msg-font: 1.04rem;
+  --pb-msg-line: 1.62;
+}
+html.pb-text-compact .pnec-bot-msg-body,
+html.pb-text-compact .pnec-bot-transcript {
+  font-size: var(--pb-msg-font);
+  line-height: var(--pb-msg-line);
+}
+html.pb-text-large .pnec-bot-msg-body,
+html.pb-text-large .pnec-bot-transcript {
+  font-size: var(--pb-msg-font);
+  line-height: var(--pb-msg-line);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   ACCENT VARIANTS — forest (default) / sky / sunset / lavender
+   Override the --pb-green chain.
+   ═══════════════════════════════════════════════════════════════════ */
+html.pb-accent-sky .pnec-bot-panel,
+html.pb-accent-sky .pnec-bot-fab {
+  --pb-green:       #3b82f6;
+  --pb-green-deep:  #1e40af;
+  --pb-green-soft:  #dbeafe;
+}
+html.pb-accent-sunset .pnec-bot-panel,
+html.pb-accent-sunset .pnec-bot-fab {
+  --pb-green:       #e07a3f;
+  --pb-green-deep:  #b8531d;
+  --pb-green-soft:  #fdebd3;
+}
+html.pb-accent-lavender .pnec-bot-panel,
+html.pb-accent-lavender .pnec-bot-fab {
+  --pb-green:       #8b5cf6;
+  --pb-green-deep:  #6d28d9;
+  --pb-green-soft:  #ede9fe;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   HIGH CONTRAST + ALWAYS-ON LABELS
+   ═══════════════════════════════════════════════════════════════════ */
+html.pb-high-contrast .pnec-bot-panel {
+  --pb-fg:        #000000;
+  --pb-fg-soft:   #0a0a0a;
+  --pb-fg-faint:  #2a2a2a;
+  --pb-border:    rgba(0, 0, 0, 0.40);
+}
+html.pb-high-contrast .pnec-bot-panel * { font-weight: 600 !important; }
+html.pb-high-contrast .pnec-bot-segmented,
+html.pb-high-contrast .pnec-bot-settings-textarea,
+html.pb-high-contrast .pnec-bot-settings-stat { border-width: 2px !important; }
+
+html.pb-always-labels .pnec-bot-suggestion-label,
+html.pb-always-labels .pnec-bot-chip-label { opacity: 1 !important; visibility: visible !important; }
+
+/* ─── Misc ─────────────────────────────────────────────────────── */
+[hidden] { display: none !important; }
+
+/* Print: hide widget entirely */
+@media print {
+  .pnec-bot-fab,
+  .pnec-bot-panel,
+  .pnec-bot-backdrop { display: none !important; }
+}

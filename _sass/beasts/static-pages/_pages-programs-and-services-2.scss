@@ -1,0 +1,108 @@
+// Static HTML page styling; keep the original stylesheet position.
+@import "beasts/foundation/tokens";
+@import "beasts/foundation/responsive";
+
+body[data-cms-page]:not(.cms-hydrated) [data-cms-config],
+  body[data-cms-page]:not(.cms-hydrated) [data-cms-override] {
+    visibility: hidden;
+  }
+
+/* v3.25: stretched page-title hero — bulletproof readable.
+   Earlier v3.24 made the title green but Elementor's runtime JS kept
+   re-applying the photo background, and inherited text-stroke styles
+   from the 'headline' variants made the green render as faded outline-
+   only letters ('weird green text'). This rewrite:
+     - kills the background-image at the section level so the section
+       is a clean cream band again
+     - forces -webkit-text-fill-color + zeroes any inherited text-stroke
+       so the green is always SOLID, never outline-only
+     - wraps the heading in a chip-style background for guaranteed
+       contrast regardless of what's behind it
+   Scoped to .elementor-section-stretched.elementor-section-height-min-height
+   so no other titles on the page are touched. */
+.elementor-section-stretched.elementor-section-height-min-height {
+  min-height: 0 !important;
+  padding-top: 32px !important;
+  padding-bottom: 20px !important;
+  background-color: #fbf8f1 !important;
+  background-image: none !important;       /* NEW: was being re-applied at runtime */
+}
+/* v3.29: ALSO collapse the inner container/column/widget-wrap — the
+   missing piece. Zeroing the section min-height alone left the
+   Elementor flex container at its tall min-height, so the band
+   stayed ~400px of empty cream above the title. */
+.elementor-section-stretched.elementor-section-height-min-height > .elementor-container,
+.elementor-section-stretched.elementor-section-height-min-height .elementor-row,
+.elementor-section-stretched.elementor-section-height-min-height .elementor-column,
+.elementor-section-stretched.elementor-section-height-min-height .elementor-widget-wrap {
+  min-height: 0 !important;
+  height: auto !important;
+}
+.elementor-section-stretched.elementor-section-height-min-height .elementor-background-overlay {
+  display: none !important;
+  background-image: none !important;
+}
+.elementor-section-stretched.elementor-section-height-min-height .elementor-heading-title,
+.elementor-section-stretched.elementor-section-height-min-height span.elementor-heading-title,
+.elementor-section-stretched.elementor-section-height-min-height h1.elementor-heading-title,
+.elementor-section-stretched.elementor-section-height-min-height h2.elementor-heading-title {
+  color: $beasts-forest !important;
+  -webkit-text-fill-color: $beasts-forest !important;   /* defeats outline-only variants */
+  -webkit-text-stroke: 0 !important;             /* defeats inherited stroke */
+  text-shadow: none !important;
+  opacity: 1 !important;
+  font-size: clamp(1.6rem, 4.5vw, 2.4rem) !important;
+  font-weight: 800 !important;
+  line-height: 1.15 !important;
+  margin: 0 !important;
+  text-align: center !important;
+  display: block !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* v3.24: animated-headline widget — was rendering with very low
+   contrast (faded gray). Force a solid dark color + clear underline
+   so the section headers are readable. */
+.elementor-widget-animated-headline .elementor-headline,
+.elementor-widget-animated-headline .elementor-headline-dynamic-text,
+.elementor-widget-animated-headline .elementor-headline-text-active,
+.elementor-widget-animated-headline .elementor-headline-dynamic-wrapper,
+.elementor-widget-animated-headline .elementor-headline-text-wrapper {
+  color: $beasts-forest !important;
+  opacity: 1 !important;
+  font-weight: 700 !important;
+}
+.elementor-widget-animated-headline .elementor-headline-dynamic-text {
+  background-image: linear-gradient(to right, #1e8449, #1e8449) !important;
+  background-repeat: no-repeat !important;
+  background-position: 0 100% !important;
+  background-size: 100% 3px !important;
+  padding-bottom: 4px !important;
+}
+
+/* v3.27: marketing pages only — kill the giant 'POWAY NEIGHBORHOOD
+   EMERGENCY CORPS' watermark + collapse the empty header band.
+   Background: the WP-cloned hero photo behind the band is broken
+   (image URL returns 404 / never set), so the white-text logo PNG
+   renders against the cream page and looks like a faded watermark.
+   Plus the section has a tall min-height that wastes ~400px above
+   the actual page title. Fix:
+     1. Hide the white-text logo PNG (invisible anyway)
+     2. Collapse the band's min-height to a thin strip
+     3. Keep the donate button (lives in the same band, at right)
+   Scoped to .jupiterx-header so home/login pages are untouched
+   (their poway-live-body.html header has its own working bg). */
+.jupiterx-header img[src*=Poway-NEC-Logo-White] {
+  display: none !important;
+}
+.jupiterx-header section.elementor-top-section + section.elementor-top-section,
+.jupiterx-header section.elementor-top-section + section.elementor-top-section .elementor-container,
+.jupiterx-header section.elementor-top-section + section.elementor-top-section .elementor-widget-wrap,
+.jupiterx-header section.elementor-top-section + section.elementor-top-section .elementor-column {
+  min-height: 0 !important;
+  height: auto !important;
+}
+.jupiterx-header section.elementor-top-section + section.elementor-top-section {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}

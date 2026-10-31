@@ -1,0 +1,216 @@
+// Migrated from _includes/poway-live-body.html; preserve selector order and runtime tokens.
+@import "beasts/foundation/tokens";
+@import "beasts/foundation/responsive";
+
+.pnec-risk-band {
+				background: $beasts-white;
+				padding: 56px 24px;
+				border-bottom: 1px solid #e6edf4;
+			}
+
+			.pnec-risk-shell {
+				max-width: 1120px;
+				margin: 0 auto;
+			}
+
+			.elementor-element-pnecrisk {
+				display: flex;
+				justify-content: center;
+				margin: 0 0 18px;
+				text-align: center;
+			}
+
+			.elementor-element-pnecrisk .elementor-headline {
+				margin: 0;
+			}
+
+			.elementor-element-pnecrisk .elementor-headline-dynamic-text {
+				color: $beasts-black !important;
+				font-size: clamp(2.35rem, 4.8vw, 3.65rem);
+				font-weight: 700;
+				letter-spacing: 0.02em;
+			}
+
+			.pnec-risk-eyebrow {
+				margin: 0 0 10px;
+				color: #27ae60;
+				font-size: 0.78rem;
+				font-weight: 800;
+				letter-spacing: 0.14em;
+				text-transform: uppercase;
+			}
+
+			.pnec-risk-head {
+				display: grid;
+				grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+				gap: 24px;
+				align-items: end;
+				margin-bottom: 28px;
+			}
+
+			.pnec-risk-title {
+				margin: 0 0 12px;
+				color: #10263f;
+				font-size: clamp(1.8rem, 3.2vw, 2.8rem);
+				line-height: 1.08;
+				font-weight: 800;
+			}
+
+			.pnec-risk-copy {
+				margin: 0;
+				max-width: 680px;
+				color: #546274;
+				font-size: 1rem;
+				line-height: 1.7;
+			}
+
+			.pnec-risk-meta {
+				display: grid;
+				gap: 10px;
+				justify-items: start;
+				padding: 18px 20px;
+				border: 1px solid #dbe4ec;
+				border-radius: 18px;
+				background: #f7fafc;
+			}
+
+			.pnec-risk-meta-label {
+				color: #10263f;
+				font-size: 0.95rem;
+				font-weight: 700;
+			}
+
+			.pnec-risk-meta-copy {
+				color: #5f7084;
+				font-size: 0.88rem;
+				line-height: 1.55;
+			}
+
+			#risk-updated-time {
+				color: #27ae60;
+				font-size: 0.82rem;
+				font-weight: 700;
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+			}
+
+			.pnec-risk-grid {
+				display: grid;
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+				gap: 18px;
+			}
+
+			.risk-card {
+				min-height: 215px;
+				padding: 22px 20px;
+				border-radius: 20px;
+				border: 1px solid rgba(255,255,255,0.12);
+				background: rgba(255,255,255,0.97);
+				box-shadow: 0 18px 42px rgba(0,0,0,0.18);
+				transition: transform 0.18s ease, box-shadow 0.18s ease;
+			}
+
+			.risk-card:hover {
+				transform: translateY(-3px);
+				box-shadow: 0 24px 52px rgba(0,0,0,0.22);
+			}
+
+			.risk-card.risk-low { border-color: rgba(16, 185, 129, 0.28); }
+			.risk-card.risk-moderate { border-color: rgba(245, 158, 11, 0.32); }
+			.risk-card.risk-high { border-color: rgba(249, 115, 22, 0.34); }
+			.risk-card.risk-critical { border-color: rgba(220, 38, 38, 0.36); }
+
+			.risk-card-header,
+			.risk-score-row,
+			.condition-row {
+				display: flex;
+				align-items: center;
+			}
+
+			.risk-card-header {
+				gap: 10px;
+				margin-bottom: 18px;
+			}
+
+			.risk-icon {
+				font-size: 1.35rem;
+			}
+
+			.risk-type {
+				color: #10263f;
+				font-size: 0.82rem;
+				font-weight: 800;
+				letter-spacing: 0.12em;
+			}
+
+			.risk-score-row {
+				gap: 8px;
+				margin-bottom: 18px;
+				flex-wrap: wrap;
+			}
+
+			.risk-score {
+				color: #0a1628;
+				font-size: 3rem;
+				line-height: 1;
+				font-weight: 900;
+			}
+
+			.risk-max {
+				color: #607285;
+				font-size: 1rem;
+				font-weight: 700;
+			}
+
+			.risk-label {
+				display: inline-flex;
+				align-items: center;
+				height: 30px;
+				padding: 0 10px;
+				border-radius: 999px;
+				font-size: 0.76rem;
+				font-weight: 800;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+			}
+
+			.risk-conditions {
+				display: grid;
+				gap: 10px;
+			}
+
+			.condition-row {
+				justify-content: space-between;
+				gap: 10px;
+				padding-top: 10px;
+				border-top: 1px solid #ecf1f5;
+			}
+
+			.condition-label {
+				color: #607285;
+				font-size: 0.84rem;
+				font-weight: 600;
+			}
+
+			.condition-value {
+				color: #0f2237;
+				font-size: 0.86rem;
+				font-weight: 800;
+			}
+
+			.pulse-amber,
+			.pulse-red {
+				animation: pnec-risk-pulse 1.8s ease-in-out infinite;
+			}
+
+			@keyframes pnec-risk-pulse {
+				0%, 100% { box-shadow: 0 18px 42px rgba(0,0,0,0.18); }
+				50% { box-shadow: 0 20px 50px rgba(39, 174, 96, 0.32); }
+			}
+
+			@media (max-width: 900px) {
+				.pnec-risk-head,
+				.pnec-risk-grid {
+					grid-template-columns: 1fr;
+				}
+			}

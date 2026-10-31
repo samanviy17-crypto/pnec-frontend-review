@@ -1,0 +1,8 @@
+{
+  "name": "pnec-frontend-review",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --import ./scripts/no-network.mjs --test assets/js/chatbot/*.test.mjs assets/js/cms/*.test.mjs"
+  }
+}

@@ -1,0 +1,631 @@
+---
+layout: pnec-base
+title: "Site Nav Manager — PNEC Admin"
+description: "PNEC admins: add, reorder, and delete items in the main site navigation. Changes commit to _data/pnec_nav.yml and appear on every page after the next Jekyll build."
+body_class: inner-page admin-nav-page
+permalink: /pages/admin-nav.html
+---
+
+<style>
+{{ '@import "beasts/inline/pages/pages-admin-nav-1";' | scssify }}
+</style>
+
+<!-- Auth gate (shown first; replaced by main shell once authenticated) -->
+<div id="an-gate" class="an-shell" style="display:none;">
+  <div class="an-auth-card">
+    <h2>Site nav manager</h2>
+    <p>Edit the main navigation bar that appears on every page. Sign in with your administrator account to continue.</p>
+    <p><a href="{{ "/pages/register.html#login" | relative_url }}">Sign in with administrator account</a></p>
+    <label for="an-key-input">Administrator account</label>
+    <input id="an-key-input" type="hidden" autocomplete="current-password" placeholder="Paste administrator account">
+    <div style="display:flex; gap:10px; margin-top:14px;">
+      <button id="an-key-submit" class="an-btn is-primary" type="button" style="flex:1;">Unlock</button>
+      <a href="{{ '/pages/admin.html' | relative_url }}" class="an-btn" style="text-decoration:none;">Cancel</a>
+    </div>
+    <div id="an-key-err" class="an-auth-err" role="status" aria-live="polite"></div>
+  </div>
+</div>
+
+<!-- Main UI (hidden until authenticated) -->
+<div id="an-app" style="display:none;">
+  <div class="an-topbar">
+    <div>
+      <h1>Site nav manager</h1>
+      <p class="sub">Edits <code>_data/pnec_nav.yml</code>. Changes appear on every page after the next Jekyll build (typically &lt;2 min).</p>
+    </div>
+    <div class="an-actions">
+      <span id="an-status" class="an-status-pill is-clean" aria-live="polite">No changes</span>
+      <a href="{{ '/' | relative_url }}" target="_blank" rel="noopener" class="an-btn">Open homepage ↗</a>
+      <button id="an-revert" class="an-btn" type="button">Discard changes</button>
+      <button id="an-save"   class="an-btn is-primary" type="button">Save changes</button>
+    </div>
+  </div>
+
+  <div class="an-shell">
+    <div class="an-card">
+      <h2>Main navigation</h2>
+      <p class="hint">
+        Drag the <strong>⋮⋮</strong> handle to reorder. Click <em>Add item</em> to insert a new link.
+        The Home icon and the Login / Profile entry are managed by the system and not shown here.
+      </p>
+      <ul id="an-list" class="an-list" role="list"></ul>
+      <button id="an-add" class="an-btn" type="button">+ Add item</button>
+
+      <div id="an-suggest" class="an-suggest" style="display:none;">
+        <h3>Suggestions from your admin-created pages</h3>
+        <p>These pages exist in the repo but aren't in the nav yet. Click a chip to add it.</p>
+        <div id="an-suggest-row" class="an-suggest-row"></div>
+      </div>
+    </div>
+
+    <div class="an-card">
+      <h2>Preview</h2>
+      <p class="hint">Approximate look of the live nav bar. The home icon and your login/profile entry are rendered by the layout and aren't shown here.</p>
+      <div class="an-preview">
+        <h3>Live preview</h3>
+        <ul id="an-preview-nav" class="an-preview-nav"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="an-toast" class="an-toast" role="status" aria-live="polite"></div>
+
+<script>
+function pnecAdminToken() {
+  return localStorage.getItem("pnec_token") || sessionStorage.getItem("pnec_token") || "";
+}
+
+(function () {
+  'use strict';
+
+  // ─── Config ────────────────────────────────────────────────────
+  var API_BASE = (window.PNEC_API_BASE || (
+    location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+      ? 'http://127.0.0.1:8425'
+      : 'https://api.pnec-review.invalid'
+  )).replace(/\/+$/, '');
+  var FILE_PATH = '_data/pnec_nav.yml';
+  var SITE_PREFIX = (function () {
+    // Jekyll baseurl, surfaced via the relative_url filter — handy for the
+    // preview links so they line up with what the live page would render.
+    var sample = '{{ "/" | relative_url }}';
+    return sample === '/' ? '' : sample.replace(/\/+$/, '');
+  }());
+
+  // ─── DOM refs ──────────────────────────────────────────────────
+  var $ = function (id) { return document.getElementById(id); };
+  var gate    = $('an-gate');
+  var app     = $('an-app');
+  var keyIn   = $('an-key-input');
+  var keyBtn  = $('an-key-submit');
+  var keyErr  = $('an-key-err');
+  var listEl  = $('an-list');
+  var addBtn  = $('an-add');
+  var saveBtn = $('an-save');
+  var revBtn  = $('an-revert');
+  var statusEl = $('an-status');
+  var previewEl = $('an-preview-nav');
+  var suggestBox = $('an-suggest');
+  var suggestRow = $('an-suggest-row');
+  var toastEl = $('an-toast');
+
+  // ─── State ─────────────────────────────────────────────────────
+  var adminKey = '';
+  var items = [];          // current working state (array of {title,url,match,external})
+  var initialItems = [];   // snapshot loaded from server — for revert & dirty detection
+  var fileSha = null;      // expected_sha to pass on save
+  var headerComment = '';  // preserved YAML header so admins still see docs
+
+  // Reuse the normal account token; per-tool shared keys are retired.
+  function getCachedKey() {
+    try { return pnecAdminToken(); } catch (_) { return ''; }
+  }
+  function setCachedKey(k) { /* Normal login owns token storage. */
+  }
+
+  function apiHeaders() {
+    return { 'Accept': 'application/json', 'Authorization': 'Bearer ' + adminKey };
+  }
+
+  // ─── Toast ─────────────────────────────────────────────────────
+  var toastTimer;
+  function toast(msg, isErr) {
+    toastEl.textContent = msg;
+    toastEl.classList.toggle('is-err', !!isErr);
+    toastEl.classList.add('is-shown');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('is-shown'); }, 2800);
+  }
+
+  // ─── YAML round-trip (intentionally narrow) ────────────────────
+  // We deliberately don't ship a full YAML library — the file we manage
+  // has a fixed, well-known shape (list of objects with title / url /
+  // match? / external?). This parser handles exactly that shape and is
+  // robust against the writer below, which round-trips it cleanly.
+  function parseYaml(text) {
+    var lines = String(text || '').replace(/\r\n/g, '\n').split('\n');
+    var headerLines = [];
+    var inHeader = true;
+    var arr = [];
+    var current = null;
+
+    function flush() {
+      if (current) {
+        arr.push({
+          title:    current.title || '',
+          url:      current.url || '',
+          match:    current.match || '',
+          external: !!current.external,
+        });
+      }
+      current = null;
+    }
+
+    for (var i = 0; i < lines.length; i++) {
+      var raw = lines[i];
+      var trimmed = raw.trim();
+
+      // Capture leading comments / blanks as preservable header so the
+      // admin docs (field reference, etc.) survive a save round-trip.
+      if (inHeader) {
+        if (trimmed === '' || trimmed[0] === '#') {
+          headerLines.push(raw);
+          continue;
+        }
+        inHeader = false;
+      }
+
+      if (trimmed === '' || trimmed[0] === '#') continue;
+
+      if (trimmed.indexOf('- ') === 0) {
+        flush();
+        current = {};
+        // The first key of the item lives on the same line as the '-'.
+        var firstKey = trimmed.slice(2);
+        var kv = parseKv(firstKey);
+        if (kv) current[kv.key] = kv.val;
+        continue;
+      }
+
+      var kv2 = parseKv(trimmed);
+      if (kv2 && current) {
+        if (kv2.key === 'external') current.external = (kv2.val === true || kv2.val === 'true');
+        else current[kv2.key] = kv2.val;
+      }
+    }
+    flush();
+
+    headerComment = headerLines.join('\n').replace(/\s+$/, '');
+    return arr;
+  }
+
+  function parseKv(s) {
+    var idx = s.indexOf(':');
+    if (idx === -1) return null;
+    var key = s.slice(0, idx).trim();
+    var val = s.slice(idx + 1).trim();
+    if (val.length >= 2 && ((val[0] === '"' && val[val.length-1] === '"') ||
+                            (val[0] === "'" && val[val.length-1] === "'"))) {
+      val = val.slice(1, -1);
+    }
+    if (val === 'true')  val = true;
+    if (val === 'false') val = false;
+    return { key: key, val: val };
+  }
+
+  // Emit YAML the data file shape expects. We always quote string values
+  // so an ampersand, colon, or # in a title doesn't break the parser.
+  function emitYaml(arr) {
+    var head = headerComment ? (headerComment + '\n\n') : (
+      '# Main PNEC site navigation — managed by /pages/admin-nav.html\n' +
+      '# Each entry renders one <li> in the main nav bar.\n\n'
+    );
+    var body = arr.map(function (it) {
+      var lines = [];
+      lines.push('- title: ' + yamlStr(it.title || ''));
+      lines.push('  url: '   + yamlStr(it.url || ''));
+      if (it.match && it.match.length > 0)   lines.push('  match: ' + yamlStr(it.match));
+      if (it.external)                       lines.push('  external: true');
+      return lines.join('\n');
+    }).join('\n\n');
+    return head + body + (body ? '\n' : '');
+  }
+
+  function yamlStr(s) {
+    // Double-quote everything and escape backslashes and double quotes.
+    // This is the safe-by-default form; nav titles can contain '&', ':',
+    // commas, etc. without confusing the parser on round-trip.
+    return '"' + String(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
+  }
+
+  // ─── Auth gate ─────────────────────────────────────────────────
+  function showGate(err) {
+    gate.style.display = '';
+    app.style.display = 'none';
+    keyErr.textContent = err || '';
+    setTimeout(function () { keyIn.focus(); }, 30);
+  }
+  function showApp() {
+    gate.style.display = 'none';
+    app.style.display = '';
+  }
+
+  function tryUnlock(key) {
+    key = pnecAdminToken();
+    if (!key) { showGate('Please sign in with an administrator account first.'); return; }
+    adminKey = key;
+    keyErr.textContent = 'Checking…';
+    keyBtn.disabled = true;
+    fetch(API_BASE + '/api/admin/publish/health', { headers: apiHeaders() })
+      .then(function (r) {
+        if (r.status === 401 || r.status === 403) {
+          throw new Error('Administrator login required. Sign in with your account and retry.');
+        }
+        if (r.status === 404) {
+          throw new Error('Backend reachable but /api/admin/publish/health was not found. The Flask container may need to be redeployed.');
+        }
+        if (!r.ok) throw new Error('Server returned ' + r.status + '.');
+        return r.json();
+      })
+      .then(function () {
+        setCachedKey(adminKey);
+        keyErr.textContent = '';
+        keyBtn.disabled = false;
+        showApp();
+        loadNav();
+      })
+      .catch(function (e) {
+        keyBtn.disabled = false;
+        adminKey = '';
+        var msg = (e && e.message) || 'Could not reach the API.';
+        if (msg.indexOf('Failed to fetch') !== -1 || msg.indexOf('NetworkError') !== -1) {
+          msg = 'Could not reach the API at ' + API_BASE + '. Is the Flask server up?';
+        }
+        keyErr.textContent = msg;
+      });
+  }
+
+  keyBtn.addEventListener('click', function () { tryUnlock(keyIn.value.trim()); });
+  keyIn.addEventListener('keydown', function (e) { if (e.key === 'Enter') tryUnlock(keyIn.value.trim()); });
+
+  // ─── Load + save ───────────────────────────────────────────────
+  function loadNav() {
+    statusEl.classList.remove('is-dirty', 'is-saving');
+    statusEl.classList.add('is-clean');
+    statusEl.textContent = 'Loading…';
+
+    fetch(API_BASE + '/api/admin/publish/file?path=' + encodeURIComponent(FILE_PATH), { headers: apiHeaders() })
+      .then(function (r) {
+        if (r.status === 404) {
+          // File doesn't exist yet — that's fine, start empty.
+          return { content: '', sha: null };
+        }
+        if (!r.ok) throw new Error('Could not load nav file (HTTP ' + r.status + ').');
+        return r.json();
+      })
+      .then(function (j) {
+        fileSha = j.sha || null;
+        items = parseYaml(j.content || '');
+        initialItems = deepClone(items);
+        render();
+        markClean();
+        loadSuggestions();
+      })
+      .catch(function (e) {
+        toast(e.message || 'Failed to load nav.', true);
+        statusEl.textContent = 'Load failed';
+      });
+  }
+
+  function save() {
+    if (!isDirty()) { toast('Nothing to save.'); return; }
+    var errs = validate();
+    if (errs.length) { toast(errs[0], true); return; }
+
+    saveBtn.disabled = true;
+    revBtn.disabled = true;
+    statusEl.classList.remove('is-clean', 'is-dirty');
+    statusEl.classList.add('is-saving');
+    statusEl.textContent = 'Saving…';
+
+    var body = {
+      path: FILE_PATH,
+      content: emitYaml(items),
+      message: 'chore(nav): update main site nav via admin-nav UI',
+      expected_sha: fileSha || ''
+    };
+
+    fetch(API_BASE + '/api/admin/publish/file', {
+      method: 'POST',
+      headers: Object.assign({}, apiHeaders(), { 'Content-Type': 'application/json' }),
+      body: JSON.stringify(body)
+    })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j, status: r.status }; }); })
+      .then(function (res) {
+        saveBtn.disabled = false;
+        revBtn.disabled = false;
+        if (!res.ok) {
+          if (res.status === 409) {
+            toast('Someone else updated the nav file. Reloading.', true);
+            statusEl.classList.remove('is-saving');
+            statusEl.classList.add('is-dirty');
+            statusEl.textContent = 'Reloading…';
+            setTimeout(loadNav, 600);
+            return;
+          }
+          throw new Error((res.j && (res.j.detail || res.j.error)) || 'Save failed (HTTP ' + res.status + ').');
+        }
+        // Update sha so the next save doesn't 409 against ourselves.
+        fileSha = (res.j && (res.j.file_sha || res.j.sha || res.j.content_sha)) || fileSha;
+        initialItems = deepClone(items);
+        markClean();
+        toast('Saved. Live on the site after the next Jekyll build.');
+      })
+      .catch(function (e) {
+        saveBtn.disabled = false;
+        revBtn.disabled = false;
+        statusEl.classList.remove('is-saving', 'is-clean');
+        statusEl.classList.add('is-dirty');
+        statusEl.textContent = 'Save failed';
+        toast(e.message || 'Save failed.', true);
+      });
+  }
+
+  saveBtn.addEventListener('click', save);
+  revBtn.addEventListener('click', function () {
+    if (!isDirty()) return;
+    if (!confirm('Discard your unsaved changes?')) return;
+    items = deepClone(initialItems);
+    render();
+    markClean();
+    loadSuggestions();
+  });
+
+  // Cmd/Ctrl-S — save
+  document.addEventListener('keydown', function (e) {
+    if ((e.metaKey || e.ctrlKey) && (e.key === 's' || e.key === 'S')) {
+      if (app.style.display === '') { e.preventDefault(); save(); }
+    }
+  });
+
+  // ─── Suggestions: pages that exist but aren't in the nav ───────
+  // We hit the editor's page list (same endpoint admin-editor.html uses)
+  // and filter out anything already linked. Click-to-add for one-step
+  // promotion of admin-created pages, matching the user's ask:
+  //   "if you add or duplicate a page or anything like that it should
+  //    also show up on the official navigation menu"
+  function loadSuggestions() {
+    fetch(API_BASE + '/api/admin/publish/pages', { headers: apiHeaders() })
+      .then(function (r) { return r.ok ? r.json() : { pages: [] }; })
+      .catch(function () { return { pages: [] }; })
+      .then(function (j) {
+        var pages = (j && j.pages) || [];
+        // The pages endpoint returns repo paths like "pages/foo.html";
+        // the nav wants site-rooted URLs like "/pages/foo.html". Skip
+        // anything internal (admin/_data/etc.) since the nav is public.
+        var existingUrls = {};
+        items.forEach(function (it) { if (it.url) existingUrls[normalize(it.url)] = true; });
+
+        var candidates = [];
+        pages.forEach(function (p) {
+          var path = (p.path || p) + '';
+          if (!path) return;
+          var lower = path.toLowerCase();
+          // Public pages only: skip admin pages and non-html/index dupes.
+          if (lower.indexOf('admin') !== -1) return;
+          if (!/\.html?$/.test(lower)) return;
+          var publicUrl = '/' + path.replace(/^\/+/, '');
+          if (existingUrls[normalize(publicUrl)]) return;
+          // Title from path: "pages/foo-bar.html" → "Foo Bar"
+          var base = path.split('/').pop().replace(/\.html?$/i, '').replace(/[-_]+/g, ' ');
+          var title = base.replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+          candidates.push({ title: title, url: publicUrl });
+        });
+
+        renderSuggestions(candidates);
+      });
+  }
+
+  function renderSuggestions(cands) {
+    suggestRow.innerHTML = '';
+    if (!cands.length) { suggestBox.style.display = 'none'; return; }
+    suggestBox.style.display = '';
+    cands.slice(0, 20).forEach(function (c) {
+      var chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'an-suggest-chip';
+      chip.textContent = c.title + ' — ' + c.url;
+      chip.addEventListener('click', function () {
+        items.push({ title: c.title, url: c.url, match: '', external: false });
+        render();
+        markDirty();
+        loadSuggestions();
+      });
+      suggestRow.appendChild(chip);
+    });
+  }
+
+  // ─── Render the editable list + preview ────────────────────────
+  function render() {
+    listEl.innerHTML = '';
+    if (!items.length) {
+      var empty = document.createElement('li');
+      empty.className = 'an-empty';
+      empty.textContent = 'No nav items yet. Click + Add item to create the first one.';
+      listEl.appendChild(empty);
+    } else {
+      items.forEach(function (it, idx) { listEl.appendChild(rowEl(it, idx)); });
+    }
+    renderPreview();
+  }
+
+  function rowEl(it, idx) {
+    var li = document.createElement('li');
+    li.className = 'an-item';
+    li.draggable = true;
+    li.dataset.idx = idx;
+
+    var handle = document.createElement('div');
+    handle.className = 'an-handle';
+    handle.title = 'Drag to reorder';
+    handle.setAttribute('aria-label', 'Drag to reorder');
+    handle.textContent = '⋮⋮';
+    li.appendChild(handle);
+
+    var fields = document.createElement('div');
+    fields.className = 'an-item-fields';
+
+    fields.appendChild(field('Title',  'title-' + idx, it.title, function (v) { it.title = v; markDirty(); renderPreview(); }, true));
+    fields.appendChild(field('URL',    'url-'   + idx, it.url,   function (v) { it.url   = v; markDirty(); renderPreview(); }, true));
+    fields.appendChild(field('Match (optional)', 'match-' + idx, it.match || '', function (v) { it.match = v; markDirty(); }, false, 'comma,separated,paths'));
+
+    li.appendChild(fields);
+
+    var actions = document.createElement('div');
+    actions.className = 'an-item-actions';
+
+    var up = document.createElement('button');
+    up.type = 'button'; up.className = 'an-btn is-small'; up.textContent = '↑';
+    up.setAttribute('aria-label', 'Move up');
+    up.disabled = (idx === 0);
+    up.addEventListener('click', function () { move(idx, idx - 1); });
+    actions.appendChild(up);
+
+    var dn = document.createElement('button');
+    dn.type = 'button'; dn.className = 'an-btn is-small'; dn.textContent = '↓';
+    dn.setAttribute('aria-label', 'Move down');
+    dn.disabled = (idx === items.length - 1);
+    dn.addEventListener('click', function () { move(idx, idx + 1); });
+    actions.appendChild(dn);
+
+    var del = document.createElement('button');
+    del.type = 'button'; del.className = 'an-btn is-small is-danger'; del.textContent = 'Delete';
+    del.setAttribute('aria-label', 'Delete this nav item');
+    del.addEventListener('click', function () {
+      if (!confirm('Remove "' + (it.title || it.url) + '" from the nav?')) return;
+      items.splice(idx, 1);
+      render(); markDirty(); loadSuggestions();
+    });
+    actions.appendChild(del);
+
+    li.appendChild(actions);
+
+    // ─── Drag and drop ─────────────────────────────────────────
+    li.addEventListener('dragstart', function (e) {
+      li.classList.add('is-dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', String(idx));
+    });
+    li.addEventListener('dragend', function () {
+      li.classList.remove('is-dragging');
+      Array.prototype.forEach.call(listEl.children, function (c) { c.classList.remove('is-drag-over'); });
+    });
+    li.addEventListener('dragover', function (e) { e.preventDefault(); li.classList.add('is-drag-over'); });
+    li.addEventListener('dragleave', function () { li.classList.remove('is-drag-over'); });
+    li.addEventListener('drop', function (e) {
+      e.preventDefault();
+      var from = parseInt(e.dataTransfer.getData('text/plain'), 10);
+      var to = parseInt(li.dataset.idx, 10);
+      if (isNaN(from) || isNaN(to) || from === to) return;
+      move(from, to);
+    });
+
+    return li;
+  }
+
+  function field(label, id, value, onChange, required, placeholder) {
+    var w = document.createElement('div');
+    var l = document.createElement('label'); l.setAttribute('for', id); l.textContent = label;
+    var i = document.createElement('input');
+    i.id = id; i.type = 'text'; i.value = value || '';
+    if (placeholder) i.placeholder = placeholder;
+    if (required && !value) i.classList.add('is-error');
+    i.addEventListener('input', function () {
+      if (i.value) i.classList.remove('is-error');
+      onChange(i.value);
+    });
+    w.appendChild(l); w.appendChild(i);
+    return w;
+  }
+
+  function move(from, to) {
+    if (from < 0 || from >= items.length || to < 0 || to >= items.length) return;
+    var x = items.splice(from, 1)[0];
+    items.splice(to, 0, x);
+    render(); markDirty();
+  }
+
+  addBtn.addEventListener('click', function () {
+    items.push({ title: 'New page', url: '/pages/new.html', match: '', external: false });
+    render(); markDirty();
+  });
+
+  function renderPreview() {
+    previewEl.innerHTML = '';
+    items.forEach(function (it) {
+      var li = document.createElement('li');
+      var a = document.createElement('a');
+      a.textContent = it.title || '(untitled)';
+      a.href = it.external ? (it.url || '#')
+                           : ((SITE_PREFIX || '') + (it.url || '/').replace(/^\/+/, '/'));
+      if (it.external) { a.target = '_blank'; a.rel = 'noopener'; }
+      li.appendChild(a);
+      previewEl.appendChild(li);
+    });
+  }
+
+  // ─── Validation + dirty tracking ───────────────────────────────
+  function validate() {
+    var errs = [];
+    items.forEach(function (it, i) {
+      var label = it.title ? '"' + it.title + '"' : 'item #' + (i + 1);
+      if (!it.title || !it.title.trim())
+        errs.push('Title is required for ' + label + '.');
+      if (!it.url || !it.url.trim())
+        errs.push('URL is required for ' + label + '.');
+    });
+    return errs;
+  }
+
+  function isDirty() { return JSON.stringify(items) !== JSON.stringify(initialItems); }
+  function markDirty() {
+    statusEl.classList.remove('is-clean', 'is-saving');
+    statusEl.classList.add('is-dirty');
+    statusEl.textContent = 'Unsaved changes';
+  }
+  function markClean() {
+    statusEl.classList.remove('is-dirty', 'is-saving');
+    statusEl.classList.add('is-clean');
+    statusEl.textContent = items.length ? 'No changes' : 'No nav items';
+  }
+
+  // ─── Helpers ──────────────────────────────────────────────────
+  function deepClone(o) { return JSON.parse(JSON.stringify(o)); }
+  function normalize(u) { return String(u || '').replace(/\/+$/, '').toLowerCase(); }
+
+  // ─── Warn-on-unsaved navigation ────────────────────────────────
+  window.addEventListener('beforeunload', function (e) {
+    if (isDirty() && app.style.display === '') {
+      e.preventDefault(); e.returnValue = '';
+    }
+  });
+
+  // ─── Boot ──────────────────────────────────────────────────────
+  var cached = getCachedKey();
+  if (cached) {
+    adminKey = cached;
+    // Try the cached key in the background. If it works we go straight to
+    // the app; if not we drop to the gate with a clear message.
+    fetch(API_BASE + '/api/admin/publish/health', { headers: apiHeaders() })
+      .then(function (r) {
+        if (r.ok) { showApp(); loadNav(); return; }
+        adminKey = ''; setCachedKey('');
+        showGate(r.status === 401 || r.status === 403 ? 'Cached administrator account is no longer valid.' : '');
+      })
+      .catch(function () { showGate(); });
+  } else {
+    showGate();
+  }
+})();
+</script>

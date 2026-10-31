@@ -1,0 +1,27 @@
+---
+layout: pnec-base
+title: "Page Not Found"
+description: "The page you're looking for doesn't exist. Return to the PNEC homepage."
+permalink: /404.html
+search_exclude: true
+---
+
+<section style="min-height:60vh;display:flex;align-items:center;justify-content:center;padding:80px 24px;background:#f8f5f0">
+  <div style="text-align:center;max-width:480px">
+    <div style="font-size:4rem;margin-bottom:16px" aria-hidden="true">🚨</div>
+    <h1 style="font-size:5rem;font-weight:900;color:#0a1628;margin:0;line-height:1">404</h1>
+    <h2 style="font-size:1.5rem;color:#c0392b;margin:8px 0 16px">Page Not Found</h2>
+    <p style="color:#5a5a5a;font-size:1rem;margin-bottom:32px">
+      The page you're looking for doesn't exist or may have moved.
+      If you're looking for emergency information, help is just one click away.
+    </p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="{{ '/' | relative_url }}" class="btn btn-primary">Go to Homepage</a>
+      <a href="{{ '/pages/kit.html' | relative_url }}" class="btn btn-outline">72-Hour Kit</a>
+      <a href="{{ '/pages/contact.html' | relative_url }}" class="btn btn-outline">Contact PNEC</a>
+    </div>
+    <p style="margin-top:32px;font-size:13px;color:#9e9e9e">
+      For life-threatening emergencies, always call <strong>911</strong>.
+    </p>
+  </div>
+</section>

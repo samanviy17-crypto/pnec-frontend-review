@@ -1,0 +1,18 @@
+// Migrated from assets/css/community-tools.css; preserve selector order and runtime tokens.
+@import "beasts/foundation/tokens";
+@import "beasts/foundation/responsive";
+
+.community-tools, .community-links {max-width:1100px;margin:24px auto;padding:24px;color:#162c24;font-family:inherit;background:#fbf8f1;border:1px solid #d4efdf;border-radius:16px}
+.community-links {display:flex;gap:16px;flex-wrap:wrap;padding:12px 24px}
+.community-tools h2 {color:$beasts-green;margin-top:0}
+.community-tools section + section {margin-top:32px;border-top:1px solid #d4efdf;padding-top:24px}
+.community-tools form {display:grid;gap:12px;max-width:700px;margin:16px 0}
+.community-tools label {display:grid;gap:4px;font-weight:600}
+.community-tools input,.community-tools textarea,.community-tools select {font:inherit;width:100%;padding:10px;border:1px solid #87998e;border-radius:6px;background:white;color:#162c24}
+.community-tools button {font:inherit;padding:10px 16px;border:1px solid #145a32;border-radius:6px;background:#1e8449;color:white;cursor:pointer;margin:4px 8px 4px 0}
+.community-tools button:disabled {opacity:.6;cursor:wait}
+.community-tools article {background:white;border:1px solid #d4efdf;padding:16px;margin:12px 0;border-radius:8px;overflow-wrap:anywhere}
+.community-tools progress {width:100%;height:20px;accent-color:#1e8449}
+.community-tools [role=status] {white-space:pre-line}
+.community-tools a, .community-links a {color:$beasts-green;text-decoration:underline}
+.community-tools .community-error {color:#a12622}

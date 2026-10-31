@@ -1,0 +1,123 @@
+// Migrated from _includes/poway-header.html; preserve selector order and runtime tokens.
+@import "beasts/foundation/tokens";
+@import "beasts/foundation/responsive";
+
+.pnec-unified-header {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+}
+.pnec-header-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.8s ease;
+}
+.pnec-header-track > div {
+  min-width: 100%;
+  height: 100%;
+}
+.pnec-header-track img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.pnec-header-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 22, 40, 0.50);
+}
+.pnec-header-ui {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 28px 36px 0;
+}
+.pnec-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.pnec-header-logo img {
+  height: 90px;
+  width: auto;
+}
+.pnec-header-donate {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #27ae60;
+  color: $beasts-white;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 10px 22px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.pnec-header-donate:hover { background: #219150; }
+.pnec-header-title {
+  text-align: center;
+  color: $beasts-white;
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pnec-header-nav {
+  background: rgba(10, 22, 40, 0.45);
+  padding: 0 36px;
+  margin: 0 -36px;
+}
+.pnec-header-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+  gap: 0;
+}
+.pnec-header-nav li a {
+  display: block;
+  color: $beasts-white;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 14px 14px;
+  white-space: nowrap;
+  transition: color 0.15s;
+  border-bottom: 2px solid transparent;
+}
+.pnec-header-nav li a:hover,
+.pnec-header-nav li a.active {
+  color: #7ed956;
+  border-bottom-color: #7ed956;
+}
+/* Dedicated home-icon button — distinct from the logo link so users
+   have an explicit way back to the home page from any sub-page nav. */
+.pnec-header-nav li.pnec-nav-home a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 12px;
+}
+.pnec-header-nav li.pnec-nav-home svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.pnec-header-nav li.pnec-nav-home .pnec-nav-home-label { /*! Original empty rule retained. */ }
+@media (max-width: 600px) {
+  .pnec-header-nav li.pnec-nav-home .pnec-nav-home-label { display: none; }
+  .pnec-header-nav li.pnec-nav-home a { gap: 0; padding: 14px 10px; }
+}

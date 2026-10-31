@@ -1,0 +1,8 @@
+// Migrated from _layouts/pnec-base.html; preserve selector order and runtime tokens.
+@import "beasts/foundation/tokens";
+@import "beasts/foundation/responsive";
+
+body[data-cms-page]:not(.cms-hydrated) [data-cms-config],
+    body[data-cms-page]:not(.cms-hydrated) [data-cms-override] {
+      visibility: hidden;
+    }

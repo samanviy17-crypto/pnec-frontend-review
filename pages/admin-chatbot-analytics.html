@@ -1,0 +1,249 @@
+---
+layout: pnec-base
+title: "Helper Bot Analytics"
+description: "Per-user chatbot usage and feedback analytics for PNEC admins."
+body_class: inner-page admin-analytics-body
+permalink: /pages/admin-chatbot-analytics.html
+---
+
+<!--
+  Helper Bot v3 — admin analytics page (Phase 4).
+
+  Renders two views:
+    1. Local view (always available): aggregates this browser's
+       localStorage conversation history into volume / topic / feedback
+       summaries. Useful for admins to inspect their own usage and
+       sanity-check the bot.
+    2. Server view (when backend endpoint /api/chat/analytics is
+       available): same layout but fed by aggregate metrics across all
+       users. Falls back to the local view if the endpoint isn't there.
+-->
+
+<style>
+{{ '@import "beasts/inline/pages/pages-admin-chatbot-analytics-1";' | scssify }}
+</style>
+
+<div class="aa-wrap" id="aa-root">
+  <!-- Filled by JS -->
+  <div class="aa-empty"><p>Loading analytics…</p></div>
+</div>
+
+<script type="module">
+import { listConversations } from '{{ "/assets/js/chatbot/store.js" | relative_url }}';
+
+const root = document.getElementById('aa-root');
+
+function isAdmin() {
+  try {
+    const raw = localStorage.getItem('pnec_user') || sessionStorage.getItem('pnec_user');
+    if (!raw) return false;
+    const u = JSON.parse(raw);
+    return u && u.role === 'admin';
+  } catch (_e) { return false; }
+}
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, ch =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch])
+  );
+}
+
+if (!isAdmin()) {
+  root.innerHTML = `
+    <div class="aa-not-admin">
+      <h2>Admins only</h2>
+      <p>Sign in with an admin account to see Helper Bot analytics.</p>
+    </div>`;
+} else {
+  // Try server endpoint first; fall back to local aggregation.
+  const apiBase = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+    ? 'http://127.0.0.1:8425' : 'https://api.pnec-review.invalid';
+  fetch(`${apiBase}/api/chat/analytics`, {
+    credentials: 'include',
+    headers: { 'Accept': 'application/json' }
+  })
+    .then(r => (r.ok ? r.json() : Promise.reject('no-server')))
+    .then(serverData => render(serverData, true))
+    .catch(() => render(aggregateLocal(), false));
+}
+
+function aggregateLocal() {
+  const convos = listConversations();
+  const totalConvos = convos.length;
+  const allMsgs = convos.flatMap(c => c.messages || []);
+  const totalMsgs = allMsgs.length;
+  const userMsgs = allMsgs.filter(m => m.role === 'user');
+  const botMsgs  = allMsgs.filter(m => m.role === 'assistant');
+  const lastActive = convos[0]?.updatedAt || 0;
+
+  // Topic clusters via a simple keyword bucket
+  const buckets = {
+    'Wildfire prep':         /\b(fire|wildfire|smoke|red.flag|santa ana|defensible)\b/i,
+    'Emergency kit':         /\b(kit|72.hour|72.hr|water|food|supplies)\b/i,
+    'Evacuation':            /\b(evacuat|escape|leave|shelter|route)\b/i,
+    'Block coordinator':     /\b(coordinator|block|neighbor.{0,3}coord|who.s my)\b/i,
+    'Volunteer / programs':  /\b(volunteer|program|help out|sign up|join)\b/i,
+    'Earthquake':            /\b(earthquake|shake|drop cover hold)\b/i,
+    'Power outage':          /\b(outage|power.{0,3}out|blackout|electricity)\b/i,
+    'Events / drills':       /\b(event|drill|fair|training|class)\b/i,
+    'Other':                 /./,
+  };
+  const topics = Object.fromEntries(Object.keys(buckets).map(k => [k, 0]));
+  userMsgs.forEach(m => {
+    for (const [k, re] of Object.entries(buckets)) {
+      if (re.test(m.content || '')) { topics[k]++; break; }
+    }
+  });
+  // Drop the "Other" bucket if it dominates noise
+  if (topics.Other > 0 && Object.values(topics).reduce((a, b) => a + b, 0) > 1) {
+    // keep
+  }
+
+  // Feedback
+  const fbUp   = botMsgs.filter(m => m.feedback === 'up').length;
+  const fbDown = botMsgs.filter(m => m.feedback === 'down').length;
+
+  // Recent down-voted items
+  const recentDown = botMsgs.filter(m => m.feedback === 'down').slice(-5).reverse();
+
+  // Hour-of-day distribution
+  const hours = new Array(24).fill(0);
+  userMsgs.forEach(m => { hours[new Date(m.timestamp).getHours()]++; });
+
+  // Avg assistant response chars
+  const avgRespChars = botMsgs.length
+    ? Math.round(botMsgs.reduce((a, m) => a + (m.content || '').length, 0) / botMsgs.length)
+    : 0;
+
+  return {
+    totalConvos, totalMsgs, userMsgs: userMsgs.length, botMsgs: botMsgs.length,
+    lastActive, topics, fbUp, fbDown, recentDown, hours, avgRespChars,
+  };
+}
+
+function render(d, isServer) {
+  if (!d.totalConvos && !d.totalMsgs) {
+    root.innerHTML = `
+      <div class="aa-empty">
+        <h3>No data yet</h3>
+        <p>Once people chat with Helper Bot, their interactions will appear here.</p>
+      </div>`;
+    return;
+  }
+
+  const topicEntries = Object.entries(d.topics || {})
+    .filter(([, n]) => n > 0)
+    .sort((a, b) => b[1] - a[1]);
+  const maxTopic = topicEntries.length ? topicEntries[0][1] : 1;
+
+  const totalFb = (d.fbUp || 0) + (d.fbDown || 0);
+  const upPct   = totalFb ? Math.round(100 * (d.fbUp || 0) / totalFb) : 0;
+
+  const lastActive = d.lastActive
+    ? new Date(d.lastActive).toLocaleString()
+    : '—';
+
+  const maxHour = d.hours ? Math.max(...d.hours, 1) : 1;
+
+  root.innerHTML = `
+    <header class="aa-head">
+      <div>
+        <h1>Helper Bot Analytics</h1>
+        <p>Topics, feedback, and timing of conversations${isServer ? ' across all users' : ' on this device'}.</p>
+      </div>
+      <span class="aa-source-pill ${isServer ? 'is-server' : ''}">
+        ${isServer ? 'Server-aggregated' : 'Local (this browser only)'}
+      </span>
+    </header>
+
+    <div class="aa-grid">
+      <div class="aa-stat">
+        <div class="aa-stat-label">Conversations</div>
+        <div class="aa-stat-value">${d.totalConvos || 0}</div>
+        <div class="aa-stat-trend">${d.totalConvos === 1 ? '1 thread' : (d.totalConvos || 0) + ' threads'}</div>
+      </div>
+      <div class="aa-stat">
+        <div class="aa-stat-label">Messages</div>
+        <div class="aa-stat-value">${d.totalMsgs || 0}</div>
+        <div class="aa-stat-trend">${d.userMsgs || 0} from users · ${d.botMsgs || 0} from bot</div>
+      </div>
+      <div class="aa-stat">
+        <div class="aa-stat-label">Avg response</div>
+        <div class="aa-stat-value">${d.avgRespChars || 0}<span style="font-size:.78rem;color:#5a6975;font-weight:600;"> chars</span></div>
+        <div class="aa-stat-trend">Across all assistant messages</div>
+      </div>
+      <div class="aa-stat">
+        <div class="aa-stat-label">Last activity</div>
+        <div class="aa-stat-value" style="font-size:1.05rem;">${escapeHtml(lastActive)}</div>
+        <div class="aa-stat-trend">Most recent message</div>
+      </div>
+    </div>
+
+    <div class="aa-row">
+      <div class="aa-card">
+        <h2>Top topics <span class="aa-card-sub">${topicEntries.length} clusters</span></h2>
+        ${topicEntries.length ? topicEntries.map(([t, n]) => `
+          <div class="aa-bar-row">
+            <span class="aa-bar-label">${escapeHtml(t)}</span>
+            <span class="aa-bar-track"><span class="aa-bar-fill" style="width:${Math.round(100 * n / maxTopic)}%"></span></span>
+            <span class="aa-bar-count">${n}</span>
+          </div>`).join('') : '<p class="aa-stat-trend">No topics tagged yet.</p>'}
+      </div>
+
+      <div class="aa-card">
+        <h2>Feedback <span class="aa-card-sub">${totalFb} ratings</span></h2>
+        <div class="aa-feedback">
+          <div class="aa-feedback-cell up">
+            <div class="v">${d.fbUp || 0}</div>
+            <div class="l">Helpful</div>
+          </div>
+          <div class="aa-feedback-cell down">
+            <div class="v">${d.fbDown || 0}</div>
+            <div class="l">Not helpful</div>
+          </div>
+        </div>
+        ${totalFb ? `<div class="aa-stat-trend ${upPct >= 70 ? 'is-good' : (upPct >= 40 ? '' : 'is-warn')}" style="text-align:center;">${upPct}% positive overall</div>` : '<p class="aa-stat-trend">No ratings yet.</p>'}
+
+        ${(d.recentDown && d.recentDown.length) ? `
+          <h2 style="margin-top:18px;">Recent not-helpful</h2>
+          <ul class="aa-recent">
+            ${d.recentDown.map(m => `
+              <li>
+                <div class="meta">${escapeHtml(new Date(m.timestamp).toLocaleString())}</div>
+                ${escapeHtml((m.content || '').slice(0, 220))}${(m.content || '').length > 220 ? '…' : ''}
+              </li>`).join('')}
+          </ul>` : ''}
+      </div>
+    </div>
+
+    <div class="aa-card">
+      <h2>Activity by hour of day <span class="aa-card-sub">user messages</span></h2>
+      <div class="aa-hour-grid">
+        ${(d.hours || []).map(n => {
+          const h = Math.round(100 * n / maxHour);
+          return `<div class="aa-hour-cell" title="${n} messages"><span class="fill" style="height:${h}%"></span></div>`;
+        }).join('')}
+      </div>
+      <div class="aa-hour-axis">
+        ${Array.from({ length: 24 }, (_, i) => i % 3 === 0 ? `<span>${i}</span>` : '<span></span>').join('')}
+      </div>
+    </div>
+
+    <div class="aa-actions" style="margin-top:18px;">
+      <button class="aa-btn" id="aa-refresh">Refresh</button>
+      <button class="aa-btn primary" id="aa-export-data">Export raw data</button>
+      <a class="aa-btn" href="${'{{ "/pages/admin.html" | relative_url }}'}">← Admin Dashboard</a>
+    </div>
+  `;
+
+  document.getElementById('aa-refresh').addEventListener('click', () => location.reload());
+  document.getElementById('aa-export-data').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `pnec-helper-bot-analytics-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+}
+</script>

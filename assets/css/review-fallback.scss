@@ -1,0 +1,8 @@
+---
+---
+/* Minimal offline review fallback; no overflow clipping or hidden content.
+   The original site relies on external WordPress CSS for these media bounds. */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; }
+img, video, iframe { max-width: 100%; height: auto; }
+.raven-post-image { display: block; }

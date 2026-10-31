@@ -1,0 +1,475 @@
+---
+layout: pnec-base
+title: "Map Hotspot Editor — PNEC Admin"
+description: "Drag-and-drop reposition for each of the 60 neighborhood hotspots on the Poway emergency map. Fixes wrong popup positions permanently."
+body_class: inner-page admin-map-hotspots-page
+permalink: /pages/admin-map-hotspots.html
+---
+
+<style>
+{{ '@import "beasts/inline/pages/pages-admin-map-hotspots-1";' | scssify }}
+</style>
+
+<!-- ─── Auth gate ─────────────────────────────────────────── -->
+<div id="amh-gate" class="amh-shell" style="display:none; grid-template-columns:1fr;">
+  <div class="amh-auth-card">
+    <h2>Map hotspot editor</h2>
+    <p>Drag each neighborhood's marker to its correct position on the emergency map. Enter your administrator account to continue.</p>
+    <p><a href="{{ "/pages/register.html#login" | relative_url }}">Sign in with administrator account</a></p>
+    <label for="amh-key-input">Administrator account</label>
+    <input id="amh-key-input" type="hidden" autocomplete="current-password" placeholder="Paste administrator account" />
+    <div style="display:flex; gap:10px; margin-top:14px;">
+      <button id="amh-key-submit" class="amh-btn is-primary" type="button" style="flex:1;">Unlock</button>
+      <a href="{{ '/pages/admin.html' | relative_url }}" class="amh-btn" style="text-decoration:none;">Cancel</a>
+    </div>
+    <div id="amh-key-err" class="amh-auth-err" role="status" aria-live="polite"></div>
+  </div>
+</div>
+
+<!-- ─── Main UI ───────────────────────────────────────────── -->
+<div id="amh-app" style="display:none;">
+  <div class="amh-topbar">
+    <div>
+      <h1>Map hotspot editor</h1>
+      <p class="sub">
+        Drag any marker to reposition. Right-click a marker for a quick action.
+        <span id="amh-warn-count"></span>
+      </p>
+    </div>
+    <div class="amh-actions">
+      <span id="amh-status" class="amh-status-pill is-clean">No changes</span>
+      <a href="{{ '/pages/find-your-neighborhood.html' | relative_url }}" target="_blank" rel="noopener" class="amh-btn">Open live map ↗</a>
+      <button id="amh-revert" class="amh-btn" type="button">Discard changes</button>
+      <button id="amh-save"   class="amh-btn is-primary" type="button">Save changes</button>
+    </div>
+  </div>
+
+  <div class="amh-shell">
+    <!-- Map stage -->
+    <div class="amh-stage-wrap">
+      <div class="amh-stage" id="amh-stage">
+        <picture>
+          <source srcset="{{ '/images/pnec/emergency-neighborhood-map.webp' | relative_url }}" type="image/webp">
+          <img src="{{ '/images/pnec/emergency-neighborhood-map.png' | relative_url }}"
+               alt="Poway Emergency Neighborhood Map" decoding="async" />
+        </picture>
+        <svg id="amh-svg" viewBox="0 0 1376 1844" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+    </div>
+
+    <!-- Side panel -->
+    <aside class="amh-panel">
+      <h2>Neighborhoods</h2>
+      <p class="hint">
+        Click an entry to highlight + scroll to its marker. Markers flagged <strong>⚠</strong> have their hotspot on a white / off-map area —
+        likely wrong, fix these first. Drag to a new position to update.
+      </p>
+      <input id="amh-filter" class="amh-filter" type="search" placeholder="Filter by name or number…" />
+      <ul id="amh-list" class="amh-list" role="listbox"></ul>
+
+      <div id="amh-card" class="amh-card" hidden>
+        <h3 id="amh-card-title">—</h3>
+        <div class="coords"><span id="amh-card-coords">—</span></div>
+        <div class="actions">
+          <button id="amh-card-center"  class="amh-btn" type="button">Center on map</button>
+          <button id="amh-card-reset"   class="amh-btn is-ghost" type="button">Reset this one</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div id="amh-toast" class="amh-toast" role="status" aria-live="polite"></div>
+
+<script>
+function pnecAdminToken() {
+  return localStorage.getItem("pnec_token") || sessionStorage.getItem("pnec_token") || "";
+}
+
+(function () {
+  'use strict';
+
+  // ─── Config ────────────────────────────────────────────────────
+  var API_BASE = (window.PNEC_API_BASE || (
+    location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+      ? 'http://127.0.0.1:8425'
+      : 'https://api.pnec-review.invalid'
+  )).replace(/\/+$/, '');
+  var FILE_PATH = 'assets/data/poway-neighborhoods.json';
+  // Map image dimensions (matches the SVG viewBox)
+  var MAP_W = 1376, MAP_H = 1844;
+  // Where on the full image the actual MAP region lives (legend + title
+  // are trimmed). Same constants the data extractor used.
+  var MAP_Y_TOP = 0.04, MAP_Y_BOT = 0.89;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var gate  = $('amh-gate');
+  var app   = $('amh-app');
+  var keyIn = $('amh-key-input');
+  var keyBtn= $('amh-key-submit');
+  var keyErr= $('amh-key-err');
+  var svg   = $('amh-svg');
+  var stage = $('amh-stage');
+  var listEl= $('amh-list');
+  var filterEl = $('amh-filter');
+  var statusEl = $('amh-status');
+  var warnEl   = $('amh-warn-count');
+  var cardEl   = $('amh-card');
+  var cardTitle= $('amh-card-title');
+  var cardCoords = $('amh-card-coords');
+  var toastEl  = $('amh-toast');
+  var saveBtn  = $('amh-save');
+  var revBtn   = $('amh-revert');
+
+  // ─── State ─────────────────────────────────────────────────────
+  var adminKey = '';
+  var data = null;            // full JSON
+  var initialData = null;     // for revert
+  var fileSha = null;
+  var dirty = false;
+  var selectedId = null;
+  var draggingId = null;
+  var hotspotEls = {};
+
+  function getCachedKey() { try { return pnecAdminToken(); } catch(_) { return ''; } }
+  function setCachedKey(k) { /* Normal login owns token storage. */ }
+  function apiHeaders() { return { 'Accept':'application/json', 'Authorization': 'Bearer ' + adminKey }; }
+
+  // ─── Toast ─────────────────────────────────────────────────────
+  var toastTimer;
+  function toast(msg, isErr) {
+    toastEl.textContent = msg;
+    toastEl.classList.toggle('is-err', !!isErr);
+    toastEl.classList.add('is-shown');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.classList.remove('is-shown'); }, 2600);
+  }
+
+  // ─── Auth ──────────────────────────────────────────────────────
+  function showGate(err) {
+    gate.style.display = ''; app.style.display = 'none';
+    keyErr.textContent = err || '';
+    setTimeout(function(){ keyIn.focus(); }, 30);
+  }
+  function showApp() { gate.style.display = 'none'; app.style.display = ''; }
+
+  function tryUnlock(key) {
+    key = pnecAdminToken();
+    if (!key) { showGate('Please sign in with an administrator account first.'); return; }
+    adminKey = key; keyErr.textContent = 'Checking…'; keyBtn.disabled = true;
+    fetch(API_BASE + '/api/admin/publish/health', { headers: apiHeaders() })
+      .then(function(r){
+        if (r.status === 401 || r.status === 403) throw new Error('Administrator login required.');
+        if (r.status === 404) throw new Error('Backend missing /api/admin/publish/health. Redeploy the Flask container.');
+        if (!r.ok) throw new Error('Server returned ' + r.status + '.');
+        return r.json();
+      })
+      .then(function(){ setCachedKey(adminKey); keyErr.textContent=''; keyBtn.disabled=false; showApp(); loadData(); })
+      .catch(function(e){
+        keyBtn.disabled = false; adminKey = '';
+        var msg = (e && e.message) || 'Could not reach the API.';
+        if (msg.indexOf('Failed to fetch') !== -1) msg = 'Could not reach the API at ' + API_BASE + '.';
+        keyErr.textContent = msg;
+      });
+  }
+  keyBtn.addEventListener('click', function(){ tryUnlock(keyIn.value.trim()); });
+  keyIn.addEventListener('keydown', function(e){ if (e.key === 'Enter') tryUnlock(keyIn.value.trim()); });
+
+  // ─── Load + save ───────────────────────────────────────────────
+  function loadData() {
+    statusEl.textContent = 'Loading…';
+    fetch(API_BASE + '/api/admin/publish/file?path=' + encodeURIComponent(FILE_PATH), { headers: apiHeaders() })
+      .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function(j){
+        fileSha = j.sha || null;
+        data = JSON.parse(j.content);
+        initialData = JSON.parse(j.content);
+        render(); markClean();
+      })
+      .catch(function(e){ toast('Load failed: ' + e.message, true); statusEl.textContent = 'Load failed'; });
+  }
+
+  function save() {
+    if (!dirty) { toast('Nothing to save.'); return; }
+    saveBtn.disabled = true; revBtn.disabled = true;
+    statusEl.className = 'amh-status-pill is-saving'; statusEl.textContent = 'Saving…';
+
+    var body = {
+      path: FILE_PATH,
+      content: JSON.stringify(data, null, 2),
+      message: 'chore(map): update neighborhood hotspots via admin-map-hotspots UI',
+      expected_sha: fileSha || ''
+    };
+    fetch(API_BASE + '/api/admin/publish/file', {
+      method:'POST',
+      headers: Object.assign({}, apiHeaders(), { 'Content-Type':'application/json' }),
+      body: JSON.stringify(body)
+    })
+      .then(function(r){ return r.json().then(function(j){ return { ok:r.ok, j:j, status:r.status }; }); })
+      .then(function(res){
+        saveBtn.disabled = false; revBtn.disabled = false;
+        if (!res.ok) {
+          if (res.status === 409) { toast('Someone else updated the file. Reloading…', true); setTimeout(loadData, 600); return; }
+          throw new Error((res.j && (res.j.detail || res.j.error)) || ('Save failed (HTTP ' + res.status + ').'));
+        }
+        fileSha = (res.j && (res.j.file_sha || res.j.sha || res.j.content_sha)) || fileSha;
+        initialData = JSON.parse(JSON.stringify(data));
+        markClean();
+        toast('Saved. Live after next build (~1–2 min).');
+      })
+      .catch(function(e){
+        saveBtn.disabled = false; revBtn.disabled = false;
+        statusEl.className = 'amh-status-pill is-dirty'; statusEl.textContent = 'Save failed';
+        toast(e.message || 'Save failed.', true);
+      });
+  }
+  saveBtn.addEventListener('click', save);
+  revBtn.addEventListener('click', function(){
+    if (!dirty) return;
+    if (!confirm('Discard your unsaved hotspot changes?')) return;
+    data = JSON.parse(JSON.stringify(initialData));
+    render(); markClean();
+  });
+  document.addEventListener('keydown', function(e){
+    if ((e.metaKey || e.ctrlKey) && (e.key === 's' || e.key === 'S')) {
+      if (app.style.display === '') { e.preventDefault(); save(); }
+    }
+  });
+  window.addEventListener('beforeunload', function(e){
+    if (dirty && app.style.display === '') { e.preventDefault(); e.returnValue = ''; }
+  });
+
+  // ─── Render ────────────────────────────────────────────────────
+  function render() {
+    // Clear SVG
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    hotspotEls = {};
+
+    var nbhs = (data && data.neighborhoods) || [];
+    // Draw small octagon polygons (visual feedback) + hotspot circles
+    nbhs.forEach(function(n){
+      // x,y are normalized to the FULL image (incl. title + legend bands).
+      // SVG viewBox is 1376×1844 — so just multiply.
+      var px = n.x * MAP_W, py = n.y * MAP_H;
+
+      // Polygon outline (faint) — uses the stored polygon
+      if (Array.isArray(n.polygon) && n.polygon.length >= 3) {
+        var poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        var pts = n.polygon.map(function(pp){ return (pp[0]*MAP_W) + ',' + (pp[1]*MAP_H); }).join(' ');
+        poly.setAttribute('points', pts);
+        poly.setAttribute('fill', 'rgba(20,90,50,0.10)');
+        poly.setAttribute('stroke', 'rgba(20,90,50,0.45)');
+        poly.setAttribute('stroke-width', '2');
+        poly.setAttribute('data-poly-for', n.id);
+        svg.appendChild(poly);
+      }
+
+      // Hotspot circle (the draggable marker)
+      var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('cx', px); c.setAttribute('cy', py);
+      c.setAttribute('r', 11);
+      c.setAttribute('fill', '#fbbf24');
+      c.setAttribute('stroke', '#0a1628');
+      c.setAttribute('stroke-width', '2');
+      c.setAttribute('class', 'amh-hotspot');
+      c.setAttribute('data-id', n.id);
+      svg.appendChild(c);
+
+      // Number label
+      var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      t.setAttribute('x', px); t.setAttribute('y', py);
+      t.setAttribute('class', 'amh-hotspot-label');
+      t.textContent = String(n.number);
+      svg.appendChild(t);
+
+      hotspotEls[n.id] = { circle: c, label: t, polygon: poly };
+
+      // Mark as warning if hotspot is outside the map region (legend / title)
+      var inMap = (n.y > MAP_Y_TOP && n.y < MAP_Y_BOT);
+      if (!inMap) c.classList.add('is-warning');
+
+      bindHotspotDrag(c, n);
+    });
+
+    renderList();
+    updateWarningCount();
+  }
+
+  function renderList() {
+    var q = (filterEl.value || '').trim().toLowerCase();
+    var nbhs = (data && data.neighborhoods) || [];
+    var filtered = !q ? nbhs : nbhs.filter(function(n){
+      return String(n.number).indexOf(q) !== -1 ||
+             (n.name || '').toLowerCase().indexOf(q) !== -1;
+    });
+    listEl.innerHTML = '';
+    filtered.forEach(function(n){
+      var li = document.createElement('li');
+      li.setAttribute('data-id', n.id);
+      if (n.id === selectedId) li.classList.add('is-selected');
+      var inMap = (n.y > MAP_Y_TOP && n.y < MAP_Y_BOT);
+      if (!inMap) li.classList.add('is-warning');
+      li.innerHTML = '<span class="amh-list-num">#' + n.number + '</span>' +
+                     '<span>' + escapeHtml(n.name) + '</span>';
+      li.addEventListener('click', function(){ selectNeighborhood(n.id); });
+      listEl.appendChild(li);
+    });
+  }
+  filterEl.addEventListener('input', renderList);
+
+  function updateWarningCount() {
+    var nbhs = (data && data.neighborhoods) || [];
+    var warn = nbhs.filter(function(n){ return !(n.y > MAP_Y_TOP && n.y < MAP_Y_BOT); }).length;
+    warnEl.textContent = warn ? (' · ' + warn + ' marker' + (warn===1?'':'s') + ' need fixing') : '';
+  }
+
+  function selectNeighborhood(id) {
+    selectedId = id;
+    // Update list selection
+    Array.prototype.forEach.call(listEl.children, function(li){
+      li.classList.toggle('is-selected', li.getAttribute('data-id') == id);
+    });
+    // Highlight on SVG
+    Object.keys(hotspotEls).forEach(function(k){
+      hotspotEls[k].circle.classList.toggle('is-selected', String(k) === String(id));
+    });
+    // Show card
+    var n = (data.neighborhoods || []).find(function(x){ return x.id == id; });
+    if (!n) { cardEl.hidden = true; return; }
+    cardEl.hidden = false;
+    cardTitle.textContent = '#' + n.number + ' · ' + n.name;
+    cardCoords.textContent = 'x=' + n.x.toFixed(4) + '  y=' + n.y.toFixed(4);
+    // Scroll selected marker into view if needed
+    try { hotspotEls[id].circle.scrollIntoView({ behavior:'smooth', block:'center' }); } catch(_) {}
+  }
+
+  $('amh-card-center').addEventListener('click', function(){
+    if (!selectedId) return;
+    try { hotspotEls[selectedId].circle.scrollIntoView({ behavior:'smooth', block:'center' }); } catch(_) {}
+  });
+  $('amh-card-reset').addEventListener('click', function(){
+    if (!selectedId) return;
+    var orig = (initialData.neighborhoods || []).find(function(x){ return x.id == selectedId; });
+    var cur  = (data.neighborhoods || []).find(function(x){ return x.id == selectedId; });
+    if (!orig || !cur) return;
+    cur.x = orig.x; cur.y = orig.y; cur.polygon = orig.polygon.map(function(p){ return p.slice(); });
+    render(); selectNeighborhood(selectedId); markDirty();
+  });
+
+  // ─── Drag handling ─────────────────────────────────────────────
+  function bindHotspotDrag(circle, n) {
+    var dragging = false;
+    function onDown(e) {
+      e.preventDefault();
+      dragging = true;
+      draggingId = n.id;
+      circle.classList.add('is-dragging');
+      selectNeighborhood(n.id);
+      document.addEventListener('pointermove', onMove);
+      document.addEventListener('pointerup', onUp, { once: true });
+    }
+    function onMove(e) {
+      if (!dragging) return;
+      var pt = clientToSvg(e.clientX, e.clientY);
+      if (!pt) return;
+      // Clamp to SVG viewBox
+      pt.x = Math.max(0, Math.min(MAP_W, pt.x));
+      pt.y = Math.max(0, Math.min(MAP_H, pt.y));
+      n.x = +(pt.x / MAP_W).toFixed(5);
+      n.y = +(pt.y / MAP_H).toFixed(5);
+      // Move the marker + label
+      circle.setAttribute('cx', pt.x);
+      circle.setAttribute('cy', pt.y);
+      hotspotEls[n.id].label.setAttribute('x', pt.x);
+      hotspotEls[n.id].label.setAttribute('y', pt.y);
+      // Refresh polygon to a small octagon around the new position
+      n.polygon = octagon(n.x, n.y);
+      if (hotspotEls[n.id].polygon) {
+        hotspotEls[n.id].polygon.setAttribute(
+          'points',
+          n.polygon.map(function(p){ return (p[0]*MAP_W) + ',' + (p[1]*MAP_H); }).join(' ')
+        );
+      }
+      // Update warning state
+      var inMap = (n.y > MAP_Y_TOP && n.y < MAP_Y_BOT);
+      circle.classList.toggle('is-warning', !inMap);
+      cardCoords.textContent = 'x=' + n.x.toFixed(4) + '  y=' + n.y.toFixed(4);
+      markDirty();
+    }
+    function onUp() {
+      dragging = false; draggingId = null;
+      circle.classList.remove('is-dragging');
+      document.removeEventListener('pointermove', onMove);
+      // Re-render the list to clear/add warning chip
+      renderList(); updateWarningCount();
+    }
+    circle.addEventListener('pointerdown', onDown);
+  }
+
+  function clientToSvg(cx, cy) {
+    var rect = svg.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return null;
+    // SVG uses preserveAspectRatio=xMidYMid meet — compute the actual
+    // displayed area within the SVG bounding rect.
+    var viewAspect = MAP_W / MAP_H;
+    var rectAspect = rect.width / rect.height;
+    var dispW, dispH, offX, offY;
+    if (rectAspect > viewAspect) {
+      dispH = rect.height; dispW = dispH * viewAspect;
+      offX = (rect.width - dispW) / 2; offY = 0;
+    } else {
+      dispW = rect.width; dispH = dispW / viewAspect;
+      offX = 0; offY = (rect.height - dispH) / 2;
+    }
+    var rx = cx - rect.left - offX;
+    var ry = cy - rect.top  - offY;
+    return {
+      x: (rx / dispW) * MAP_W,
+      y: (ry / dispH) * MAP_H,
+    };
+  }
+
+  function octagon(cx, cy, r) {
+    r = r || 0.018;
+    var pts = [];
+    for (var i = 0; i < 8; i++) {
+      var a = 2 * Math.PI * i / 8;
+      pts.push([
+        +(cx + r * Math.cos(a)).toFixed(5),
+        +(cy + r * Math.sin(a)).toFixed(5)
+      ]);
+    }
+    return pts;
+  }
+
+  function markDirty() {
+    dirty = true;
+    statusEl.className = 'amh-status-pill is-dirty';
+    statusEl.textContent = 'Unsaved changes';
+  }
+  function markClean() {
+    dirty = false;
+    statusEl.className = 'amh-status-pill is-clean';
+    statusEl.textContent = 'No changes';
+  }
+
+  function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // ─── Boot ──────────────────────────────────────────────────────
+  var cached = getCachedKey();
+  if (cached) {
+    adminKey = cached;
+    fetch(API_BASE + '/api/admin/publish/health', { headers: apiHeaders() })
+      .then(function(r){
+        if (r.ok) { showApp(); loadData(); return; }
+        adminKey = ''; setCachedKey('');
+        showGate(r.status === 401 || r.status === 403 ? 'Cached administrator account is no longer valid.' : '');
+      })
+      .catch(function(){ showGate(); });
+  } else {
+    showGate();
+  }
+})();
+</script>

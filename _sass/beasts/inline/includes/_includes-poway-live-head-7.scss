@@ -1,0 +1,38 @@
+// Migrated from _includes/poway-live-head.html; preserve selector order and runtime tokens.
+@import "beasts/foundation/tokens";
+@import "beasts/foundation/responsive";
+
+.elementor-2820 .elementor-nav-menu--main .elementor-nav-menu,
+  .elementor-22 .elementor-nav-menu--main .elementor-nav-menu {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .elementor-2820 .elementor-nav-menu--main .elementor-nav-menu > li,
+  .elementor-22 .elementor-nav-menu--main .elementor-nav-menu > li {
+    flex: 0 0 auto;
+  }
+
+  .elementor-2820 .elementor-nav-menu--main .elementor-nav-menu > li > a,
+  .elementor-22 .elementor-nav-menu--main .elementor-nav-menu > li > a {
+    white-space: nowrap;
+    font-size: 11px;
+    line-height: 1.1;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  @media (max-width: 1400px) {
+    .elementor-2820 .elementor-nav-menu--main .elementor-nav-menu,
+    .elementor-22 .elementor-nav-menu--main .elementor-nav-menu {
+      gap: 8px;
+    }
+
+    .elementor-2820 .elementor-nav-menu--main .elementor-nav-menu > li > a,
+    .elementor-22 .elementor-nav-menu--main .elementor-nav-menu > li > a {
+      font-size: 10px;
+    }
+  }

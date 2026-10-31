@@ -1,0 +1,29 @@
+// main.scss
+// PNEC Design System ? Entry point
+// Imports all partials in dependency order
+
+// 1. Variables (must be first ? all partials reference these)
+@import "variables";
+
+// 2. Base resets and typography
+@import "base";
+
+// 3. Layout components
+@import "navbar";
+@import "footer";
+
+// 4. UI components (buttons, cards, forms, badges)
+@import "components";
+
+// 5. Feature-specific styles
+@import "homepage";
+// _chatbot.scss removed in v3 — the new chatbot ships its own
+// stylesheet at assets/css/chatbot.css and uses .pnec-bot-* selectors.
+// The v2 .chatbot-trigger / .chatbot-panel rules were 489 lines of dead
+// CSS shipped on every page.
+@import "pages";
+
+// 6. v2.41 — site-wide polish layer (smooth scroll, hover lifts, focus rings,
+// scroll-reveal, gradient selection, etc.). Imported LAST so it overrides
+// earlier rules where needed.
+@import "polish";

@@ -1,0 +1,112 @@
+---
+layout: pnec-base
+title: "Blog Post"
+description: "Read the latest posts from the Poway Neighborhood Emergency Corps."
+use_poway_live_styles: true
+use_poway_source_clone: true
+head_scss: "beasts/inline/pages/pages-blog-post-1"
+---
+
+<div class="bp-wrap" id="bp-wrap">
+  <div class="bp-loading" id="bp-loading">Loading post…</div>
+</div>
+
+<script>
+(function() {
+  var base = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+    ? 'http://127.0.0.1:8425'
+    : 'https://api.pnec-review.invalid';
+
+  var blogListUrl = (location.pathname.includes('/Beasts_FrontEnd') || location.pathname.startsWith('/Beasts'))
+    ? '/Beasts_FrontEnd/pages/blog.html'
+    : '/pages/blog.html';
+
+  var adminUrl = (location.pathname.includes('/Beasts_FrontEnd') || location.pathname.startsWith('/Beasts'))
+    ? '/Beasts_FrontEnd/pages/admin.html'
+    : '/pages/admin.html';
+
+  var params = new URLSearchParams(location.search);
+  var slug   = params.get('slug');
+
+  if (!slug) { showError('No post specified.'); return; }
+
+  var token = localStorage.getItem('pnec_token');
+  var user  = JSON.parse(localStorage.getItem('pnec_user') || 'null');
+  var isAdmin = user && user.role === 'admin';
+
+  var headers = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+
+  fetch(base + '/api/blog/' + encodeURIComponent(slug), { credentials: 'include', headers: headers })
+    .then(function(r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    })
+    .then(function(data) {
+      var p = data.post;
+      if (!p) { showError('Post not found.'); return; }
+
+      document.title = p.title + ' — PNEC Blog';
+
+      var html = '';
+
+      if (isAdmin) {
+        html += '<div class="bp-admin-bar">'
+          + '<span>⚠️ Admin view' + (!p.published ? ' — this post is a <strong>draft</strong> (not visible to the public)' : '') + '</span>'
+          + '<button class="bp-btn bp-btn-edit" onclick="editPost(' + p.id + ')">Edit</button>'
+          + '<button class="bp-btn bp-btn-delete" onclick="deletePost(' + p.id + ',\'' + _esc(p.slug) + '\')">Delete</button>'
+          + '</div>';
+      }
+
+      html += '<a class="bp-back" href="' + blogListUrl + '">← Back to Blog</a>';
+
+      if (p.cover_image_url) {
+        html += '<img class="bp-cover" src="' + _esc(p.cover_image_url) + '" alt="">';
+      }
+
+      html += '<div class="bp-meta">' + fmt(p.created_at) + '</div>';
+      html += '<h1 class="bp-title">' + _esc(p.title) + '</h1>';
+      html += '<div class="bp-byline">By ' + _esc(p.author_name || 'PNEC Team') + '</div>';
+      html += '<div class="bp-content">' + (p.content || '') + '</div>';
+
+      document.getElementById('bp-wrap').innerHTML = html;
+    })
+    .catch(function(e) {
+      if (e.message === '404') showError('Post not found.');
+      else showError('Could not load this post. Please try again.');
+    });
+
+  function showError(msg) {
+    document.getElementById('bp-wrap').innerHTML =
+      '<a class="bp-back" href="' + blogListUrl + '">← Back to Blog</a>'
+      + '<div class="bp-error"><h2>Oops</h2><p>' + msg + '</p></div>';
+  }
+
+  function fmt(iso) {
+    if (!iso) return '';
+    try { return new Date(iso).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' }); }
+    catch(e) { return ''; }
+  }
+
+  function _esc(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  window.editPost = function(id) {
+    window.location.href = adminUrl + '#blog-edit-' + id;
+  };
+
+  window.deletePost = function(id, slug) {
+    if (!confirm('Delete this post? This cannot be undone.')) return;
+    var h = { 'Content-Type': 'application/json' };
+    var tok = localStorage.getItem('pnec_token');
+    if (tok) h['Authorization'] = 'Bearer ' + tok;
+    fetch(base + '/api/blog/' + id, { method: 'DELETE', credentials: 'include', headers: h })
+      .then(function(r) {
+        if (r.ok) window.location.href = blogListUrl;
+        else alert('Failed to delete post.');
+      })
+      .catch(function() { alert('Network error. Please try again.'); });
+  };
+})();
+</script>

@@ -1,0 +1,113 @@
+{
+  "standalone": [
+    {
+      "old": "assets/css/poway-neighborhood-map.css",
+      "entry": "assets/css/poway-neighborhood-map.scss",
+      "partial": "_sass/beasts/pnec/_poway-neighborhood-map.scss"
+    },
+    {
+      "old": "assets/css/community-tools.css",
+      "entry": "assets/css/community-tools.scss",
+      "partial": "_sass/beasts/pnec/_community-tools.scss"
+    },
+    {
+      "old": "assets/css/poway-unified-ui.css",
+      "entry": "assets/css/poway-unified-ui.scss",
+      "partial": "_sass/beasts/pnec/_poway-unified-ui.scss"
+    },
+    {
+      "old": "assets/css/footer-polish.css",
+      "entry": "assets/css/footer-polish.scss",
+      "partial": "_sass/beasts/layout/_footer-polish.scss"
+    },
+    {
+      "old": "assets/css/chatbot.css",
+      "entry": "assets/css/chatbot.scss",
+      "partial": "_sass/beasts/pnec/_chatbot.scss"
+    },
+    {
+      "old": "assets/css/cms-sections.css",
+      "entry": "assets/css/cms-sections.scss",
+      "partial": "_sass/beasts/pnec/_cms-sections.scss"
+    }
+  ],
+  "static_html": [
+    {
+      "file": "pages/about.html",
+      "block": 1,
+      "entry": "assets/css/beasts/pages-about-1.scss",
+      "url": "assets/css/beasts/pages-about-1.css",
+      "partial": "_sass/beasts/static-pages/_pages-about-1.scss"
+    },
+    {
+      "file": "pages/about.html",
+      "block": 2,
+      "entry": "assets/css/beasts/pages-about-2.scss",
+      "url": "assets/css/beasts/pages-about-2.css",
+      "partial": "_sass/beasts/static-pages/_pages-about-2.scss"
+    },
+    {
+      "file": "pages/about.html",
+      "block": 8,
+      "entry": "assets/css/beasts/pages-about-8.scss",
+      "url": "assets/css/beasts/pages-about-8.css",
+      "partial": "_sass/beasts/static-pages/_pages-about-8.scss"
+    },
+    {
+      "file": "pages/about.html",
+      "block": 9,
+      "entry": "assets/css/beasts/pages-about-9.scss",
+      "url": "assets/css/beasts/pages-about-9.css",
+      "partial": "_sass/beasts/static-pages/_pages-about-9.scss"
+    },
+    {
+      "file": "pages/contact.html",
+      "block": 1,
+      "entry": "assets/css/beasts/pages-contact-1.scss",
+      "url": "assets/css/beasts/pages-contact-1.css",
+      "partial": "_sass/beasts/static-pages/_pages-contact-1.scss"
+    },
+    {
+      "file": "pages/contact.html",
+      "block": 7,
+      "entry": "assets/css/beasts/pages-contact-7.scss",
+      "url": "assets/css/beasts/pages-contact-7.css",
+      "partial": "_sass/beasts/static-pages/_pages-contact-7.scss"
+    },
+    {
+      "file": "pages/contact.html",
+      "block": 8,
+      "entry": "assets/css/beasts/pages-contact-8.scss",
+      "url": "assets/css/beasts/pages-contact-8.css",
+      "partial": "_sass/beasts/static-pages/_pages-contact-8.scss"
+    },
+    {
+      "file": "pages/programs-and-services.html",
+      "block": 1,
+      "entry": "assets/css/beasts/pages-programs-and-services-1.scss",
+      "url": "assets/css/beasts/pages-programs-and-services-1.css",
+      "partial": "_sass/beasts/static-pages/_pages-programs-and-services-1.scss"
+    },
+    {
+      "file": "pages/programs-and-services.html",
+      "block": 2,
+      "entry": "assets/css/beasts/pages-programs-and-services-2.scss",
+      "url": "assets/css/beasts/pages-programs-and-services-2.css",
+      "partial": "_sass/beasts/static-pages/_pages-programs-and-services-2.scss"
+    },
+    {
+      "file": "pages/programs-and-services.html",
+      "block": 8,
+      "entry": "assets/css/beasts/pages-programs-and-services-8.scss",
+      "url": "assets/css/beasts/pages-programs-and-services-8.css",
+      "partial": "_sass/beasts/static-pages/_pages-programs-and-services-8.scss"
+    },
+    {
+      "file": "pages/programs-and-services.html",
+      "block": 9,
+      "entry": "assets/css/beasts/pages-programs-and-services-9.scss",
+      "url": "assets/css/beasts/pages-programs-and-services-9.css",
+      "partial": "_sass/beasts/static-pages/_pages-programs-and-services-9.scss"
+    }
+  ]
+}

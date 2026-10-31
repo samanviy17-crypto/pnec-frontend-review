@@ -1,0 +1,360 @@
+// Migrated from assets/css/footer-polish.css; preserve selector order and runtime tokens.
+@import "beasts/foundation/tokens";
+@import "beasts/foundation/responsive";
+
+/* ──────────────────────────────────────────────────────────────────────
+   footer-polish.css  (v3.11 — site-cream + brand-green, properly lit)
+
+   Why this file (and not _sass/_polish.scss)?
+   The home page sets `use_poway_source_clone: true`, which causes the
+   layout to skip /assets/css/main.css entirely (so polish.scss never
+   loads there). This file is linked unconditionally from pnec-base.html
+   so the footer overhaul applies on EVERY page.
+
+   v3.11 changes (user feedback round 2: "make them warm lighter
+   colors, also match the colors of the actual website"):
+   ───────────────────────────────────────────────────────────────
+   The previous v3.10 had two real bugs the screenshot exposed:
+
+   1. Individual `.elementor-section` blocks inside .jupiterx-footer
+      kept their dark-classic Elementor backgrounds. The cream
+      gradient I set on the OUTER `.jupiterx-footer` was masked by
+      three inner sections (81b1d56 / 098aa0d / cd04838) which each
+      have `background_background:classic` baked in via inline data
+      and a matching dark-color CSS rule from the WP stylesheet.
+
+      Fix: force `background: transparent !important` on
+      `.jupiterx-footer .elementor-section` AND
+      `.jupiterx-footer .elementor-widget-wrap.elementor-element-populated`
+      AND zero out every section's `--background-color`. Three
+      attack vectors because Elementor uses all three.
+
+   2. PNEC logo PNG (Logo-White-…) was rendering as black-on-cream
+      because my filter:invert produced near-black on the white
+      image — invisible against the cream bg.
+
+      Fix: use a different filter chain that pulls the logo to the
+      brand forest green tone (sepia → hue-rotate → boosted
+      saturation, with brightness clamped so it sits ~#1e8449).
+
+   Also tightened the cream palette to MATCH the actual website
+   colors (auth page, donate page, chatbot rail all use):
+      #fbf8f1 — primary cream
+      #d4efdf — soft green
+      #1e8449 — accent green
+      #145a32 — deep green
+
+   Result: footer is LIGHT cream end-to-end with forest-green text
+   and warm-honey accents — visually identical palette to the
+   login page and donate page.
+
+   ────────────────────────────────────────────────────────────────────── */
+
+/* ============================================================
+   SHELL — the whole footer, with the site-cream gradient.
+   ============================================================ */
+.jupiterx-footer {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(720px 380px at 14% 0%, rgba(212, 239, 223, 0.55), transparent 60%),
+    radial-gradient(820px 420px at 100% 100%, rgba(212, 160, 76, 0.14), transparent 60%),
+    linear-gradient(180deg, #fbf8f1 0%, #f6efde 60%, #efe6cc 100%) !important;
+  color: #5a4a2f !important;
+}
+
+/* Soft sage hairline at the very top */
+.jupiterx-footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(20, 90, 50, 0.22) 30%,
+    rgba(20, 90, 50, 0.22) 70%,
+    transparent 100%);
+  z-index: 2;
+}
+
+/* ============================================================
+   THE FIX FROM v3.11 — KILL ALL INNER SECTION BACKGROUNDS
+   ============================================================
+   The WP Elementor markup has three sibling <section> blocks with
+   `data-settings="{...background_background:classic...}"` plus an
+   .elementor-background-overlay inside each. Each one carries a
+   dark fill via the cloned WP stylesheet. They were stacking on
+   top of our cream gradient and turning the footer black again.
+   We strip them all here. */
+
+.jupiterx-footer .elementor-section,
+.jupiterx-footer .elementor-top-section,
+.jupiterx-footer .elementor-inner-section,
+.jupiterx-footer section[data-element_type="section"],
+.jupiterx-footer .elementor-element-81b1d56,
+.jupiterx-footer .elementor-element-098aa0d,
+.jupiterx-footer .elementor-element-cd04838 {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* Elementor uses a CSS var for the section bg in some templates */
+.jupiterx-footer .elementor-section,
+.jupiterx-footer .elementor-top-section {
+  --background-color: transparent !important;
+  --e-section-background-color: transparent !important;
+}
+
+/* Column populate overlays */
+.jupiterx-footer .elementor-widget-wrap.elementor-element-populated {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* And the explicit overlay element WP inserts per section */
+.jupiterx-footer .elementor-background-overlay {
+  display: none !important;
+  background: transparent !important;
+}
+
+/* ============================================================
+   TYPOGRAPHY — readable on cream
+   ============================================================ */
+.jupiterx-footer h3,
+.jupiterx-footer h4,
+.jupiterx-footer .raven-heading,
+.jupiterx-footer .raven-heading-title,
+.jupiterx-footer .raven-heading-text-wrapper,
+.jupiterx-footer .raven-heading-plain-text {
+  color: $beasts-green !important;       /* PNEC deep forest */
+  font-weight: 800 !important;
+  letter-spacing: -0.005em !important;
+}
+
+/* Animated "PREPARED" highlight — warm honey, no rainbow */
+.jupiterx-footer .raven-heading-dynamic-text {
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
+  background-clip: initial !important;
+  color: #c87042 !important;        /* terracotta accent */
+  font-weight: 900 !important;
+}
+
+.jupiterx-footer p,
+.jupiterx-footer li,
+.jupiterx-footer span,
+.jupiterx-footer .elementor-text-editor,
+.jupiterx-footer .elementor-text-editor p {
+  color: #5a4a2f !important;        /* warm taupe body */
+  line-height: 1.65 !important;
+}
+
+.jupiterx-footer a,
+.jupiterx-footer .elementor-item,
+.jupiterx-footer .elementor-post__title a,
+.jupiterx-footer .elementor-post__read-more {
+  color: $beasts-green !important;        /* PNEC deep forest */
+  transition: color 180ms ease, text-decoration-color 180ms ease;
+  text-decoration: none;
+}
+.jupiterx-footer a:hover,
+.jupiterx-footer .elementor-item:hover,
+.jupiterx-footer .elementor-post__title a:hover,
+.jupiterx-footer .elementor-post__read-more:hover {
+  color: #1e8449 !important;        /* PNEC primary green */
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ============================================================
+   QUICK LINKS — terracotta-dot bullets on cream, dashed dividers
+   ============================================================ */
+.jupiterx-footer ul,
+.jupiterx-footer .elementor-nav-menu {
+  list-style: none !important;
+  padding-left: 0 !important;
+}
+.jupiterx-footer ul li,
+.jupiterx-footer .elementor-nav-menu li {
+  padding: 6px 0 6px 18px !important;
+  border-bottom: 1px dashed rgba(20, 90, 50, 0.18);
+  position: relative;
+  transition: padding-left 200ms ease;
+  list-style: none !important;
+}
+.jupiterx-footer ul li::before,
+.jupiterx-footer .elementor-nav-menu li::before {
+  content: '';
+  position: absolute;
+  left: 4px; top: 50%;
+  width: 6px; height: 6px;
+  margin-top: -3px;
+  background: #c87042;              /* terracotta accent */
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(200, 112, 66, 0.20);
+}
+.jupiterx-footer ul li:hover,
+.jupiterx-footer .elementor-nav-menu li:hover { padding-left: 22px !important; }
+.jupiterx-footer ul li:last-child,
+.jupiterx-footer .elementor-nav-menu li:last-child { border-bottom: 0; }
+
+/* ============================================================
+   NEWSLETTER FORM (Constant Contact)
+   ============================================================ */
+.jupiterx-footer .ctct-email,
+.jupiterx-footer input[type="email"] {
+  background: $beasts-white !important;
+  border: 1.5px solid rgba(20, 90, 50, 0.28) !important;
+  color: #2a2a1a !important;
+  border-radius: 10px !important;
+  padding: 12px 14px !important;
+  font: inherit !important;
+  font-size: 0.95rem !important;
+  transition: border-color 200ms ease, box-shadow 200ms ease, background 200ms ease;
+}
+.jupiterx-footer .ctct-email::placeholder,
+.jupiterx-footer input[type="email"]::placeholder {
+  color: rgba(90, 74, 47, 0.55) !important;
+}
+.jupiterx-footer .ctct-email:focus,
+.jupiterx-footer input[type="email"]:focus {
+  outline: none !important;
+  border-color: #1e8449 !important;
+  background: $beasts-white !important;
+  box-shadow: 0 0 0 4px rgba(30, 132, 73, 0.20) !important;
+}
+.jupiterx-footer .ctct-submit,
+.jupiterx-footer input[type="submit"] {
+  background: linear-gradient(135deg, #1e8449 0%, #145a32 100%) !important;
+  color: #fffdf6 !important;
+  border: 0 !important;
+  border-radius: 10px !important;
+  padding: 12px 22px !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  cursor: pointer;
+  box-shadow:
+    0 1px 0 rgba(255, 253, 246, 0.18) inset,
+    0 4px 12px rgba(20, 90, 50, 0.22) !important;
+  transition: transform 160ms ease, box-shadow 220ms ease, filter 160ms ease;
+}
+.jupiterx-footer .ctct-submit:hover,
+.jupiterx-footer input[type="submit"]:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  box-shadow:
+    0 1px 0 rgba(255, 253, 246, 0.22) inset,
+    0 8px 18px rgba(20, 90, 50, 0.30) !important;
+}
+.jupiterx-footer .ctct-disclosure,
+.jupiterx-footer .ctct-disclosure small { color: rgba(90, 74, 47, 0.65) !important; }
+
+/* The Constant Contact form has inline `style="color: #ffffff"` on
+   its hidden label — invisible on cream. Force forest. */
+.jupiterx-footer .ctct-label-hidden[style],
+.jupiterx-footer .ctct-label-hidden,
+.jupiterx-footer .ctct-form label[style],
+.jupiterx-footer .ctct-form label {
+  color: $beasts-green !important;
+}
+
+/* ============================================================
+   SOCIAL ICONS — cream pill, forest icon, hover-flip
+   ============================================================ */
+.jupiterx-footer .elementor-social-icon,
+.jupiterx-footer a.elementor-icon.elementor-social-icon {
+  background: $beasts-white !important;
+  border: 1px solid rgba(20, 90, 50, 0.28) !important;
+  color: $beasts-green !important;
+  transition: transform 200ms ease, background 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+}
+.jupiterx-footer .elementor-social-icon i { color: $beasts-green !important; }
+.jupiterx-footer .elementor-social-icon:hover,
+.jupiterx-footer a.elementor-icon.elementor-social-icon:hover {
+  transform: translateY(-2px);
+  background: #1e8449 !important;
+  border-color: $beasts-green !important;
+  box-shadow: 0 6px 14px rgba(20, 90, 50, 0.30) !important;
+}
+.jupiterx-footer .elementor-social-icon:hover i,
+.jupiterx-footer a.elementor-icon.elementor-social-icon:hover i { color: #fffdf6 !important; }
+
+/* ============================================================
+   RECENT UPDATES POSTS
+   ============================================================ */
+.jupiterx-footer .elementor-post {
+  padding: 12px 0 !important;
+  border-bottom: 1px dashed rgba(20, 90, 50, 0.18);
+}
+.jupiterx-footer .elementor-post:last-child { border-bottom: 0; }
+.jupiterx-footer .elementor-post__title {
+  font-size: 0.98rem !important;
+  line-height: 1.3 !important;
+  margin: 0 0 4px 0 !important;
+}
+.jupiterx-footer .elementor-post__excerpt {
+  font-size: 0.84rem !important;
+  color: rgba(90, 74, 47, 0.85) !important;
+  margin-top: 4px !important;
+}
+.jupiterx-footer .elementor-post__excerpt p {
+  font-size: 0.84rem !important;
+  color: rgba(90, 74, 47, 0.85) !important;
+  margin: 0 0 4px 0 !important;
+}
+
+/* ============================================================
+   PNEC LOGO — the WP markup ships the WHITE-on-transparent PNG
+   ============================================================
+   On a cream bg the original is invisible. v3.10 tried
+   filter:invert+sepia+hue-rotate but the math produced near-
+   black. New approach: a tighter chain that lands the logo
+   directly on #1e8449 (PNEC primary green). */
+.jupiterx-footer .elementor-element-8b689a2 img,
+.jupiterx-footer img[src*="Logo-White"] {
+  filter:
+    brightness(0)              /* white → black */
+    saturate(100%)
+    invert(28%)                /* darken intensity */
+    sepia(72%)
+    saturate(580%)
+    hue-rotate(98deg)          /* steer toward green */
+    brightness(95%)
+    contrast(95%) !important;
+  max-width: 100%;
+  height: auto;
+}
+.jupiterx-footer img { max-width: 100%; height: auto; }
+
+/* ============================================================
+   COPYRIGHT BAR — quiet warm-taupe
+   ============================================================ */
+.jupiterx-footer .copyright,
+.jupiterx-footer .footer-copyright,
+.jupiterx-footer .elementor-element-cd04838 p,
+.jupiterx-footer .elementor-element-cd04838 span,
+.jupiterx-footer .elementor-element-df35ad1 span {
+  color: rgba(90, 74, 47, 0.72) !important;
+  font-size: 0.85rem !important;
+  letter-spacing: 0.02em !important;
+}
+/* Inline `style="color: #ffffff"` in the cloned markup — beat it */
+.jupiterx-footer .elementor-element-df35ad1 span[style*="color"] {
+  color: rgba(90, 74, 47, 0.72) !important;
+}
+
+/* The cloned form submit has inline
+   `style="background-color: #72af2f"` — beat it */
+.jupiterx-footer input[type="submit"][style] {
+  background: linear-gradient(135deg, #1e8449 0%, #145a32 100%) !important;
+  background-color: $beasts-green !important;
+  color: #fffdf6 !important;
+}
+
+/* v3.24: Quick Links footer mobile-open + donate-button mobile-shrink
+   moved INLINE into _includes/poway-live-body.html where they ship
+   with the Elementor markup they target. footer-polish.css isn't
+   loaded on the WP-cloned marketing pages, so rules here couldn't
+   reach them. See poway-live-body.html for the actual rules. */

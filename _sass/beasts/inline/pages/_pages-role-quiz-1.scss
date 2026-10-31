@@ -1,0 +1,283 @@
+// Migrated from pages/role-quiz.html; preserve selector order and runtime tokens.
+@import "beasts/foundation/tokens";
+@import "beasts/foundation/responsive";
+
+/* ── Quiz shell ─────────────────────────────────────────────────── */
+#quiz-shell {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0b1d33 0%, #122340 50%, #0d1f38 100%);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #e6eefc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 40px 20px 80px;
+}
+
+/* ── Progress bar ───────────────────────────────────────────────── */
+#progress-wrap {
+  width: min(640px, 100%);
+  margin-bottom: 32px;
+}
+
+#progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #7ea8d4;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+#progress-track {
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+#progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4cc9f0, #80ed99);
+  border-radius: 99px;
+  transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  width: 0%;
+}
+
+/* ── Scenario card ──────────────────────────────────────────────── */
+#scenario-card {
+  width: min(640px, 100%);
+  background: rgba(16, 34, 61, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 24px;
+  padding: 36px 32px 28px;
+  box-shadow: 0 28px 60px rgba(0,0,0,0.4);
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+#scenario-card.exit {
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+}
+
+#scenario-card.enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.scenario-emoji {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.scenario-headline {
+  font-size: clamp(1.15rem, 2.5vw, 1.4rem);
+  font-weight: 700;
+  text-align: center;
+  margin: 0 0 8px;
+  line-height: 1.35;
+}
+
+.scenario-context {
+  font-size: 0.9rem;
+  color: #94a9c9;
+  text-align: center;
+  margin: 0 0 28px;
+  line-height: 1.6;
+}
+
+/* ── Choice grid ────────────────────────────────────────────────── */
+.choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@include beasts-below(map-get($beasts-breakpoints, phone)) {
+  .choices { grid-template-columns: 1fr; }
+  #scenario-card { padding: 24px 18px 20px; }
+}
+
+.choice-btn {
+  background: rgba(255,255,255,0.04);
+  border: 1.5px solid rgba(148, 163, 184, 0.2);
+  border-radius: 16px;
+  padding: 16px 14px;
+  cursor: pointer;
+  transition: all 0.18s;
+  text-align: left;
+  color: #e6eefc;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.choice-btn:hover {
+  border-color: #4cc9f0;
+  background: rgba(76, 201, 240, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(76,201,240,0.12);
+}
+
+.choice-btn:active {
+  transform: scale(0.98);
+}
+
+.choice-icon { font-size: 1.6rem; }
+.choice-text { font-size: 0.88rem; line-height: 1.45; font-weight: 500; }
+
+/* ── Intro screen ───────────────────────────────────────────────── */
+#intro-screen {
+  text-align: center;
+  max-width: 540px;
+}
+
+#intro-screen h1 {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  margin: 0 0 12px;
+  background: linear-gradient(135deg, #4cc9f0, #80ed99);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+#intro-screen p {
+  color: #94a9c9;
+  line-height: 1.7;
+  margin: 0 0 32px;
+  font-size: 1rem;
+}
+
+.start-btn, .retake-btn {
+  display: inline-block;
+  padding: 16px 40px;
+  background: linear-gradient(135deg, #4cc9f0, #5ea0ef);
+  color: #081524;
+  border: none;
+  border-radius: 99px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  text-decoration: none;
+}
+
+.start-btn:hover, .retake-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(76,201,240,0.35);
+}
+
+/* ── Result card ────────────────────────────────────────────────── */
+#result-screen { display: none; width: min(680px, 100%); text-align: center; }
+
+.result-badge {
+  font-size: 5rem;
+  display: block;
+  margin-bottom: 8px;
+  animation: pop 0.5s cubic-bezier(.17,.67,.45,1.5) both;
+}
+
+@keyframes pop {
+  from { transform: scale(0.3); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.result-role-name {
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 800;
+  margin: 12px 0 4px;
+  background: linear-gradient(135deg, #4cc9f0, #80ed99);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.result-tagline {
+  font-size: 0.95rem;
+  color: #94a9c9;
+  margin: 0 0 28px;
+  font-style: italic;
+}
+
+.result-description {
+  background: rgba(16, 34, 61, 0.92);
+  border: 1px solid rgba(148,163,184,0.18);
+  border-radius: 20px;
+  padding: 24px 28px;
+  text-align: left;
+  line-height: 1.75;
+  color: #c8dcf0;
+  margin-bottom: 24px;
+  min-height: 80px;
+  position: relative;
+}
+
+.result-description.loading::after {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(76,201,240,0.3);
+  border-top-color: #4cc9f0;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin: 16px auto 0;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.result-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.result-actions a {
+  padding: 12px 26px;
+  border-radius: 99px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+  border: 1.5px solid rgba(148,163,184,0.25);
+  color: #e6eefc;
+}
+
+.result-actions a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  border-color: #4cc9f0;
+}
+
+.result-actions a.primary {
+  background: linear-gradient(135deg, #4cc9f0, #5ea0ef);
+  color: #081524;
+  border-color: transparent;
+}
+
+/* ── Step tracker dots ──────────────────────────────────────────── */
+.step-dots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  transition: background 0.3s;
+}
+
+.step-dot.active { background: #4cc9f0; }
+.step-dot.done { background: #80ed99; }

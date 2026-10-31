@@ -1,0 +1,7 @@
+// Preserve each caller's original inclusive breakpoint and cascade position.
+@mixin beasts-below($width) {
+  @media (max-width: $width) { @content; }
+}
+@mixin beasts-above($width) {
+  @media (min-width: $width) { @content; }
+}

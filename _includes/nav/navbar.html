@@ -1,0 +1,129 @@
+<!-- _includes/nav/navbar.html -->
+<!-- PNEC top navigation bar — desktop + mobile hamburger drawer -->
+
+<nav class="pnec-navbar" role="navigation" aria-label="Main navigation">
+  <div class="navbar-shell">
+    <div class="navbar-top">
+      <a href="{{ '/' | relative_url }}" class="navbar-brand" aria-label="PNEC Home">
+        <img src="{{ '/images/capstone/powaynec.png' | relative_url }}" alt="" class="brand-logo" data-cms-config="brand_logo_url">
+        <div class="brand-text">
+          <span class="brand-name"    data-cms-config="brand_name">Poway NEC &amp; FSC</span>
+          <span class="brand-tagline" data-cms-config="brand_tagline">Neighbors Helping Neighbors</span>
+        </div>
+      </a>
+
+      <div class="navbar-actions">
+        <div class="user-menu" id="navbar-auth-logged-in" style="display:none">
+          <button class="user-menu-trigger" id="user-menu-trigger" aria-expanded="false" aria-haspopup="true">
+            <div class="user-avatar" id="user-avatar-initials">?</div>
+            <span id="navbar-display-name">User</span>
+            <span id="navbar-display-location" class="navbar-display-location" style="display:none;"></span>
+            <span id="navbar-role-badge"></span>
+            <span>▾</span>
+          </button>
+          <ul class="user-menu-dropdown" id="user-menu-dropdown" role="menu">
+            <li class="user-menu-header">
+              <div class="user-name" id="user-menu-name">User</div>
+              <div id="user-menu-email"></div>
+            </li>
+            <li><a href="{{ '/pages/profile.html' | relative_url }}" class="user-menu-item" role="menuitem">My Profile</a></li>
+            <li id="nav-media-link" style="display:none"><a href="{{ '/pages/upload.html' | relative_url }}" class="user-menu-item" role="menuitem">Upload Media</a></li>
+            <li id="nav-events-link" style="display:none"><a href="{{ '/pages/manage-events.html' | relative_url }}" class="user-menu-item" role="menuitem">Manage Events</a></li>
+            <li id="nav-dashboard-link" style="display:none"><a href="{{ '/pages/dashboard.html' | relative_url }}" class="user-menu-item" role="menuitem">Staff Dashboard</a></li>
+            <li id="nav-admin-link" style="display:none"><a href="{{ '/pages/admin.html' | relative_url }}" class="user-menu-item" role="menuitem">⚙️ Admin Dashboard</a></li>
+            <li id="nav-editor-link" style="display:none"><a href="{{ '/pages/admin-editor.html' | relative_url }}" target="_blank" rel="noopener" class="user-menu-item" role="menuitem">🎨 Live Theme Editor ↗</a></li>
+            <!-- v2.41: Sign Out lives on the profile page now (link below points there). The legacy navbar-logout-btn id is kept on a hidden stub so existing JS handlers don't error. -->
+            <li><a href="{{ '/pages/profile.html#signout' | relative_url }}" class="user-menu-item" role="menuitem">↩ Sign out</a></li>
+            <li style="display:none"><button id="navbar-logout-btn" type="button" aria-hidden="true"></button></li>
+          </ul>
+        </div>
+
+        <a href="/donation-form/" class="btn-donate-nav" data-cms-config="nav_donate_label">Donate Now</a>
+
+        <button class="hamburger" id="hamburger-btn" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open navigation menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="navbar-bottom">
+      <ul class="navbar-nav" role="list">
+        <li class="nav-item nav-item-home">
+          <a href="{{ '/' | relative_url }}" class="nav-link nav-link-home{% if page.url == '/' %} active{% endif %}" aria-label="Home" title="Home">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 12L12 3l9 9"/>
+              <path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/>
+            </svg>
+            <span class="nav-link-home-label">Home</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ '/pages/about.html' | relative_url }}" class="nav-link{% if page.url contains '/about' %} active{% endif %}" data-cms-config="nav_label_about">About</a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ '/pages/programs-and-services.html' | relative_url }}" class="nav-link{% if page.url contains '/programs-and-services' %} active{% endif %}" data-cms-config="nav_label_programs">Programs and Services</a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ '/pages/preparedness-resources.html' | relative_url }}" class="nav-link{% if page.url contains '/preparedness-resources' or page.url contains '/poway-statistics-and-information' %} active{% endif %}" data-cms-config="nav_label_preparedness">Preparedness &amp; Help</a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ '/pages/community-events-and-activities.html' | relative_url }}" class="nav-link{% if page.url contains '/community-events-and-activities' %} active{% endif %}" data-cms-config="nav_label_events">Community Events</a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ '/pages/find-your-neighborhood.html' | relative_url }}" class="nav-link{% if page.url contains '/find-your-neighborhood' %} active{% endif %}" data-cms-config="nav_label_neighborhood">Find Your Neighborhood</a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ '/pages/contact.html' | relative_url }}" class="nav-link{% if page.url contains '/contact' %} active{% endif %}" data-cms-config="nav_label_contact">Contact</a>
+        </li>
+        <li class="nav-item" id="navbar-login-item">
+          <a href="{{ '/pages/register.html#login' | relative_url }}" class="nav-link{% if page.url contains '/login' %} active{% endif %}" data-cms-config="nav_label_login">Login</a>
+        </li>
+        <li class="nav-item" id="navbar-register-item">
+          <a href="{{ '/pages/register.html' | relative_url }}" class="nav-link{% if page.url contains '/register' %} active{% endif %}" data-cms-config="nav_label_register">Register</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile nav overlay -->
+<div class="mobile-nav-overlay" id="mobile-nav-overlay" aria-hidden="true"></div>
+
+<!-- Mobile drawer -->
+<nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation" aria-hidden="true">
+  <div class="mobile-nav-header">
+    <span style="color:white;font-weight:700;font-size:1.1rem;">Poway NEC &amp; FSC</span>
+    <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close navigation">✕</button>
+  </div>
+
+  <ul class="mobile-nav-links">
+    <li class="mobile-nav-section">
+      <div class="mobile-nav-section-label">Explore</div>
+      <a href="{{ '/pages/about.html' | relative_url }}">About</a>
+      <a href="{{ '/pages/programs-and-services.html' | relative_url }}">Programs and Services</a>
+      <a href="{{ '/pages/preparedness-resources.html' | relative_url }}">Preparedness &amp; Help</a>
+      <a href="{{ '/pages/community-events-and-activities.html' | relative_url }}">Community Events</a>
+      <a href="{{ '/pages/find-your-neighborhood.html' | relative_url }}">Find Your Neighborhood</a>
+      <a href="{{ '/pages/contact.html' | relative_url }}">Contact</a>
+      <a href="{{ '/pages/volunteer.html' | relative_url }}">Volunteer / Apply</a>
+    </li>
+    <li class="mobile-nav-section" id="mobile-auth-logged-out">
+      <div class="mobile-nav-section-label">Account</div>
+      <a href="{{ '/pages/register.html#login' | relative_url }}">Login</a>
+      <a href="{{ '/pages/register.html' | relative_url }}">Register</a>
+    </li>
+    <li class="mobile-nav-section" id="mobile-auth-logged-in" style="display:none">
+      <div class="mobile-nav-section-label">Account</div>
+      <div id="mobile-auth-user-summary" style="color:#fff;padding:0.25rem 0 0.85rem 0;font-weight:600;"></div>
+      <a href="{{ '/pages/profile.html' | relative_url }}">My Profile</a>
+      <a href="{{ '/pages/dashboard.html' | relative_url }}" id="mobile-dashboard-link" style="display:none">Staff Dashboard</a>
+      <a href="{{ '/pages/admin.html' | relative_url }}" id="mobile-admin-link" style="display:none">⚙️ Admin Dashboard</a>
+      <a href="{{ '/pages/admin-editor.html' | relative_url }}" target="_blank" rel="noopener" id="mobile-editor-link" style="display:none">🎨 Live Theme Editor ↗</a>
+      <!-- v2.41: Sign Out → Profile (a single Sign-out button lives there). Kept hidden stub for legacy JS. -->
+      <a href="{{ '/pages/profile.html#signout' | relative_url }}" style="color: #fc8181;">↩ Sign out</a>
+      <a href="#" id="mobile-logout-btn" style="display:none" aria-hidden="true"></a>
+    </li>
+  </ul>
+
+  <a href="/donation-form/" class="btn btn-primary btn-block">Donate Now</a>
+</nav>

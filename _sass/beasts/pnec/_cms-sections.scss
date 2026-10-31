@@ -1,0 +1,172 @@
+// Migrated from assets/css/cms-sections.css; preserve selector order and runtime tokens.
+@import "beasts/foundation/tokens";
+@import "beasts/foundation/responsive";
+
+/* assets/css/cms-sections.css
+   Shared styling for the CMS v2 section types. Loaded via _layouts/pnec-base.html
+   on every page. Designed to inherit cleanly into the WordPress-cloned homepage. */
+
+/* Container reset for the host */
+[data-cms-section-host] {
+  display: block;
+  width: 100%;
+}
+
+[data-cms-section-id] {
+  display: block;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+/* Flash animation when editor scrolls iframe to a selected element. */
+@keyframes cms-flash {
+  0%   { box-shadow: 0 0 0 0 rgba(59,130,246,0.8); }
+  100% { box-shadow: 0 0 0 12px rgba(59,130,246,0); }
+}
+.cms-flash {
+  animation: cms-flash 1.4s ease-out;
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* "+ Add section here" floating buttons (preview mode only) */
+.cms-add-here {
+  display: block;
+  width: 100%;
+  margin: 4px 0;
+  padding: 8px 12px;
+  background: transparent;
+  color: #94a3b8;
+  border: 1px dashed #cbd5e1;
+  border-radius: 6px;
+  font: 600 13px ui-sans-serif, system-ui, sans-serif;
+  cursor: pointer;
+  opacity: 0.4;
+  transition: opacity 120ms, color 120ms, border-color 120ms, background 120ms;
+}
+.cms-add-here:hover {
+  opacity: 1;
+  color: #1e3a8a;
+  border-color: #1e3a8a;
+  border-style: solid;
+  background: rgba(59,130,246,0.05);
+}
+/* Drop zone state during drag-reorder */
+.cms-add-here-drop {
+  opacity: 1 !important;
+  height: 28px;
+  background: linear-gradient(90deg, #5b8cff, #a855f7) !important;
+  color: white !important;
+  border: 0 !important;
+  box-shadow: 0 4px 14px rgba(91,140,255,0.5);
+  animation: cms-drop-pulse 0.6s ease-in-out infinite alternate;
+}
+@keyframes cms-drop-pulse {
+  from { transform: scale(1); }
+  to   { transform: scaleY(1.2); }
+}
+[data-cms-section-host].cms-dragging [data-cms-section-id] {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+/* Stega-tagged inline-editable elements get a subtle hint in inspector mode. */
+body.cms-inspector .cms-editable {
+  cursor: text;
+  position: relative;
+}
+body.cms-inspector .cms-editable:hover {
+  outline: 2px dashed #3b82f6;
+  outline-offset: 2px;
+}
+body.cms-inspector .cms-editable:hover::after {
+  content: 'double-click to edit';
+  position: absolute;
+  top: -22px;
+  left: 0;
+  background: #3b82f6;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Hidden sections still take a small footprint in admin preview so they're
+   findable, but render empty on the public page. */
+[data-cms-section-visible="false"] {
+  display: none;
+}
+body.cms-inspector [data-cms-section-visible="false"],
+[data-cms-section-host][data-cms-preview="true"] [data-cms-section-visible="false"] {
+  display: block;
+  opacity: 0.5;
+  outline: 1px dashed #94a3b8;
+}
+
+/* Hero */
+.cms-hero {
+  position: relative;
+}
+.cms-hero__headline {
+  line-height: 1.15;
+}
+
+/* Text block */
+.cms-text-block {
+  color: #1e293b;
+}
+
+/* Image with text */
+.cms-iwt {
+  align-items: center;
+}
+@media (max-width: 640px) {
+  .cms-iwt {
+    grid-template-columns: 1fr !important;
+  }
+  .cms-iwt__media,
+  .cms-iwt__text {
+    order: unset !important;
+  }
+}
+
+/* Device visibility helpers */
+@include beasts-above(map-get($beasts-breakpoints, desktop)) {
+  .cms-hide-desktop { display: none !important; }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  .cms-hide-tablet { display: none !important; }
+}
+@media (max-width: 639px) {
+  .cms-hide-mobile { display: none !important; }
+}
+
+/* Entrance animations — opt-in via per-section layout.animation
+   The base state hides the section; `.cms-anim-in` (added by hydrate.js's
+   IntersectionObserver once the section enters the viewport) plays it in. */
+.cms-anim                  { opacity: 0; transition: opacity 600ms cubic-bezier(.2,.7,.3,1.1), transform 600ms cubic-bezier(.2,.7,.3,1.1); will-change: opacity, transform; }
+.cms-anim-fade-in          { /*! Original empty rule retained. */ }
+.cms-anim-fade-up          { transform: translateY(28px); }
+.cms-anim-fade-down        { transform: translateY(-28px); }
+.cms-anim-slide-left       { transform: translateX(-40px); }
+.cms-anim-slide-right      { transform: translateX(40px); }
+.cms-anim-zoom-in          { transform: scale(.94); }
+.cms-anim.cms-anim-in      { opacity: 1; transform: none; }
+/* Respect users who have reduced motion turned on */
+@media (prefers-reduced-motion: reduce) {
+  .cms-anim, .cms-anim.cms-anim-in { opacity: 1; transform: none; transition: none; }
+}
+
+/* FAQ */
+.cms-faq__item summary::-webkit-details-marker { display: none; }
+.cms-faq__item summary::marker { content: ''; }
+.cms-faq__item summary::after {
+  content: '+';
+  float: right;
+  color: #94a3b8;
+}
+.cms-faq__item[open] summary::after {
+  content: '−';
+}

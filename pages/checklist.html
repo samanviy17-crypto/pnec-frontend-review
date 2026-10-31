@@ -1,0 +1,330 @@
+---
+layout: pnec-base
+title: "My Emergency Kit"
+description: "Track your personal emergency preparedness kit — check off what you have."
+body_class: inner-page
+---
+
+{% include community-tools.html features="household quiz checkins hazards" %}
+
+
+<style>
+{{ '@import "beasts/inline/pages/pages-checklist-1";' | scssify }}
+</style>
+
+<div class="checklist-page">
+  <div class="checklist-hero">
+    <div class="checklist-progress-ring">
+      <svg width="90" height="90" viewBox="0 0 90 90">
+        <circle class="ring-track" cx="45" cy="45" r="38"/>
+        <circle class="ring-fill" id="ring-fill" cx="45" cy="45" r="38"
+          stroke-dasharray="238.76" stroke-dashoffset="238.76"/>
+      </svg>
+      <div class="checklist-progress-label">
+        <span class="checklist-progress-num" id="kit-count">0</span>
+        <span class="checklist-progress-denom" id="kit-denom">/ 20</span>
+      </div>
+    </div>
+    <div class="checklist-hero-text">
+      <h1 class="checklist-hero-title">My Emergency Kit</h1>
+      <p class="checklist-hero-sub">FEMA recommends having 72 hours of supplies ready. Check off what you have — your progress is saved locally and contributes to your preparedness badges.</p>
+      <div class="checklist-progress-bar-wrap">
+        <div class="checklist-progress-bar-fill" id="kit-bar" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kit-tip" id="kit-tip"></div>
+
+  <p id="kit-sync-status" role="status">Loading checklist…</p>
+<div id="checklist-categories"></div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:12px;">
+    <button type="button" class="checklist-reset-btn" onclick="pnecResetKit()">↺ Reset all</button>
+    <button type="button" class="checklist-reset-btn" onclick="pnecRetryKit()">Retry account save</button>
+    <a href="{{ '/' | relative_url }}" style="font-size:0.85rem;color:#9e9e9e;text-decoration:none;">← Back to Home</a>
+  </div>
+</div>
+
+<script>
+(function() {
+  var ITEMS = [
+    {
+      cat: '💧 Water & Food', items: [
+        { id: 'water',       label: 'Water',             qty: '1 gal/person/day × 3 days', note: 'Store in sealed containers away from sunlight' },
+        { id: 'food',        label: 'Non-perishable food', qty: '3-day supply',              note: 'Canned goods, energy bars, dried fruit' },
+        { id: 'manual_can',  label: 'Manual can opener',  qty: '1',                          note: 'Essential for canned food' },
+        { id: 'water_tabs',  label: 'Water purification tablets', qty: '1 pack',             note: 'Backup if stored water runs out' },
+      ]
+    },
+    {
+      cat: '🩺 First Aid', items: [
+        { id: 'first_aid',   label: 'First aid kit',      qty: '1 full kit',   note: 'Bandages, antiseptic, gauze, medical tape' },
+        { id: 'meds_7day',   label: 'Prescription medications', qty: '7-day supply', note: 'Keep refilled and rotated' },
+        { id: 'otc_meds',    label: 'OTC medications',    qty: 'Assorted',     note: 'Pain reliever, antacid, antihistamine' },
+        { id: 'first_aid_manual', label: 'First aid manual', qty: '1',         note: 'Printed copy in case phones are down' },
+      ]
+    },
+    {
+      cat: '🔦 Light & Power', items: [
+        { id: 'flashlight',  label: 'Flashlight',         qty: '1+ per person', note: 'LED preferred, check batteries every 6 months' },
+        { id: 'batteries',   label: 'Extra batteries',    qty: 'Several sets',  note: 'Match sizes to your devices' },
+        { id: 'radio',       label: 'Battery/crank NOAA radio', qty: '1',      note: 'For emergency alerts when power is out' },
+        { id: 'power_bank',  label: 'Portable power bank', qty: '1+',          note: 'Keep charged; 20,000mAh+ recommended' },
+      ]
+    },
+    {
+      cat: '🏠 Shelter & Warmth', items: [
+        { id: 'blankets',    label: 'Emergency blankets', qty: '1 per person',  note: 'Mylar space blankets are compact' },
+        { id: 'dust_masks',  label: 'N95 dust masks',     qty: '2+ per person', note: 'Critical for wildfire smoke' },
+        { id: 'gloves',      label: 'Work gloves',        qty: '1 pair',        note: 'Heavy leather for debris handling' },
+        { id: 'rain_gear',   label: 'Rain ponchos',       qty: '1 per person',  note: 'Compact disposable ones work well' },
+      ]
+    },
+    {
+      cat: '📋 Documents & Cash', items: [
+        { id: 'docs',        label: 'Copies of important docs', qty: '1 set',   note: 'ID, insurance, bank info — in waterproof bag' },
+        { id: 'cash',        label: 'Cash in small bills', qty: '$100+',        note: 'ATMs may be offline after a disaster' },
+        { id: 'phone_list',  label: 'Emergency contact list', qty: 'Printed',   note: 'Don\'t rely on phone memory alone' },
+        { id: 'whistle',     label: 'Whistle to signal for help', qty: '1',     note: 'Loud enough to hear through debris' },
+      ]
+    },
+  ];
+
+  ITEMS.push({cat: '📍 Household plan', items: [
+    {id: 'evacuation', label: 'Household evacuation plan', qty: '1', note: 'Save your plan above'},
+    {id: 'meeting', label: 'Household meeting point', qty: '1', note: 'Agree on a meeting point with your household'}
+  ]});
+  var TOTAL = ITEMS.reduce(function(n, cat) { return n + cat.items.length; }, 0);
+  var userId = null;
+  try {
+    var stored = localStorage.getItem('pnec_user') || sessionStorage.getItem('pnec_user');
+    if (stored) userId = JSON.parse(stored).id;
+  } catch(e) {}
+
+  var KEY = userId ? 'pnec_kit_' + userId : 'pnec_kit_guest';
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+
+  // Keep an item-level outbox separately from the legacy profile/badge cache.
+  // Only locally edited items override the server during reconciliation.
+  var pending = {};
+  var needsReview = false;
+  function loadPending() {
+    try {
+      var savedPending = localStorage.getItem(KEY + '_pending');
+      pending = JSON.parse(savedPending || '{}');
+      needsReview = localStorage.getItem(KEY + '_review') === 'true';
+      // Older browser copies have no dirty marker. Preserve them for explicit review.
+      if (savedPending === null && Object.keys(state).length) {
+        pending = Object.assign({}, state); needsReview = true;
+      }
+    } catch(e) { pending = {}; }
+  }
+  loadPending();
+  state = Object.assign({}, state, pending);
+  var pendingVersions = {};
+  var editVersion = 0;
+  var syncQueue = Promise.resolve();
+  var syncReady = false;
+  var householdSize = 1;
+  function syncMessage(message) {
+    var el = document.getElementById('kit-sync-status');
+    if (el) el.textContent = message;
+  }
+  function persist() {
+    try {
+      localStorage.setItem(KEY + '_pending', JSON.stringify(pending));
+      localStorage.setItem(KEY + '_review', JSON.stringify(needsReview));
+      localStorage.setItem(KEY, JSON.stringify(state));
+      return true;
+    } catch(error) {
+      syncMessage('Browser storage is unavailable. Keep this page open until account saving succeeds.');
+      return false;
+    }
+  }
+  function save() {
+    var storedLocally = persist();
+    if (needsReview && userId) {
+      if (storedLocally) syncMessage('Browser and account copies need reconciliation. Browser choices are retained. Use Retry account save to apply them to your account.');
+      return;
+    }
+    if (!syncReady || !userId) {
+      if (storedLocally) syncMessage('Saved in this browser. Account sync is pending; use Retry account save when connected.');
+      return;
+    }
+    var sent = Object.assign({}, pending);
+    var sentVersions = Object.assign({}, pendingVersions);
+    var accountKey = KEY;
+    syncQueue = syncQueue.catch(function() {}).then(function() {
+      syncMessage('Saving…');
+      return window.pnecCommunityRequest('/preparedness', 'PATCH', {items: sent});
+    }).then(function() {
+      if (KEY !== accountKey) return;
+      Object.keys(sent).forEach(function(id) {
+        if (pending[id] === sent[id] && pendingVersions[id] === sentVersions[id]) {
+          delete pending[id]; delete pendingVersions[id];
+        }
+      });
+      var retained = persist();
+      if (retained) syncMessage(Object.keys(pending).length ? 'Newer browser changes are waiting to save.' : 'Saved to your account.');
+    }).catch(function(error) {
+      syncMessage('Account save failed: ' + error.message + ' Browser changes are pending. Use Retry account save.');
+    });
+  }
+  async function loadAccountChecklist() {
+    syncReady = false;
+    try {
+      var account = await fetchCurrentUser();
+      if (!account) {
+        syncMessage(userId ? 'Account unavailable. You can keep editing locally; retry when connected.' : 'Guest checklist is saved in this browser. Sign in and reload to save to your account.');
+        return;
+      }
+      if (userId !== account.id) {
+        userId = account.id; KEY = 'pnec_kit_' + userId;
+        try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { state = {}; }
+        loadPending();
+        state = Object.assign({}, state, pending);
+        pendingVersions = {};
+      }
+      var record = await window.pnecCommunityRequest('/preparedness');
+      householdSize = record.household_size;
+      // Import legacy browser-only data only when the account has no checklist.
+      if (!Object.keys(record.items).length) {
+        pending = Object.assign({}, state, pending); needsReview = false;
+      } else if (needsReview && Object.keys(pending).every(function(id) { return record.items[id] === pending[id]; })) {
+        pending = {}; needsReview = false;
+      }
+      state = Object.assign({}, record.items, pending);
+      persist();
+      syncReady = true;
+      buildDOM(); updateUI();
+      if (Object.keys(pending).length) save();
+      else syncMessage('Saved to your account.');
+    } catch(error) {
+      syncMessage('Account checklist unavailable: ' + error.message + ' Keep editing locally; use Retry account save when connected.');
+    }
+  }
+
+  function checkedCount() {
+    return Object.keys(state).filter(function(k) { return state[k]; }).length;
+  }
+
+  var TIPS = [
+    'Check expiry dates on food and medications every 6 months.',
+    'Store your kit in an easy-to-grab bag near an exit.',
+    'Rotate water supplies every 6 months.',
+    'Know your evacuation route before you need it.',
+    'Keep a paper map in your kit — GPS may be unavailable.',
+    'Include pet food and supplies if you have animals.',
+    'A hand-crank or solar charger can power your radio indefinitely.',
+    'PNEC recommends telling your block captain your kit status.',
+  ];
+
+  function updateUI() {
+    var water = document.getElementById('cb-water');
+    if (water) water.parentElement.querySelector('.checklist-item-qty').textContent = (householdSize * 3) + ' gallons / household';
+    var food = document.getElementById('cb-food');
+    if (food) food.parentElement.querySelector('.checklist-item-qty').textContent = '3-day supply for ' + householdSize;
+    var n = checkedCount();
+    document.getElementById('kit-count').textContent = n;
+    document.getElementById('kit-denom').textContent = '/ ' + TOTAL;
+    var pct = Math.round(n / TOTAL * 100);
+    document.getElementById('kit-bar').style.width = pct + '%';
+    var circ = 2 * Math.PI * 38;
+    document.getElementById('ring-fill').setAttribute('stroke-dasharray', circ);
+    document.getElementById('ring-fill').setAttribute('stroke-dashoffset', circ - (circ * n / TOTAL));
+    // Update all checkboxes
+    ITEMS.forEach(function(cat) {
+      cat.items.forEach(function(item) {
+        var cb = document.getElementById('cb-' + item.id);
+        var lbl = document.getElementById('lbl-' + item.id);
+        if (cb) cb.checked = !!state[item.id];
+        if (lbl) lbl.className = 'checklist-item-label' + (state[item.id] ? ' checked' : '');
+      });
+    });
+    // Refresh badges on profile page if open
+    if (typeof pnecRefreshBadges === 'function') pnecRefreshBadges();
+  }
+
+  function buildDOM() {
+    var container = document.getElementById('checklist-categories');
+    container.innerHTML = '';
+    ITEMS.forEach(function(cat, ci) {
+      var sec = document.createElement('div');
+      sec.className = 'checklist-category';
+
+      var header = document.createElement('div');
+      header.className = 'checklist-cat-header open';
+      var catChecked = cat.items.filter(function(i) { return state[i.id]; }).length;
+      header.innerHTML = '<span class="checklist-cat-icon">' + cat.cat.split(' ')[0] + '</span>' +
+        '<span class="checklist-cat-name">' + cat.cat.split(' ').slice(1).join(' ') + '</span>' +
+        '<span class="checklist-cat-count" id="cat-count-' + ci + '">' + catChecked + ' / ' + cat.items.length + '</span>' +
+        '<span class="checklist-cat-chevron">▼</span>';
+      header.addEventListener('click', function() {
+        this.classList.toggle('open');
+        items.classList.toggle('open');
+      });
+
+      var items = document.createElement('div');
+      items.className = 'checklist-items open';
+      cat.items.forEach(function(item) {
+        var row = document.createElement('label');
+        row.className = 'checklist-item';
+        row.htmlFor = 'cb-' + item.id;
+        row.innerHTML =
+          '<input type="checkbox" id="cb-' + item.id + '"' + (state[item.id] ? ' checked' : '') + '>' +
+          '<div class="checklist-item-body">' +
+            '<div class="checklist-item-label' + (state[item.id] ? ' checked' : '') + '" id="lbl-' + item.id + '">' + item.label + '</div>' +
+            '<div class="checklist-item-note">' + item.note + '</div>' +
+          '</div>' +
+          '<span class="checklist-item-qty">' + item.qty + '</span>';
+        var cb = row.querySelector('input');
+        cb.addEventListener('change', function() {
+          state[item.id] = this.checked;
+          pending[item.id] = this.checked;
+          pendingVersions[item.id] = ++editVersion;
+          save();
+          var catCheckedNow = cat.items.filter(function(i) { return state[i.id]; }).length;
+          var countEl = document.getElementById('cat-count-' + ci);
+          if (countEl) countEl.textContent = catCheckedNow + ' / ' + cat.items.length;
+          updateUI();
+        });
+        items.appendChild(row);
+      });
+
+      sec.appendChild(header);
+      sec.appendChild(items);
+      container.appendChild(sec);
+    });
+  }
+
+  // Tip of the day
+  var tipIdx = new Date().getDate() % TIPS.length;
+  var tipEl = document.getElementById('kit-tip');
+  if (tipEl) tipEl.innerHTML = '<strong>💡 Tip of the day:</strong> ' + TIPS[tipIdx];
+
+  buildDOM();
+  updateUI();
+  document.addEventListener('DOMContentLoaded', loadAccountChecklist);
+
+  window.addEventListener('pnec-household-saved', function(event) {
+    householdSize = event.detail.household_size; updateUI();
+  });
+
+  window.pnecRetryKit = function() {
+    needsReview = false; persist();
+    if (userId && syncReady) save();
+    else loadAccountChecklist();
+  };
+
+  window.pnecResetKit = function() {
+    if (!confirm('Reset all kit items? This cannot be undone.')) return;
+    state = {};
+    ITEMS.forEach(function(cat) { cat.items.forEach(function(item) { state[item.id] = false; pending[item.id] = false; pendingVersions[item.id] = ++editVersion; }); });
+    save();
+    buildDOM();
+    updateUI();
+  };
+})();
+</script>

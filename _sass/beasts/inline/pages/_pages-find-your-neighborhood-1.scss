@@ -1,0 +1,17 @@
+// Migrated from pages/find-your-neighborhood.html; preserve selector order and runtime tokens.
+@import "beasts/foundation/tokens";
+@import "beasts/foundation/responsive";
+
+/* v3.28: critical-path CSS — parsed BEFORE the 40+ WP CDN stylesheets
+   below in <head>, so the empty header band, broken hero, and white-
+   text wordmark never get a chance to flash during first paint. Same
+   rules as v3.27/v3.25 (in the main <style> block lower in this file)
+   but duplicated here to win the race. */
+.jupiterx-header img[src*="Poway-NEC-Logo-White"]{display:none!important}
+.jupiterx-header section.elementor-top-section+section.elementor-top-section{min-height:0!important;padding:10px 0!important}
+.jupiterx-header section.elementor-top-section+section.elementor-top-section .elementor-container,
+.jupiterx-header section.elementor-top-section+section.elementor-top-section .elementor-widget-wrap,
+.jupiterx-header section.elementor-top-section+section.elementor-top-section .elementor-column{min-height:0!important;height:auto!important}
+.elementor-section-stretched.elementor-section-height-min-height{min-height:0!important;background-image:none!important;background-color:#fbf8f1!important;padding-top:32px!important;padding-bottom:20px!important}
+.elementor-section-stretched.elementor-section-height-min-height .elementor-background-overlay{display:none!important}
+.elementor-section-stretched.elementor-section-height-min-height .elementor-heading-title{color:$beasts-forest!important;-webkit-text-fill-color:$beasts-forest!important;-webkit-text-stroke:0!important;opacity:1!important}

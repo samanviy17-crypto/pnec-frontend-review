@@ -1,0 +1,254 @@
+// Migrated from pages/admin-blog.html; preserve selector order and runtime tokens.
+@import "beasts/foundation/tokens";
+@import "beasts/foundation/responsive";
+
+/* ════════════════════════════════════════════════════════════════
+   PNEC Admin Blog Manager (v3.19, May 2026)
+   Cream + forest theme. Two-pane layout: post list / editor.
+   Endpoints used:
+     GET    /api/blog?all=1            list all posts (incl. drafts)
+     GET    /api/blog/<slug>           one post (admin sees drafts too)
+     POST   /api/blog                  create
+     PATCH  /api/blog/<id>             update (incl. publish/unpublish)
+     DELETE /api/blog/<id>             remove
+     POST   /api/admin/publish/upload  cover/inline image upload
+   ════════════════════════════════════════════════════════════════ */
+
+.admin-blog-page { background: #fbf8f1; min-height: 100vh; }
+.admin-blog-page *, .admin-blog-page *::before, .admin-blog-page *::after { box-sizing: border-box; }
+
+/* ─── Top bar ───────────────────────────────────────────────── */
+.ab-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 14px 22px;
+  background: linear-gradient(180deg, #ffffff 0%, #fbf8f1 100%);
+  border-bottom: 1px solid #e3e0d8;
+  position: sticky; top: 0; z-index: 30;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+.ab-topbar h1 {
+  margin: 0; font-size: 1.05rem; font-weight: 800; color: $beasts-forest;
+  letter-spacing: -0.012em; line-height: 1.15;
+}
+.ab-topbar .sub { margin: 1px 0 0; font-size: 0.78rem; color: #5a6470; }
+.ab-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+.ab-btn {
+  padding: 8px 14px;
+  border: 1.5px solid #d8d4c4; background: $beasts-white; color: $beasts-forest;
+  border-radius: 8px; font: inherit; font-size: 0.86rem; font-weight: 700;
+  cursor: pointer; white-space: nowrap;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s, transform 0.06s, box-shadow 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.ab-btn:hover { background: #d4efdf; border-color: $beasts-green; }
+.ab-btn:active { transform: translateY(1px); }
+.ab-btn.is-primary {
+  background: linear-gradient(135deg, #145a32 0%, #1e8449 100%);
+  color: #fffdf6; border-color: $beasts-green;
+  box-shadow: 0 4px 12px rgba(20,90,50,0.20);
+}
+.ab-btn.is-primary:hover { filter: brightness(1.08); color: #fffdf6; }
+.ab-btn.is-primary:disabled { background: #b9c4b9; cursor: wait; filter: none; box-shadow: none; }
+.ab-btn.is-ghost { background: transparent; border-color: transparent; padding: 6px 10px; }
+.ab-btn.is-danger { color: #80261b; border-color: rgba(192,57,43,0.32); }
+.ab-btn.is-danger:hover { background: rgba(192,57,43,0.10); }
+
+/* ─── Status pill ───────────────────────────────────────────── */
+.ab-status-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 999px;
+  font-size: 0.74rem; font-weight: 700; letter-spacing: 0.04em;
+}
+.ab-status-pill::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.ab-status-pill.is-draft     { background: #fdf0d5; color: #92400e; }
+.ab-status-pill.is-published { background: #d4efdf; color: $beasts-green; }
+.ab-status-pill.is-saving    { background: #dbeafe; color: #1e40af; }
+.ab-status-pill.is-saving::before { animation: ab-pulse 1s ease-in-out infinite; }
+@keyframes ab-pulse { 0%,100%{opacity:1}50%{opacity:.4} }
+
+/* ─── Shell ─────────────────────────────────────────────────── */
+.ab-shell {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 0;
+  height: calc(100vh - 64px);
+  font-family: 'DM Sans', sans-serif; color: #0a1628;
+}
+@media (max-width: 900px) {
+  .ab-shell { grid-template-columns: 1fr; height: auto; }
+  .ab-sidebar { max-height: 320px; }
+}
+
+/* ─── Sidebar: post list ────────────────────────────────────── */
+.ab-sidebar {
+  background: #f7f1e2; border-right: 1px solid #e3e0d8;
+  overflow-y: auto;
+}
+.ab-sidebar-head {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e3e0d8;
+  display: flex; justify-content: space-between; align-items: center;
+  background: #fbf8f1;
+}
+.ab-sidebar-head h2 { margin: 0; font-size: 0.82rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #5a6470; }
+.ab-post-list { list-style: none; margin: 0; padding: 8px 0; }
+.ab-post-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: background-color 0.12s, border-color 0.12s;
+}
+.ab-post-item:hover { background: rgba(212,239,223,0.6); }
+.ab-post-item.is-active { background: $beasts-white; border-left-color: #1e8449; }
+.ab-post-item .title { font-weight: 700; color: $beasts-forest; font-size: 0.96rem; margin-bottom: 4px; }
+.ab-post-item .meta { display: flex; gap: 8px; align-items: center; font-size: 0.74rem; color: #5a6470; }
+.ab-post-item .meta .pill {
+  padding: 1px 7px; border-radius: 999px; font-weight: 700; font-size: 0.66rem; letter-spacing: 0.04em;
+}
+.ab-post-item .meta .pill.draft     { background: #fdf0d5; color: #92400e; }
+.ab-post-item .meta .pill.published { background: #d4efdf; color: $beasts-green; }
+
+.ab-empty {
+  text-align: center; padding: 36px 16px;
+  color: #5a6470; font-size: 0.9rem;
+}
+.ab-empty button { margin-top: 12px; }
+
+/* ─── Editor pane ───────────────────────────────────────────── */
+.ab-editor {
+  display: flex; flex-direction: column;
+  background: $beasts-white;
+  overflow: hidden;
+}
+.ab-editor-empty {
+  flex: 1; display: grid; place-items: center;
+  text-align: center; padding: 40px;
+  color: #5a6470;
+}
+.ab-editor-empty h2 { margin: 0 0 8px; color: $beasts-forest; font-weight: 800; }
+
+.ab-form { display: flex; flex-direction: column; overflow: hidden; flex: 1; }
+.ab-form-row {
+  padding: 14px 22px;
+  border-bottom: 1px solid #e3e0d8;
+  background: #fbf8f1;
+}
+.ab-field { display: flex; flex-direction: column; gap: 6px; }
+.ab-field + .ab-field { margin-top: 10px; }
+.ab-field label {
+  font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em;
+  color: #5a6470; text-transform: uppercase;
+}
+.ab-field input[type="text"],
+.ab-field input[type="url"],
+.ab-field textarea,
+.ab-field select {
+  width: 100%; padding: 9px 12px;
+  border: 1.5px solid #d8d4c4; border-radius: 8px;
+  font: inherit; font-size: 0.94rem;
+  background: $beasts-white; color: #0a1628;
+}
+.ab-field input:focus, .ab-field textarea:focus, .ab-field select:focus {
+  outline: none; border-color: #1e8449;
+  box-shadow: 0 0 0 3px rgba(30,132,73,0.16);
+}
+.ab-field-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }
+@media (max-width: 700px) { .ab-field-grid { grid-template-columns: 1fr; } }
+
+.ab-title-input {
+  font-size: 1.4rem !important; font-weight: 800 !important;
+  color: $beasts-forest !important;
+  border: 0 !important; padding: 0 !important;
+  background: transparent !important;
+}
+.ab-title-input:focus { box-shadow: none !important; }
+
+.ab-cover-row {
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.ab-cover-preview {
+  width: 120px; height: 70px;
+  background: #f7f1e2;
+  border: 1.5px dashed #d8d4c4;
+  border-radius: 8px;
+  display: grid; place-items: center;
+  color: #5a6470; font-size: 0.74rem;
+  overflow: hidden;
+}
+.ab-cover-preview img { width: 100%; height: 100%; object-fit: cover; }
+.ab-cover-actions { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+
+/* ─── Toolbar ───────────────────────────────────────────────── */
+.ab-toolbar {
+  display: flex; gap: 6px; padding: 8px 22px; flex-wrap: wrap;
+  background: #fbf8f1; border-bottom: 1px solid #e3e0d8;
+}
+.ab-tool {
+  padding: 6px 10px; min-width: 32px;
+  border: 1px solid transparent; background: transparent; color: $beasts-forest;
+  border-radius: 6px; font: inherit; font-size: 0.86rem; font-weight: 700;
+  cursor: pointer; transition: background-color 0.12s;
+}
+.ab-tool:hover { background: #d4efdf; }
+.ab-tool .ab-tool-divider { display: inline-block; width: 1px; height: 18px; background: #d8d4c4; }
+
+.ab-content-pane {
+  flex: 1; display: flex; min-height: 0;
+}
+.ab-content-textarea {
+  flex: 1; width: 100%; padding: 22px;
+  border: 0; resize: none;
+  font-family: 'SF Mono', 'Menlo', Consolas, monospace;
+  font-size: 0.92rem; line-height: 1.6;
+  color: #0a1628; background: #fffdf6;
+  outline: none; tab-size: 2;
+}
+.ab-content-textarea:focus { background: $beasts-white; }
+
+.ab-foot {
+  padding: 10px 22px;
+  border-top: 1px solid #e3e0d8;
+  background: #fbf8f1;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  font-size: 0.78rem; color: #5a6470;
+}
+
+/* ─── Toast ─────────────────────────────────────────────────── */
+.ab-toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: $beasts-green; color: #fffdf6;
+  padding: 12px 18px; border-radius: 10px;
+  font-size: 0.9rem; font-weight: 700;
+  box-shadow: 0 8px 28px rgba(20,90,50,0.40);
+  z-index: 200; transform: translateY(80px); opacity: 0;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  max-width: 420px;
+}
+.ab-toast.is-visible { transform: translateY(0); opacity: 1; }
+.ab-toast.is-error { background: #80261b; }
+.ab-toast a { color: #ffe8a7; font-weight: 800; }
+
+/* ─── Auth gate ─────────────────────────────────────────────── */
+.ab-auth-gate {
+  max-width: 480px; margin: 80px auto; padding: 32px;
+  background: $beasts-white; border: 1px solid #e3e0d8; border-radius: 16px;
+  text-align: center; box-shadow: 0 6px 20px rgba(20,90,50,0.08);
+}
+.ab-auth-gate h2 { margin: 0 0 6px; color: $beasts-forest; font-weight: 800; }
+.ab-auth-gate p { color: #5a6470; margin: 0 0 16px; line-height: 1.55; }
+.ab-auth-gate input[type="password"] {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid #d8d4c4; border-radius: 10px;
+  font: inherit; margin-bottom: 12px;
+}
+.ab-auth-gate input[type="password"]:focus {
+  outline: none; border-color: #1e8449; box-shadow: 0 0 0 3px rgba(30,132,73,0.16);
+}
+.ab-auth-error {
+  color: #80261b; background: rgba(192,57,43,0.08);
+  border: 1px solid rgba(192,57,43,0.32);
+  padding: 8px 12px; border-radius: 8px;
+  font-size: 0.86rem; margin-bottom: 12px; display: none;
+}
+.ab-auth-error.is-visible { display: block; }

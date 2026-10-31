@@ -1,0 +1,111 @@
+<style>
+{{ '@import "beasts/inline/includes/includes-poway-header-1";' | scssify }}
+</style>
+
+<a class="jupiterx-a11y jupiterx-a11y-skip-navigation-link" href="#jupiterx-main">Skip to content</a>
+<div class="jupiterx-site">
+
+<div class="pnec-unified-header">
+  <!-- Carousel background -->
+  <div id="pnec-header-slides" class="pnec-header-track">
+    <div><img src="{{ '/assets/images/Poway_Lake.webp' | relative_url }}" alt="" width="1920" height="500" fetchpriority="high" decoding="async"></div>
+    <div><img src="{{ '/assets/images/Poway_Fire.webp' | relative_url }}" alt="" width="1920" height="500" loading="lazy" decoding="async"></div>
+    <div><img src="{{ '/assets/images/Poway_Flood.webp' | relative_url }}" alt="" width="1920" height="500" loading="lazy" decoding="async"></div>
+    <div><img src="{{ '/assets/images/Poway_Lightning.webp' | relative_url }}" alt="" width="1920" height="500" loading="lazy" decoding="async"></div>
+    <div><img src="{{ '/assets/images/Poway_Image.webp' | relative_url }}" alt="" width="1920" height="500" loading="lazy" decoding="async"></div>
+  </div>
+
+  <!-- Dark overlay -->
+  <div class="pnec-header-overlay"></div>
+
+  <!-- UI layer -->
+  <div class="pnec-header-ui">
+    <!-- Top row: logo + donate -->
+    <div class="pnec-header-top">
+      <a href="{{ '/' | relative_url }}" class="pnec-header-logo">
+        <img src="https://powaynec.com/wp-content/uploads/2020/05/contact@example.test" alt="Poway NEC">
+      </a>
+      <a href="{{ '/donation-form/' | relative_url }}" class="pnec-header-donate">
+        Donate Now <i class="fas fa-heart"></i>
+      </a>
+    </div>
+
+    <!-- Page title -->
+    <div class="pnec-header-title">{{ page.title }}</div>
+
+    <!-- Nav bar -->
+    <nav class="pnec-header-nav" aria-label="Main navigation">
+      <ul>
+        <li class="pnec-nav-home">
+          <a href="{{ '/' | relative_url }}" aria-label="Home" title="Home"{% if page.url == '/' or page.url == '/index.html' %} class="active"{% endif %}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 12L12 3l9 9"/>
+              <path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/>
+            </svg>
+            <span class="pnec-nav-home-label">Home</span>
+          </a>
+        </li>
+        {%- comment -%}
+          Data-driven nav: items come from _data/pnec_nav.yml so the
+          Admin > Site nav manager can add / reorder / delete entries
+          without editing this template. Falls back to a built-in list
+          if the data file is missing, so the site is never naked.
+        {%- endcomment -%}
+        {%- assign nav_items = site.data.pnec_nav -%}
+        {%- if nav_items == nil or nav_items.size == 0 -%}
+          {%- assign nav_items = "" | split: "" -%}
+        {%- endif -%}
+        {%- for item in nav_items -%}
+          {%- assign is_active = false -%}
+          {%- if item.match and item.match != "" -%}
+            {%- assign keys = item.match | split: "," -%}
+            {%- for key in keys -%}
+              {%- assign key_trim = key | strip -%}
+              {%- if key_trim != "" and page.url contains key_trim -%}{%- assign is_active = true -%}{%- endif -%}
+            {%- endfor -%}
+          {%- else -%}
+            {%- if item.url and item.url != "" and page.url contains item.url -%}{%- assign is_active = true -%}{%- endif -%}
+          {%- endif -%}
+          {%- if item.external -%}
+            <li><a href="{{ item.url }}" target="_blank" rel="noopener"{% if is_active %} class="active"{% endif %}>{{ item.title }}</a></li>
+          {%- else -%}
+            <li><a href="{{ item.url | relative_url }}"{% if is_active %} class="active"{% endif %}>{{ item.title }}</a></li>
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if nav_items.size == 0 -%}
+          {%- comment -%}Fallback: original hardcoded nav, in case _data/pnec_nav.yml is missing.{%- endcomment -%}
+          <li><a href="{{ '/pages/about.html' | relative_url }}"{% if page.url contains '/about' %} class="active"{% endif %}>About</a></li>
+          <li><a href="{{ '/pages/programs-and-services.html' | relative_url }}"{% if page.url contains '/programs-and-services' %} class="active"{% endif %}>Programs and Services</a></li>
+          <li><a href="{{ '/pages/preparedness-resources.html' | relative_url }}"{% if page.url contains '/preparedness-resources' or page.url contains '/poway-statistics-and-information' %} class="active"{% endif %}>Preparedness &amp; Help</a></li>
+          <li><a href="{{ '/pages/community-events-and-activities.html' | relative_url }}"{% if page.url contains '/community-events-and-activities' %} class="active"{% endif %}>Community Events</a></li>
+        {%- endif -%}
+        <li id="poway-auth-display-item" style="display:none;">
+          <a href="{{ '/pages/profile.html' | relative_url }}" id="poway-auth-display-link" aria-label="My Profile">
+            <span id="poway-auth-display-name"></span><span id="poway-auth-display-location" style="display:none;"></span>
+          </a>
+        </li>
+        <li id="poway-auth-login-item"><a href="{{ '/pages/register.html#login' | relative_url }}"{% if page.url contains '/login' %} class="active"{% endif %}>Login</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<!-- Hidden mobile auth elements (required by auth-ui.js) -->
+<span id="poway-auth-display-item-mobile" style="display:none;">
+  <a href="{{ '/pages/profile.html' | relative_url }}" id="poway-auth-display-link-mobile">
+    <span id="poway-auth-display-name-mobile"></span>
+    <span id="poway-auth-display-location-mobile" style="display:none;"></span>
+  </a>
+</span>
+<span id="poway-auth-login-item-mobile" style="display:none;"></span>
+
+<script>
+(function() {
+  var idx = 0, total = 5;
+  var track = document.getElementById('pnec-header-slides');
+  setInterval(function() {
+    idx = (idx + 1) % total;
+    track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+  }, 4000);
+})();
+</script>

@@ -1,0 +1,535 @@
+---
+layout: pnec-base
+title: "Blog Manager — PNEC Admin"
+description: "PNEC admins: create, edit, publish, and delete blog posts. Insert images, GIFs, and links inline. Everything saves to the live site automatically."
+body_class: inner-page admin-blog-page
+permalink: /pages/admin-blog.html
+---
+
+<style>
+{{ '@import "beasts/inline/pages/pages-admin-blog-1";' | scssify }}
+</style>
+
+<!-- ─── Auth gate ──────────────────────────────────────────────── -->
+<div class="ab-auth-gate" id="ab-auth-gate" hidden>
+  <h2>Admin sign-in</h2>
+  <p>Sign in with your administrator account to manage blog posts.</p>
+  <div class="ab-auth-error" id="ab-auth-error">Administrator login required. Sign in with your account and retry.</div>
+  <input type="hidden" id="ab-auth-input" placeholder="Administrator account" autocomplete="off">
+  <a href="{{ "/pages/register.html#login" | relative_url }}">Sign in with administrator account</a>
+  <button type="button" class="ab-btn is-primary" id="ab-auth-submit" style="width:100%;padding:12px;font-size:0.95rem">Sign in</button>
+</div>
+
+<!-- ─── Main app ───────────────────────────────────────────────── -->
+<div id="ab-app" hidden>
+  <header class="ab-topbar">
+    <div>
+      <h1>📝 Blog Manager</h1>
+      <p class="sub">Write posts, drop in images + links, publish to the live site.</p>
+    </div>
+    <div class="ab-actions">
+      <span class="ab-status-pill is-published" id="ab-status">Ready</span>
+      <button type="button" class="ab-btn" id="ab-new">+ New post</button>
+      <button type="button" class="ab-btn" id="ab-preview" disabled>👁 Preview</button>
+      <button type="button" class="ab-btn is-primary" id="ab-save" disabled>Save</button>
+    </div>
+  </header>
+
+  <div class="ab-shell">
+    <aside class="ab-sidebar">
+      <div class="ab-sidebar-head">
+        <h2>All posts</h2>
+        <button type="button" class="ab-btn is-ghost" id="ab-refresh" title="Refresh post list">↻</button>
+      </div>
+      <ul class="ab-post-list" id="ab-post-list"></ul>
+    </aside>
+
+    <main class="ab-editor" id="ab-editor">
+      <div class="ab-editor-empty" id="ab-editor-empty">
+        <div>
+          <h2>Pick a post or start a new one</h2>
+          <p>Click <strong>+ New post</strong> above, or select an existing one from the left.</p>
+        </div>
+      </div>
+      <form class="ab-form" id="ab-form" hidden onsubmit="event.preventDefault()">
+        <div class="ab-form-row">
+          <div class="ab-field">
+            <label for="ab-title">Title</label>
+            <input class="ab-title-input" type="text" id="ab-title" placeholder="Untitled post" maxlength="255">
+          </div>
+        </div>
+        <div class="ab-form-row">
+          <div class="ab-field-grid">
+            <div class="ab-field">
+              <label for="ab-slug">URL slug</label>
+              <input type="text" id="ab-slug" placeholder="auto-generated from the title">
+            </div>
+            <div class="ab-field">
+              <label for="ab-published">Status</label>
+              <select id="ab-published">
+                <option value="0">Draft (only admins see it)</option>
+                <option value="1">Published (live on the site)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="ab-form-row">
+          <div class="ab-field">
+            <label for="ab-excerpt">Excerpt <span style="font-weight:600;color:#94a3b8;text-transform:none;">(optional — shown on the blog index)</span></label>
+            <textarea id="ab-excerpt" rows="2" maxlength="500" placeholder="A short summary that appears on /pages/blog.html"></textarea>
+          </div>
+          <div class="ab-field" style="margin-top:12px;">
+            <label>Cover image</label>
+            <div class="ab-cover-row">
+              <div class="ab-cover-preview" id="ab-cover-preview">No cover</div>
+              <div class="ab-cover-actions">
+                <input type="url" id="ab-cover-url" placeholder="https:// — or upload below" style="flex:1;">
+                <div style="display:flex; gap:6px;">
+                  <button type="button" class="ab-btn" id="ab-cover-upload">📷 Upload cover</button>
+                  <button type="button" class="ab-btn is-ghost" id="ab-cover-clear">Clear</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ab-toolbar" role="toolbar" aria-label="Formatting toolbar">
+          <button type="button" class="ab-tool" data-wrap="<strong>|</strong>" title="Bold (Cmd/Ctrl-B)"><b>B</b></button>
+          <button type="button" class="ab-tool" data-wrap="<em>|</em>" title="Italic (Cmd/Ctrl-I)"><i>I</i></button>
+          <button type="button" class="ab-tool" data-wrap="<u>|</u>" title="Underline">U</button>
+          <span class="ab-tool" aria-hidden="true" style="cursor:default;padding:6px 4px;color:#d8d4c4;">|</span>
+          <button type="button" class="ab-tool" data-insert='&lt;h2&gt;Heading&lt;/h2&gt;' title="Heading 2">H2</button>
+          <button type="button" class="ab-tool" data-insert='&lt;h3&gt;Subheading&lt;/h3&gt;' title="Heading 3">H3</button>
+          <button type="button" class="ab-tool" data-wrap="<p>|</p>" title="Paragraph">¶</button>
+          <span class="ab-tool" aria-hidden="true" style="cursor:default;padding:6px 4px;color:#d8d4c4;">|</span>
+          <button type="button" class="ab-tool" data-action="link" title="Insert link (Cmd/Ctrl-K)">🔗 Link</button>
+          <button type="button" class="ab-tool" data-action="image" title="Upload + insert image">📷 Image</button>
+          <button type="button" class="ab-tool" data-insert='&lt;ul&gt;&#10;  &lt;li&gt;Item&lt;/li&gt;&#10;  &lt;li&gt;Item&lt;/li&gt;&#10;&lt;/ul&gt;' title="Bullet list">• List</button>
+          <button type="button" class="ab-tool" data-insert='&lt;ol&gt;&#10;  &lt;li&gt;Step&lt;/li&gt;&#10;  &lt;li&gt;Step&lt;/li&gt;&#10;&lt;/ol&gt;' title="Numbered list">1. List</button>
+          <button type="button" class="ab-tool" data-insert='&lt;blockquote&gt;Quote&lt;/blockquote&gt;' title="Quote">❝</button>
+          <button type="button" class="ab-tool" data-insert='&lt;hr&gt;' title="Horizontal rule">—</button>
+          <span class="ab-tool" aria-hidden="true" style="cursor:default;padding:6px 4px;color:#d8d4c4;">|</span>
+          <button type="button" class="ab-tool" id="ab-delete" title="Delete post" style="margin-left:auto;color:#80261b;">🗑 Delete</button>
+        </div>
+
+        <div class="ab-content-pane">
+          <textarea class="ab-content-textarea" id="ab-content" spellcheck="false"
+                    placeholder="Write your post here. HTML allowed — use the toolbar above or type tags directly. Images you upload go straight to the repo."></textarea>
+        </div>
+
+        <div class="ab-foot">
+          <div id="ab-foot-meta">Last saved: never</div>
+          <div id="ab-counter">0 chars</div>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <input type="file" id="ab-img-input" hidden accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml">
+</div>
+
+<div class="ab-toast" id="ab-toast"></div>
+
+<script>
+function pnecAdminToken() {
+  return localStorage.getItem("pnec_token") || sessionStorage.getItem("pnec_token") || "";
+}
+
+(function() {
+  var API_BASE = (window.PNEC_API_BASE || (
+    (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://127.0.0.1:8425'
+      : 'https://api.pnec-review.invalid'
+  ));
+
+  // State
+  var adminKey = pnecAdminToken();
+  var posts = [];          // [{ id, title, slug, ... }]
+  var currentId = null;    // currently-edited post id (null = unsaved new)
+  var currentData = null;  // full post object for currentId
+
+  // Element shortcuts
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function toast(msg, opts) {
+    var el = $('ab-toast');
+    el.innerHTML = msg;
+    el.classList.toggle('is-error', !!(opts && opts.error));
+    el.classList.add('is-visible');
+    clearTimeout(el._t);
+    el._t = setTimeout(function() { el.classList.remove('is-visible'); }, (opts && opts.ms) || 4500);
+  }
+
+  function setStatus(state, label) {
+    var el = $('ab-status');
+    el.className = 'ab-status-pill is-' + state;
+    el.textContent = label;
+  }
+
+  function apiHeaders(extra) {
+    var h = { 'Accept': 'application/json', 'Authorization': 'Bearer ' + adminKey };
+    if (extra) for (var k in extra) h[k] = extra[k];
+    return h;
+  }
+
+  // ─── Auth ─────────────────────────────────────────────────────
+  $('ab-auth-submit').addEventListener('click', tryAuth);
+  $('ab-auth-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') tryAuth();
+  });
+  function tryAuth() {
+    var k = pnecAdminToken();
+    if (!k) return;
+    adminKey = k;
+    // Account tokens are managed exclusively by the normal login worker.
+    $('ab-auth-error').classList.remove('is-visible');
+    // probe by listing posts (any non-2xx → show error)
+    fetch(API_BASE + '/api/blog?all=1', {
+      method: 'GET', headers: apiHeaders(),
+    }).then(function(r) {
+      if (r.status === 401) {
+        $('ab-auth-error').innerHTML = 'Administrator login required. Sign in with your account and retry.';
+        $('ab-auth-error').classList.add('is-visible');
+        return;
+      }
+      if (r.status === 404) {
+        $('ab-auth-error').innerHTML = 'Backend doesn\'t have the new blog auth yet. The Flask server needs to be <strong>rebuilt + redeployed</strong>. See PNEC_ADMIN_SETUP.md.';
+        $('ab-auth-error').classList.add('is-visible');
+        return;
+      }
+      if (!r.ok) {
+        $('ab-auth-error').innerHTML = 'Server returned ' + r.status + '.';
+        $('ab-auth-error').classList.add('is-visible');
+        return;
+      }
+      showApp();
+    }).catch(function() {
+      $('ab-auth-error').innerHTML = 'Could not reach the Flask API.';
+      $('ab-auth-error').classList.add('is-visible');
+    });
+  }
+
+  function showApp() {
+    $('ab-auth-gate').hidden = true;
+    $('ab-app').hidden = false;
+    loadPosts();
+  }
+
+  // ─── List ─────────────────────────────────────────────────────
+  $('ab-refresh').addEventListener('click', loadPosts);
+
+  function loadPosts() {
+    setStatus('saving', 'Loading posts…');
+    fetch(API_BASE + '/api/blog?all=1', { headers: apiHeaders() })
+      .then(function(r) { return r.json().then(function(j) { return { ok: r.ok, j: j }; }); })
+      .then(function(res) {
+        if (!res.ok) throw new Error('list failed');
+        posts = res.j.posts || [];
+        renderList();
+        setStatus('published', posts.length + ' posts');
+      })
+      .catch(function(err) {
+        toast('Could not load posts: ' + esc(String(err.message || err)), { error: true });
+        setStatus('draft', 'Load failed');
+      });
+  }
+
+  function renderList() {
+    var ul = $('ab-post-list');
+    if (!posts.length) {
+      ul.innerHTML = '<li class="ab-empty"><div>No posts yet.</div><button type="button" class="ab-btn is-primary" id="ab-empty-new">+ New post</button></li>';
+      var ne = document.getElementById('ab-empty-new');
+      if (ne) ne.addEventListener('click', newPost);
+      return;
+    }
+    ul.innerHTML = posts.map(function(p) {
+      var status = p.published ? '<span class="pill published">Live</span>' : '<span class="pill draft">Draft</span>';
+      var when = p.updated_at ? new Date(p.updated_at).toLocaleDateString() : '';
+      return '<li class="ab-post-item' + (p.id === currentId ? ' is-active' : '') + '" data-id="' + p.id + '">'
+           +   '<div class="title">' + esc(p.title) + '</div>'
+           +   '<div class="meta">' + status + '<span>' + esc(when) + '</span></div>'
+           + '</li>';
+    }).join('');
+    ul.querySelectorAll('[data-id]').forEach(function(li) {
+      li.addEventListener('click', function() {
+        var id = parseInt(li.getAttribute('data-id'), 10);
+        openPost(id);
+      });
+    });
+  }
+
+  // ─── Open / new / save ────────────────────────────────────────
+  $('ab-new').addEventListener('click', newPost);
+  $('ab-save').addEventListener('click', save);
+  $('ab-delete').addEventListener('click', deletePost);
+  $('ab-preview').addEventListener('click', preview);
+
+  function newPost() {
+    currentId = null;
+    currentData = { title: '', slug: '', content: '', excerpt: '', cover_image_url: '', published: false };
+    openForm();
+  }
+
+  function openPost(id) {
+    var p = posts.find(function(x) { return x.id === id; });
+    if (!p) return;
+    setStatus('saving', 'Loading…');
+    fetch(API_BASE + '/api/blog/' + encodeURIComponent(p.slug), { headers: apiHeaders() })
+      .then(function(r) { return r.json().then(function(j) { return { ok: r.ok, j: j }; }); })
+      .then(function(res) {
+        if (!res.ok || !res.j.post) throw new Error('not found');
+        currentId = res.j.post.id;
+        currentData = res.j.post;
+        openForm();
+        renderList();
+      })
+      .catch(function() { toast('Could not open post.', { error: true }); setStatus('draft', 'Error'); });
+  }
+
+  function openForm() {
+    $('ab-editor-empty').hidden = true;
+    $('ab-form').hidden = false;
+    $('ab-title').value = currentData.title || '';
+    $('ab-slug').value = currentData.slug || '';
+    $('ab-published').value = currentData.published ? '1' : '0';
+    $('ab-excerpt').value = currentData.excerpt || '';
+    $('ab-cover-url').value = currentData.cover_image_url || '';
+    $('ab-content').value = currentData.content || '';
+    updateCoverPreview();
+    updateCounter();
+    setStatus(currentData.published ? 'published' : 'draft', currentData.published ? 'Live' : 'Draft');
+    $('ab-save').disabled = false;
+    $('ab-preview').disabled = !currentData.slug;
+    $('ab-delete').style.display = currentId ? '' : 'none';
+  }
+
+  function save() {
+    var title = $('ab-title').value.trim();
+    if (!title) { toast('Title is required.', { error: true }); return; }
+    var body = {
+      title: title,
+      slug: $('ab-slug').value.trim() || undefined,
+      content: $('ab-content').value,
+      excerpt: $('ab-excerpt').value.trim() || null,
+      cover_image_url: $('ab-cover-url').value.trim() || null,
+      published: $('ab-published').value === '1',
+    };
+    $('ab-save').disabled = true;
+    $('ab-save').textContent = 'Saving…';
+    setStatus('saving', 'Saving…');
+
+    var method = currentId ? 'PATCH' : 'POST';
+    var url = currentId ? (API_BASE + '/api/blog/' + currentId) : (API_BASE + '/api/blog');
+
+    fetch(url, {
+      method: method,
+      headers: apiHeaders({ 'Content-Type': 'application/json' }),
+      body: JSON.stringify(body),
+    }).then(function(r) { return r.json().then(function(j) { return { ok: r.ok, status: r.status, j: j }; }); })
+      .then(function(res) {
+        if (!res.ok) {
+          var d = (res.j && (res.j.detail || res.j.message)) || ('Server ' + res.status);
+          throw new Error(d);
+        }
+        var p = res.j.post;
+        currentId = p.id;
+        currentData = p;
+        toast('Saved! Post is <strong>' + (p.published ? 'live on the site' : 'a draft') + '</strong>. <a href="/pages/blog-post.html?slug=' + encodeURIComponent(p.slug) + '" target="_blank">View →</a>', { ms: 7000 });
+        $('ab-preview').disabled = false;
+        loadPosts();
+        setStatus(p.published ? 'published' : 'draft', p.published ? 'Live' : 'Draft');
+      })
+      .catch(function(err) {
+        toast('Save failed: ' + esc(String(err.message || err)), { error: true });
+        setStatus('draft', 'Error');
+      })
+      .finally(function() {
+        $('ab-save').disabled = false;
+        $('ab-save').textContent = 'Save';
+      });
+  }
+
+  function deletePost() {
+    if (!currentId) return;
+    if (!confirm('Delete "' + ($('ab-title').value || 'this post') + '"? Cannot be undone.')) return;
+    fetch(API_BASE + '/api/blog/' + currentId, { method: 'DELETE', headers: apiHeaders() })
+      .then(function(r) {
+        if (!r.ok) throw new Error('delete failed ' + r.status);
+        toast('Deleted.');
+        currentId = null; currentData = null;
+        $('ab-editor-empty').hidden = false;
+        $('ab-form').hidden = true;
+        loadPosts();
+      })
+      .catch(function(err) { toast(esc(String(err.message || err)), { error: true }); });
+  }
+
+  function preview() {
+    if (!currentData || !currentData.slug) return;
+    window.open('/pages/blog-post.html?slug=' + encodeURIComponent(currentData.slug), '_blank', 'noopener');
+  }
+
+  // ─── Live counter ─────────────────────────────────────────────
+  $('ab-content').addEventListener('input', updateCounter);
+  function updateCounter() {
+    $('ab-counter').textContent = ($('ab-content').value || '').length.toLocaleString() + ' chars';
+  }
+
+  // ─── Toolbar ──────────────────────────────────────────────────
+  document.querySelectorAll('.ab-tool[data-wrap]').forEach(function(btn) {
+    btn.addEventListener('click', function() { wrap(btn.getAttribute('data-wrap')); });
+  });
+  document.querySelectorAll('.ab-tool[data-insert]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      insertAtCursor(btn.getAttribute('data-insert').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&#10;/g, '\n').replace(/&amp;/g, '&'));
+    });
+  });
+  document.querySelectorAll('.ab-tool[data-action]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var a = btn.getAttribute('data-action');
+      if (a === 'link') insertLink();
+      if (a === 'image') $('ab-img-input').click();
+    });
+  });
+
+  function wrap(template) {
+    var ta = $('ab-content');
+    var s = ta.selectionStart, e = ta.selectionEnd;
+    var val = ta.value;
+    var sel = val.slice(s, e);
+    var parts = template.split('|');
+    var before = parts[0], after = parts[1] || '';
+    ta.value = val.slice(0, s) + before + sel + after + val.slice(e);
+    ta.selectionStart = s + before.length;
+    ta.selectionEnd = s + before.length + sel.length;
+    ta.focus();
+    updateCounter();
+  }
+
+  function insertAtCursor(text) {
+    var ta = $('ab-content');
+    var s = ta.selectionStart;
+    var val = ta.value;
+    ta.value = val.slice(0, s) + text + val.slice(ta.selectionEnd);
+    ta.selectionStart = ta.selectionEnd = s + text.length;
+    ta.focus();
+    updateCounter();
+  }
+
+  function insertLink() {
+    var url = prompt('Link URL (https://…)');
+    if (!url) return;
+    var text = prompt('Link text', url) || url;
+    wrap('<a href="' + url.replace(/"/g, '&quot;') + '" target="_blank" rel="noopener">|</a>');
+    // After wrap, if no selection was active, paste text now
+    var ta = $('ab-content');
+    if (ta.selectionStart === ta.selectionEnd) {
+      var s = ta.selectionStart;
+      ta.value = ta.value.slice(0, s) + text + ta.value.slice(s);
+      ta.selectionStart = ta.selectionEnd = s + text.length;
+    }
+    updateCounter();
+  }
+
+  // ─── Image upload (toolbar + cover) ───────────────────────────
+  var imgUploadKind = null;   // 'cover' | 'inline'
+  $('ab-img-input').addEventListener('change', function(ev) {
+    var file = ev.target.files && ev.target.files[0];
+    if (!file) return;
+    ev.target.value = '';
+    if (file.size > 5_000_000) { toast('Image too large (max 5 MB).', { error: true }); return; }
+    var reader = new FileReader();
+    reader.onload = function() {
+      var dataUrl = reader.result || '';
+      var b64 = String(dataUrl).split(',')[1] || '';
+      if (!b64) { toast('Could not read file.', { error: true }); return; }
+      var safe = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 60);
+      var stamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      var repoPath = 'assets/images/uploads/' + stamp + '_' + safe;
+
+      setStatus('saving', 'Uploading ' + safe + '…');
+      fetch(API_BASE + '/api/admin/publish/upload', {
+        method: 'POST',
+        headers: apiHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({ path: repoPath, content_b64: b64,
+                              message: 'Upload ' + safe + ' (blog admin)' }),
+      }).then(function(r) { return r.json().then(function(j) { return { ok: r.ok, status: r.status, j: j }; }); })
+        .then(function(res) {
+          if (!res.ok || !res.j.ok) {
+            var d = (res.j && (res.j.detail || res.j.error)) || ('Upload failed (' + res.status + ')');
+            throw new Error(d);
+          }
+          var siteUrl = '/' + repoPath;
+          if (imgUploadKind === 'cover') {
+            $('ab-cover-url').value = siteUrl;
+            updateCoverPreview();
+            toast('Cover set. Save the post to commit.', { ms: 6000 });
+          } else {
+            insertAtCursor('<img src="' + siteUrl + '" alt="" loading="lazy">');
+            toast('Image inserted. <a href="' + (res.j.html_url || '#') + '" target="_blank">commit ' + ((res.j.commit_sha || '').slice(0,7)) + '</a>', { ms: 7000 });
+          }
+          setStatus(currentData && currentData.published ? 'published' : 'draft', currentData && currentData.published ? 'Live' : 'Draft');
+        })
+        .catch(function(err) { toast('Upload failed: ' + esc(String(err.message || err)), { error: true }); setStatus('draft', 'Error'); });
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Toolbar image button → inline insert
+  document.querySelector('.ab-tool[data-action="image"]').addEventListener('click', function() {
+    imgUploadKind = 'inline';
+  });
+  // Cover upload button
+  $('ab-cover-upload').addEventListener('click', function() {
+    imgUploadKind = 'cover';
+    $('ab-img-input').click();
+  });
+  $('ab-cover-clear').addEventListener('click', function() {
+    $('ab-cover-url').value = '';
+    updateCoverPreview();
+  });
+  $('ab-cover-url').addEventListener('input', updateCoverPreview);
+
+  function updateCoverPreview() {
+    var url = $('ab-cover-url').value.trim();
+    var prev = $('ab-cover-preview');
+    if (url) {
+      prev.innerHTML = '<img src="' + esc(url) + '" alt="cover preview">';
+    } else {
+      prev.textContent = 'No cover';
+    }
+  }
+
+  // ─── Keyboard shortcuts ───────────────────────────────────────
+  document.addEventListener('keydown', function(ev) {
+    if (!(ev.metaKey || ev.ctrlKey)) return;
+    if (ev.key === 's') { ev.preventDefault(); save(); }
+    if (ev.key === 'b') { ev.preventDefault(); wrap('<strong>|</strong>'); }
+    if (ev.key === 'i') { ev.preventDefault(); wrap('<em>|</em>'); }
+    if (ev.key === 'k') { ev.preventDefault(); insertLink(); }
+  });
+
+  // ─── Boot ─────────────────────────────────────────────────────
+  function boot() {
+    if (!adminKey) { $('ab-auth-gate').hidden = false; return; }
+    fetch(API_BASE + '/api/blog?all=1', { headers: apiHeaders() })
+      .then(function(r) {
+        if (r.status === 401) { $('ab-auth-gate').hidden = false; return; }
+        if (!r.ok) {
+          $('ab-auth-gate').hidden = false;
+          $('ab-auth-error').innerHTML = 'Backend returned ' + r.status + '. May need redeploy.';
+          $('ab-auth-error').classList.add('is-visible');
+          return;
+        }
+        showApp();
+      })
+      .catch(function() { $('ab-auth-gate').hidden = false; });
+  }
+  boot();
+})();
+</script>

@@ -1,0 +1,117 @@
+---
+layout: pnec-base
+title: "Support PNEC"
+description: "Your donation supports PNEC's mission to train and equip Poway neighborhoods for emergencies. 100% volunteer-run since 2003."
+# Every Donate Now button across the site links to /donation-form/
+# (navbar, hero, footer, headers, 8 standalone pages). Without this
+# permalink the donate page lived at /pages/donate.html and every
+# button 404'd. Publishing here matches the existing href targets.
+permalink: /donation-form/
+body_class: inner-page donate-page-body
+---
+
+{% include community-tools.html features="drives" %}
+
+
+<style>
+{{ '@import "beasts/inline/pages/pages-donate-1";' | scssify }}
+</style>
+
+<div class="donate-wrap">
+  <!-- Hero -->
+  <div class="donate-hero">
+    <span class="donate-hero-eyebrow">100% volunteer-run · 501(c)(3)</span>
+    <h1>Keep PNEC ready.</h1>
+    <p>PNEC operates entirely on donations and volunteer hours. Every dollar funds drills, kits, training, and outreach across all 14 Poway neighborhoods.</p>
+  </div>
+
+  <!-- Where the money goes -->
+  <div class="donate-cards">
+    <div class="donate-card">
+      <div class="donate-card-icon" aria-hidden="true">📚</div>
+      <h3>Training materials</h3>
+      <p>CERT manuals, first-aid cards, and preparedness guides for every coordinator and workshop participant.</p>
+    </div>
+    <div class="donate-card">
+      <div class="donate-card-icon" aria-hidden="true">🎒</div>
+      <h3>CERT equipment</h3>
+      <p>Hard hats, safety vests, first-aid kits, and search lights for response teams.</p>
+    </div>
+    <div class="donate-card">
+      <div class="donate-card-icon" aria-hidden="true">🏘️</div>
+      <h3>Community outreach</h3>
+      <p>Neighborhood fliers, multilingual materials, and door-to-door coordinator campaigns.</p>
+    </div>
+    <div class="donate-card">
+      <div class="donate-card-icon" aria-hidden="true">📻</div>
+      <h3>Radio infrastructure</h3>
+      <p>PACT amateur radios, repeater maintenance, and equipment for emergency communications.</p>
+    </div>
+  </div>
+
+  <!-- CTA card -->
+  <div class="donate-cta-card">
+    <div class="donate-cta-icon" aria-hidden="true">❤️</div>
+    <h2>Make a donation</h2>
+    <p class="donate-cta-sub">Donations are processed securely through PayPal. You'll receive a tax receipt by email.</p>
+
+    <!-- Suggested amounts — each preselects the PayPal donation amount via &amount=
+         param. Real button-id below should be set in the next admin update. -->
+    <div class="donate-amounts" role="list">
+      <a class="donate-amount-btn" href="https://www.paypal.com/donate?hosted_button_id=PNEC&amount=25"  target="_blank" rel="noopener">$25</a>
+      <a class="donate-amount-btn" href="https://www.paypal.com/donate?hosted_button_id=PNEC&amount=50"  target="_blank" rel="noopener">$50</a>
+      <a class="donate-amount-btn" href="https://www.paypal.com/donate?hosted_button_id=PNEC&amount=100" target="_blank" rel="noopener">$100</a>
+      <a class="donate-amount-btn" href="https://www.paypal.com/donate?hosted_button_id=PNEC&amount=250" target="_blank" rel="noopener">$250</a>
+    </div>
+
+    <a class="donate-cta-btn" href="https://www.paypal.com/donate?hosted_button_id=PNEC" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+      Donate any amount
+    </a>
+
+    <p class="donate-cta-foot">
+      Or mail a check: <strong>PNEC, P.O. Box 789, Poway, CA 92074</strong>
+    </p>
+
+    <div class="donate-trust-row">
+      <span class="donate-trust-pill">
+        <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Secure (PayPal)
+      </span>
+      <span class="donate-trust-pill">
+        <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+        Tax-deductible
+      </span>
+      <span class="donate-trust-pill">
+        <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Local to Poway
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- Other ways to help -->
+<section class="donate-other">
+  <div class="donate-other-wrap">
+    <h2>Other ways to help</h2>
+    <div class="donate-other-grid">
+      <div class="donate-other-card">
+        <h3>Volunteer your time</h3>
+        <p>Block coordinators, CERT volunteers, event helpers — every role gets training and PNEC welcomes you no matter how much time you have.</p>
+        <a class="donate-other-link" href="{{ '/pages/volunteer.html' | relative_url }}">Get involved →</a>
+      </div>
+      <div class="donate-other-card">
+        <h3>Spread the word</h3>
+        <p>Share PNEC's resources with neighbors, at your HOA meeting, on Nextdoor, or at the next community event you attend.</p>
+        <a class="donate-other-link" href="{{ '/pages/contact.html' | relative_url }}">Contact us →</a>
+      </div>
+      <div class="donate-other-card">
+        <h3>Corporate sponsorship</h3>
+        <p>Sponsor CERT training courses, supply kits, or fund neighborhood outreach campaigns. Sponsors are recognized at events and on the site.</p>
+        <a class="donate-other-link" href="mailto:contact@example.test">Email us →</a>
+      </div>
+    </div>
+  </div>
+</section>

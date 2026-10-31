@@ -1,0 +1,357 @@
+---
+layout: pnec-base
+title: "Volunteer Dashboard — PNEC Admin"
+description: "Real-time volunteer interest dashboard for PNEC admins. View, filter, and update applicant status."
+body_class: inner-page admin-volunteer-page
+permalink: /pages/admin-volunteer.html
+---
+
+<style>
+{{ '@import "beasts/inline/pages/pages-admin-volunteer-1";' | scssify }}
+</style>
+
+<div class="av-shell" id="av-shell">
+
+  <!-- Auth gate (shown if not admin) -->
+  <div class="av-auth-gate" id="av-auth-gate" hidden>
+    <h2>Admin sign-in</h2>
+    <p>Sign in with your administrator account, then return here to view the volunteer dashboard.</p>
+    <div class="av-auth-error" id="av-auth-error">Administrator login required. Sign in with your account and retry.</div>
+    <input type="hidden" id="av-auth-input" placeholder="Administrator account" autocomplete="off">
+    <a href="{{ "/pages/register.html#login" | relative_url }}">Sign in with administrator account</a>
+  <button type="button" id="av-auth-submit">Sign in</button>
+  </div>
+
+  <!-- Main app (shown once authed) -->
+  <div id="av-app" hidden>
+
+    <header class="av-head">
+      <div>
+        <h1>Volunteer Dashboard</h1>
+        <p class="sub" id="av-subtitle">Loading…</p>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <span class="av-live" id="av-live">Live · auto-refresh 20s</span>
+        <button type="button" class="av-refresh-btn" id="av-refresh">Refresh now</button>
+      </div>
+    </header>
+
+    <!-- Summary tiles (click to filter) -->
+    <div class="av-summary" id="av-summary"></div>
+
+    <!-- Controls -->
+    <div class="av-controls">
+      <input type="search" id="av-search" placeholder="Search name, email, neighborhood, message…">
+      <select id="av-role-filter">
+        <option value="">All roles</option>
+        <option value="neighborhood_coordinator">Neighborhood Coordinator</option>
+        <option value="cert_volunteer">CERT Volunteer</option>
+        <option value="ham_radio_operator">Ham Radio Operator</option>
+        <option value="admin_board">Admin / Board</option>
+        <option value="flex">Flex</option>
+      </select>
+    </div>
+
+    <!-- List -->
+    <div class="av-list" id="av-list"></div>
+  </div>
+</div>
+
+<script>
+function pnecAdminToken() {
+  return localStorage.getItem("pnec_token") || sessionStorage.getItem("pnec_token") || "";
+}
+
+(function() {
+  var API_BASE = (window.PNEC_API_BASE || (
+    (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://127.0.0.1:8425'
+      : 'https://api.pnec-review.invalid'
+  ));
+
+  var POLL_MS = 20000;
+
+  // State
+  var adminKey = pnecAdminToken();
+  var statusFilter = '';
+  var roleFilter   = '';
+  var searchTerm   = '';
+  var lastData     = null;
+  var pollHandle   = null;
+
+  // Elements
+  var gate       = document.getElementById('av-auth-gate');
+  var app        = document.getElementById('av-app');
+  var authInput  = document.getElementById('av-auth-input');
+  var authSubmit = document.getElementById('av-auth-submit');
+  var authError  = document.getElementById('av-auth-error');
+  var subtitle   = document.getElementById('av-subtitle');
+  var summaryEl  = document.getElementById('av-summary');
+  var listEl     = document.getElementById('av-list');
+  var searchEl   = document.getElementById('av-search');
+  var roleEl     = document.getElementById('av-role-filter');
+  var refreshBtn = document.getElementById('av-refresh');
+
+  // ─── Auth ──────────────────────────────────────────────────
+  function showGate() {
+    gate.hidden = false; app.hidden = true;
+    if (pollHandle) { clearInterval(pollHandle); pollHandle = null; }
+    setTimeout(function() { if (authInput) authInput.focus(); }, 50);
+  }
+  function showApp() {
+    gate.hidden = true; app.hidden = false;
+    load();
+    if (!pollHandle) pollHandle = setInterval(load, POLL_MS);
+  }
+  authSubmit.addEventListener('click', tryAuth);
+  authInput.addEventListener('keydown', function(ev) {
+    if (ev.key === 'Enter') tryAuth();
+  });
+  function tryAuth() {
+    var key = pnecAdminToken();
+    if (!key) return;
+    adminKey = key;
+    // Account tokens are managed exclusively by the normal login worker.
+    authError.classList.remove('is-visible');
+    load();
+  }
+
+  // ─── Data load ─────────────────────────────────────────────
+  function load() {
+    var params = new URLSearchParams();
+    if (statusFilter) params.set('status', statusFilter);
+    if (roleFilter)   params.set('role', roleFilter);
+    if (searchTerm)   params.set('q', searchTerm);
+    fetch(API_BASE + '/api/volunteer/interests?' + params.toString(), {
+      method: 'GET',
+      headers: { 'Accept': 'application/json', 'Authorization': 'Bearer ' + adminKey },
+      credentials: 'include'
+    }).then(function(res) {
+      if (res.status === 401) { showGate(); throw new Error('unauth'); }
+      if (res.status === 404) { showGate(); throw new Error('notdeployed'); }
+      if (!res.ok)            { throw new Error('http_' + res.status); }
+      return res.json();
+    }).then(function(data) {
+      lastData = data;
+      render(data);
+      if (app.hidden) showApp();
+    }).catch(function(err) {
+      var msg = String(err.message || '');
+      if (msg === 'unauth') {
+        authError.innerHTML = 'Administrator login required. Sign in with your account and retry.';
+        authError.classList.add('is-visible');
+      } else if (msg === 'notdeployed') {
+        authError.innerHTML = 'Backend doesn\'t have <code>/api/volunteer/interests</code> yet. The Flask server needs to be <strong>rebuilt + redeployed</strong> with the latest code.';
+        authError.classList.add('is-visible');
+      } else if (msg.indexOf('http_') === 0) {
+        // Non-2xx, not 401/404 — show status but stay in app if it was opened
+        console.warn('volunteer dashboard:', msg);
+        // Fallthrough silently — periodic poll will retry
+      } else {
+        // Network / CORS / unreachable — show a banner once
+        if (gate && gate.hidden === false) {
+          authError.innerHTML = 'Could not reach the Flask API. Check the server is up.';
+          authError.classList.add('is-visible');
+        }
+      }
+    });
+  }
+  refreshBtn.addEventListener('click', load);
+
+  // ─── Filters ──────────────────────────────────────────────
+  searchEl.addEventListener('input', function() {
+    searchTerm = searchEl.value.trim();
+    debouncedLoad();
+  });
+  roleEl.addEventListener('change', function() {
+    roleFilter = roleEl.value;
+    load();
+  });
+  var dt;
+  function debouncedLoad() {
+    clearTimeout(dt);
+    dt = setTimeout(load, 250);
+  }
+
+  // ─── Render ────────────────────────────────────────────────
+  function render(data) {
+    var items = (data && data.items) || [];
+    var summary = (data && data.summary) || {};
+
+    subtitle.textContent = items.length + ' shown · ' + (summary.total || 0) + ' total submissions · auto-refreshing every 20s';
+
+    // Tiles — clickable filters
+    var tilesHtml = ''
+      + tile('total',      'all',         summary.total       || 0, 'All time')
+      + tile('new',        'new',         summary.new         || 0, 'New')
+      + tile('contacted',  'contacted',   summary.contacted   || 0, 'Contacted')
+      + tile('onboarding', 'onboarding',  summary.onboarding  || 0, 'Onboarding')
+      + tile('active',     'active',      summary.active      || 0, 'Active')
+      + tile('declined',   'declined',    summary.declined    || 0, 'Declined')
+      + tile('archived',   'archived',    summary.archived    || 0, 'Archived');
+    summaryEl.innerHTML = tilesHtml;
+    summaryEl.querySelectorAll('.av-tile').forEach(function(t) {
+      t.addEventListener('click', function() {
+        var s = t.getAttribute('data-status');
+        statusFilter = (s === 'all') ? '' : s;
+        load();
+      });
+      if (t.getAttribute('data-status') === (statusFilter || 'all')) t.classList.add('is-active');
+    });
+
+    if (!items.length) {
+      listEl.innerHTML = '<div class="av-empty"><h3>No matching submissions</h3><p>Adjust filters or check back later — auto-refresh every 20 s.</p></div>';
+      return;
+    }
+
+    listEl.innerHTML = items.map(rowHtml).join('');
+    // wire toggles + actions
+    listEl.querySelectorAll('[data-action]').forEach(function(btn) {
+      btn.addEventListener('click', function(ev) {
+        ev.stopPropagation();
+        var id = btn.closest('.av-row').getAttribute('data-id');
+        var action = btn.getAttribute('data-action');
+        if (action === 'toggle') return toggleRow(id);
+        if (action === 'set-status') return updateStatus(id, btn.getAttribute('data-value'));
+        if (action === 'add-note')   return addNoteFor(id);
+      });
+    });
+    listEl.querySelectorAll('.av-row').forEach(function(row) {
+      row.addEventListener('click', function() {
+        toggleRow(row.getAttribute('data-id'));
+      });
+    });
+  }
+
+  function tile(key, statusVal, num, label) {
+    return '<div class="av-tile" data-status="' + statusVal + '">'
+         + '<div class="num">' + num + '</div>'
+         + '<div class="lbl">' + label + '</div>'
+         + '</div>';
+  }
+
+  function rowHtml(it) {
+    var statusClass = 'av-status-' + (it.status || 'new');
+    var when = it.created_at ? new Date(it.created_at).toLocaleString() : '';
+    var roleLabel = it.role_label || it.role || '';
+    return '<div class="av-row" data-id="' + it.id + '">'
+      +   '<div class="av-cell-who">'
+      +     '<strong>' + esc(it.name) + '</strong>'
+      +     '<span><a href="mailto:' + esc(it.email) + '">' + esc(it.email) + '</a>'
+      +     (it.phone ? ' · ' + esc(it.phone) : '')
+      +     '</span>'
+      +   '</div>'
+      +   '<div class="av-cell-meta">'
+      +     '<span class="av-role-pill">' + esc(roleLabel) + '</span>'
+      +     (it.neighborhood ? '<div style="margin-top:4px;">' + esc(it.neighborhood) + '</div>' : '')
+      +   '</div>'
+      +   '<div class="av-cell-meta"><span class="av-status-pill ' + statusClass + '">' + esc(it.status) + '</span></div>'
+      +   '<div class="av-cell-date">' + esc(when) + '</div>'
+      +   '<button type="button" class="av-row-toggle" data-action="toggle">Open ▾</button>'
+      + '</div>';
+  }
+
+  function toggleRow(id) {
+    var row = listEl.querySelector('.av-row[data-id="' + id + '"]');
+    if (!row) return;
+    var existing = row.querySelector('.av-detail');
+    if (existing) { existing.remove(); row.classList.remove('is-expanded'); return; }
+    var it = (lastData && lastData.items || []).find(function(x) { return String(x.id) === String(id); });
+    if (!it) return;
+    row.classList.add('is-expanded');
+    var d = document.createElement('div');
+    d.className = 'av-detail';
+    d.innerHTML = ''
+      + '<dl class="av-detail-grid">'
+      +   '<div><dt>Name</dt><dd>' + esc(it.name) + '</dd></div>'
+      +   '<div><dt>Email</dt><dd><a href="mailto:' + esc(it.email) + '">' + esc(it.email) + '</a></dd></div>'
+      +   '<div><dt>Phone</dt><dd>' + esc(it.phone || '—') + '</dd></div>'
+      +   '<div><dt>Neighborhood</dt><dd>' + esc(it.neighborhood || '—') + '</dd></div>'
+      +   '<div><dt>Role</dt><dd>' + esc(it.role_label || it.role) + '</dd></div>'
+      +   '<div><dt>Status</dt><dd>' + esc(it.status) + '</dd></div>'
+      +   '<div><dt>Submitted</dt><dd>' + (it.created_at ? new Date(it.created_at).toLocaleString() : '—') + '</dd></div>'
+      +   '<div><dt>Contacted</dt><dd>' + (it.contacted_at ? new Date(it.contacted_at).toLocaleString() : '—') + '</dd></div>'
+      + '</dl>'
+      + (it.message ? '<div class="av-message-box">' + esc(it.message) + '</div>' : '')
+      + (it.admin_notes ? '<div><dt style="font-size:0.74rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#5a6470;margin-bottom:4px;">Admin notes</dt><div class="av-notes-box">' + esc(it.admin_notes) + '</div></div>' : '')
+      + '<div class="av-actions">'
+      +   '<button type="button" class="av-action is-primary" data-action="set-status" data-value="contacted">Mark contacted</button>'
+      +   '<button type="button" class="av-action" data-action="set-status" data-value="onboarding">Onboarding</button>'
+      +   '<button type="button" class="av-action" data-action="set-status" data-value="active">Active</button>'
+      +   '<button type="button" class="av-action is-danger" data-action="set-status" data-value="declined">Declined</button>'
+      +   '<button type="button" class="av-action" data-action="set-status" data-value="archived">Archive</button>'
+      + '</div>'
+      + '<div class="av-note-input">'
+      +   '<textarea placeholder="Add an admin note (e.g. emailed 2026-05-12, follow up after Memorial Day…)"></textarea>'
+      +   '<button type="button" class="av-action is-primary" data-action="add-note" style="align-self:flex-end;">Add note</button>'
+      + '</div>';
+    row.appendChild(d);
+    // re-wire after innerHTML
+    d.querySelectorAll('[data-action]').forEach(function(btn) {
+      btn.addEventListener('click', function(ev) {
+        ev.stopPropagation();
+        var action = btn.getAttribute('data-action');
+        if (action === 'set-status') updateStatus(id, btn.getAttribute('data-value'));
+        if (action === 'add-note')   addNoteFor(id, d.querySelector('textarea').value);
+      });
+    });
+  }
+
+  function updateStatus(id, status) {
+    fetch(API_BASE + '/api/volunteer/interests/' + id, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + adminKey,
+      },
+      body: JSON.stringify({ status: status }),
+      credentials: 'include'
+    }).then(function(res) {
+      if (!res.ok) { throw new Error('Server returned ' + res.status); }
+      return res.json();
+    }).then(function() {
+      load();
+    }).catch(function(err) {
+      console.warn('updateStatus failed:', err);
+      // Non-blocking toast via brief alert. (The dashboard auto-refreshes
+      // every 20s so the failed update will retry naturally on next poll
+      // if the admin re-clicks.)
+      alert('Couldn\'t update status — ' + (err.message || 'try again') + '.');
+    });
+  }
+
+  function addNoteFor(id, noteFromArg) {
+    var row = listEl.querySelector('.av-row[data-id="' + id + '"]');
+    var ta = row && row.querySelector('.av-note-input textarea');
+    var note = (noteFromArg !== undefined) ? noteFromArg : (ta && ta.value || '');
+    note = String(note || '').trim();
+    if (!note) { alert('Type a note first.'); return; }
+    fetch(API_BASE + '/api/volunteer/interests/' + id, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + adminKey,
+      },
+      body: JSON.stringify({ note: note }),
+      credentials: 'include'
+    }).then(function(res) { return res.json(); })
+      .then(function() { if (ta) ta.value = ''; load(); })
+      .catch(function() { alert('Failed to add note — try again.'); });
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // Boot
+  if (adminKey) load();
+  else showGate();
+})();
+</script>

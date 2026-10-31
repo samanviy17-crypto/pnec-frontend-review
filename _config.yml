@@ -1,0 +1,35 @@
+title: "PNEC — isolated source review"
+description: "Poway Neighborhood Emergency Corps review snapshot"
+url: "https://pnec-review.invalid"
+baseurl: ""
+api_base_url: "http://127.0.0.1:8425"
+encoding: utf-8
+theme: minima
+plugins:
+  - jekyll-include-cache
+  - jekyll-seo-tag
+exclude:
+  - scripts/
+  - README.md
+  - SOURCE-NOTES.md
+  - SECURITY.md
+  - ATTRIBUTION.md
+  - RPG-LIMITATIONS.md
+  - LICENSE
+  - .env.example
+  - .gitignore
+  - Gemfile
+  - Gemfile.lock
+  - requirements-dev.txt
+  - package.json
+  - assets/js/chatbot/*.test.mjs
+  - assets/js/cms/*.test.mjs
+sass:
+  sass_dir: _sass
+  style: compressed
+defaults:
+  - scope:
+      path: "pages"
+    values:
+      layout: "pnec-base"
+      use_poway_live_styles: true

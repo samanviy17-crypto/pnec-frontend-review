@@ -1,0 +1,189 @@
+// Migrated from pages/admin-map-hotspots.html; preserve selector order and runtime tokens.
+@import "beasts/foundation/tokens";
+@import "beasts/foundation/responsive";
+
+/* ════════════════════════════════════════════════════════════════
+   PNEC Admin Map Hotspot Editor (v3.20, May 2026)
+
+   Lets admins drag each neighborhood's hotspot to its correct
+   position on the emergency neighborhood map. Saves the updated
+   x/y coords + a fresh small octagon polygon back to
+   /assets/data/poway-neighborhoods.json via /api/admin/publish/file.
+   ════════════════════════════════════════════════════════════════ */
+.admin-map-hotspots-page { background:#fbf8f1; min-height:100vh; }
+.admin-map-hotspots-page *, .admin-map-hotspots-page *::before, .admin-map-hotspots-page *::after { box-sizing:border-box; }
+
+/* ─── Top bar ───────────────────────────────────────────────── */
+.amh-topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; padding:14px 22px;
+  background:linear-gradient(180deg,#fff 0%,#fbf8f1 100%);
+  border-bottom:1px solid #e3e0d8;
+  position:sticky; top:0; z-index:30;
+  font-family:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+}
+.amh-topbar h1 { margin:0; font-size:1.05rem; font-weight:800; color:$beasts-forest; }
+.amh-topbar .sub { margin:1px 0 0; font-size:.78rem; color:#475569; }
+.amh-actions { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+
+.amh-btn {
+  padding:8px 14px;
+  border:1.5px solid #d8d4c4; background:$beasts-white; color:$beasts-forest;
+  border-radius:8px; font-size:.86rem; font-weight:700;
+  cursor:pointer; white-space:nowrap;
+  transition:background-color .15s,border-color .15s,color .15s,transform .06s;
+  font-family:'DM Sans',sans-serif;
+}
+.amh-btn:hover { background:#d4efdf; border-color:$beasts-green; }
+.amh-btn.is-primary {
+  background:linear-gradient(135deg,#145a32 0%,#1e8449 100%);
+  color:#fffdf6; border-color:$beasts-green;
+  box-shadow:0 4px 12px rgba(20,90,50,.2);
+}
+.amh-btn.is-primary:disabled { opacity:.55; cursor:wait; }
+.amh-btn.is-ghost { background:transparent; border-color:transparent; }
+.amh-btn.is-danger { color:#80261b; border-color:rgba(192,57,43,.32); }
+.amh-btn.is-danger:hover { background:rgba(192,57,43,.10); }
+
+.amh-status-pill {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:4px 10px; border-radius:999px;
+  font-size:.74rem; font-weight:700; letter-spacing:.04em;
+}
+.amh-status-pill::before { content:''; width:7px; height:7px; border-radius:50%; background:currentColor; }
+.amh-status-pill.is-clean  { background:#d4efdf; color:$beasts-green; }
+.amh-status-pill.is-dirty  { background:#fdf0d5; color:#92400e; }
+.amh-status-pill.is-saving { background:#dbeafe; color:#1e40af; }
+.amh-status-pill.is-saving::before { animation:amh-pulse 1s ease-in-out infinite; }
+@keyframes amh-pulse { 0%,100%{opacity:1}50%{opacity:.4} }
+
+/* ─── Auth gate ───────────────────────────────────────────── */
+.amh-auth-card {
+  max-width:460px; margin:80px auto; background:$beasts-white;
+  border:1.5px solid #e3e0d8; border-radius:14px; padding:28px;
+  font-family:'DM Sans',sans-serif; color:#0a1628;
+}
+.amh-auth-card h2 { margin:0 0 6px; color:$beasts-forest; }
+.amh-auth-card p  { margin:0 0 16px; color:#475569; font-size:.92rem; line-height:1.55; }
+.amh-auth-card input {
+  width:100%; padding:10px 12px; border:1.5px solid #d8d4c4;
+  border-radius:8px; font:inherit; font-size:.95rem;
+}
+.amh-auth-card input:focus { outline:2px solid #1e8449; outline-offset:1px; border-color:$beasts-green; }
+.amh-auth-err { color:#80261b; font-size:.84rem; margin-top:10px; min-height:1em; }
+
+/* ─── Main shell ──────────────────────────────────────────── */
+.amh-shell {
+  display:grid;
+  grid-template-columns:1fr 360px;
+  gap:14px;
+  padding:14px;
+  font-family:'DM Sans',sans-serif; color:#0a1628;
+  align-items:start;
+}
+@media (max-width:980px) {
+  .amh-shell { grid-template-columns:1fr; }
+}
+
+/* ─── Map stage ───────────────────────────────────────────── */
+.amh-stage-wrap {
+  background:$beasts-white; border:1.5px solid #e3e0d8; border-radius:12px;
+  padding:10px; position:relative;
+  /* Don't let the stage collapse on narrow screens */
+  min-height:200px;
+}
+.amh-stage {
+  position:relative; width:100%;
+  /* Aspect ratio of the map image — 1376:1844 */
+  aspect-ratio:1376/1844;
+  background:#f7f1e2;
+  border-radius:8px; overflow:hidden;
+  user-select:none;
+}
+.amh-stage img {
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:contain; pointer-events:none;
+}
+.amh-stage svg {
+  position:absolute; inset:0; width:100%; height:100%;
+}
+.amh-hotspot {
+  cursor:grab;
+  transition:r .15s, fill .15s, stroke-width .15s;
+}
+.amh-hotspot:hover  { r:14; fill:#facc15; stroke-width:3; }
+.amh-hotspot.is-dragging { cursor:grabbing; r:18; fill:#facc15; stroke-width:4; }
+.amh-hotspot.is-selected { fill:#facc15; stroke:#dc2626; stroke-width:3; }
+.amh-hotspot.is-warning { stroke:#dc2626 !important; }
+.amh-hotspot-label {
+  font:700 12px/1 'DM Sans',sans-serif;
+  fill:#0a1628; paint-order:stroke;
+  stroke:$beasts-white; stroke-width:3; stroke-linejoin:round;
+  pointer-events:none;
+  text-anchor:middle; dominant-baseline:central;
+}
+
+/* ─── Side panel ──────────────────────────────────────────── */
+.amh-panel {
+  background:$beasts-white; border:1.5px solid #e3e0d8; border-radius:12px;
+  padding:16px;
+  position:sticky; top:78px;
+  max-height:calc(100vh - 100px); overflow:auto;
+}
+.amh-panel h2 { margin:0 0 6px; font-size:1.02rem; color:$beasts-forest; }
+.amh-panel .hint { margin:0 0 14px; font-size:.86rem; color:#475569; line-height:1.5; }
+
+.amh-list {
+  list-style:none; margin:0; padding:0;
+  display:flex; flex-direction:column; gap:4px;
+  max-height:50vh; overflow:auto;
+  border:1px solid #e3e0d8; border-radius:8px; padding:4px;
+  background:#fafaf6;
+}
+.amh-list li {
+  display:flex; align-items:center; gap:8px;
+  padding:6px 8px; border-radius:6px;
+  cursor:pointer; font-size:.83rem;
+  transition:background-color .12s;
+}
+.amh-list li:hover  { background:#d4efdf; }
+.amh-list li.is-selected { background:$beasts-green; color:#fffdf6; font-weight:700; }
+.amh-list li.is-warning::after { content:'⚠'; margin-left:auto; color:#dc2626; font-weight:700; }
+.amh-list-num {
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:28px; height:22px; padding:0 6px;
+  border-radius:5px; font-weight:700; font-size:.78rem;
+  background:$beasts-forest; color:#fffdf6;
+}
+.amh-list li.is-selected .amh-list-num { background:#facc15; color:#0a1628; }
+
+/* ─── Selected-neighborhood card ──────────────────────────── */
+.amh-card {
+  margin-top:14px; padding:12px;
+  background:#f7f1e2; border-radius:8px;
+  border:1px solid #e3e0d8;
+}
+.amh-card h3 { margin:0 0 4px; font-size:.92rem; color:$beasts-forest; }
+.amh-card .coords { font-family:ui-monospace,monospace; font-size:.8rem; color:#475569; }
+.amh-card .actions { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+
+/* ─── Toast ───────────────────────────────────────────────── */
+.amh-toast {
+  position:fixed; right:22px; bottom:22px; z-index:100;
+  background:$beasts-forest; color:#fffdf6; padding:12px 18px;
+  border-radius:10px; font-weight:600; font-size:.9rem;
+  font-family:'DM Sans',sans-serif;
+  box-shadow:0 12px 28px rgba(10,22,40,.30);
+  opacity:0; transform:translateY(6px);
+  transition:opacity .18s,transform .18s;
+  pointer-events:none;
+}
+.amh-toast.is-shown { opacity:1; transform:translateY(0); }
+.amh-toast.is-err { background:#80261b; }
+
+/* Filter input */
+.amh-filter {
+  display:block; width:100%; padding:6px 10px;
+  border:1.5px solid #d8d4c4; border-radius:7px;
+  font:inherit; font-size:.85rem; margin:6px 0 8px;
+}

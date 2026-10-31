@@ -1,0 +1,112 @@
+// Migrated from pages/blog-post.html; preserve selector order and runtime tokens.
+@import "beasts/foundation/tokens";
+@import "beasts/foundation/responsive";
+
+.bp-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 56px 24px 80px;
+    }
+    .bp-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #72af2f;
+      font-size: .9rem;
+      font-weight: 700;
+      text-decoration: none;
+      margin-bottom: 32px;
+    }
+    .bp-back:hover { text-decoration: underline; }
+    .bp-cover {
+      width: 100%;
+      max-height: 420px;
+      object-fit: cover;
+      border-radius: 16px;
+      margin-bottom: 32px;
+    }
+    .bp-meta {
+      font-size: .85rem;
+      color: #72af2f;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .bp-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      color: #0a1628;
+      margin: 0 0 16px;
+      line-height: 1.15;
+    }
+    .bp-byline {
+      font-size: .9rem;
+      color: #7a8fa8;
+      margin-bottom: 32px;
+      padding-bottom: 28px;
+      border-bottom: 2px solid #e8edf4;
+    }
+    .bp-content {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #2c3e50;
+    }
+    .bp-content h2, .bp-content h3 {
+      color: #0a1628;
+      margin-top: 2em;
+    }
+    .bp-content img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin: 16px 0;
+    }
+    .bp-content a { color: #72af2f; }
+    .bp-content ul, .bp-content ol {
+      padding-left: 1.5em;
+      margin: 1em 0;
+    }
+    .bp-content blockquote {
+      border-left: 4px solid #72af2f;
+      margin: 1.5em 0;
+      padding: 12px 20px;
+      background: #f0f7e8;
+      border-radius: 0 8px 8px 0;
+      color: #445;
+    }
+    .bp-loading {
+      text-align: center;
+      padding: 80px 20px;
+      color: #7a8fa8;
+    }
+    .bp-error {
+      text-align: center;
+      padding: 80px 20px;
+      color: #c0392b;
+    }
+    .bp-error h2 { color: #0a1628; }
+    .bp-admin-bar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 24px;
+      padding: 14px 18px;
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 10px;
+      font-size: .88rem;
+    }
+    .bp-admin-bar span { flex: 1; font-weight: 600; color: #856404; }
+    .bp-btn {
+      padding: 7px 14px;
+      border-radius: 8px;
+      border: 0;
+      cursor: pointer;
+      font-size: .85rem;
+      font-weight: 700;
+    }
+    .bp-btn-edit   { background: #0a1628; color: $beasts-white; }
+    .bp-btn-delete { background: #c0392b; color: $beasts-white; }
+    @media (max-width: 600px) {
+      .bp-wrap { padding: 32px 16px 56px; }
+    }

@@ -1,0 +1,366 @@
+---
+layout: null
+---
+<!-- PNEC Helper Bot v3 widget markup. Static copy of
+     _includes/chatbot/chatbot-widget.html, fetched at runtime by
+     /assets/js/ui/chatbot-inject.js for full-HTML pages that don't
+     go through the Jekyll layout (about, contact, etc.). -->
+<!-- Closed-state floating action button -->
+<button id="pnec-bot-fab"
+        class="pnec-bot-fab"
+        type="button"
+        aria-label="Open Helper Bot"
+        aria-haspopup="dialog"
+        aria-expanded="false">
+  <span class="pnec-bot-fab-pulse" aria-hidden="true"></span>
+  <span class="pnec-bot-fab-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12a9 9 0 0 1-9 9c-1.6 0-3.1-.4-4.4-1.1L3 21l1.1-4.6A9 9 0 1 1 21 12z"/>
+      <circle cx="9" cy="11" r="0.8" fill="currentColor"/>
+      <circle cx="15" cy="11" r="0.8" fill="currentColor"/>
+      <path d="M9 14.5c1 .8 2 1 3 1s2-.2 3-1"/>
+    </svg>
+  </span>
+  <span class="pnec-bot-fab-label" id="pnec-bot-fab-label">Helper Bot</span>
+  <span class="pnec-bot-fab-badge" id="pnec-bot-fab-badge" hidden></span>
+</button>
+
+<!-- Modal-mode backdrop -->
+<div id="pnec-bot-backdrop" class="pnec-bot-backdrop" hidden aria-hidden="true"></div>
+
+<!-- The widget panel -->
+<aside id="pnec-bot-panel"
+       class="pnec-bot-panel"
+       role="dialog"
+       aria-modal="false"
+       aria-labelledby="pnec-bot-title"
+       aria-describedby="pnec-bot-greeting"
+       hidden>
+
+  <!-- ── Side rail: conversation history ──────────────────────────── -->
+  <nav class="pnec-bot-rail" id="pnec-bot-rail" aria-label="Conversation history">
+    <div class="pnec-bot-rail-head">
+      <button id="pnec-bot-new-chat" type="button" class="pnec-bot-new-chat">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        New chat
+      </button>
+    </div>
+    <div class="pnec-bot-rail-search">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="pnec-bot-rail-search" type="search" placeholder="Search conversations" aria-label="Search past conversations" autocomplete="off">
+    </div>
+    <ol class="pnec-bot-rail-list" id="pnec-bot-rail-list" role="list"></ol>
+  </nav>
+
+  <!-- ── Main column ──────────────────────────────────────────────── -->
+  <div class="pnec-bot-main">
+
+    <header class="pnec-bot-head">
+      <button id="pnec-bot-rail-toggle" class="pnec-bot-icon-btn" type="button" aria-label="Toggle conversation history">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="pnec-bot-head-id">
+        <span class="pnec-bot-head-avatar" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-12V5l-8-3-8 3v5c0 8 8 12 8 12z"/></svg>
+        </span>
+        <div class="pnec-bot-head-meta">
+          <h2 id="pnec-bot-title" class="pnec-bot-title">Helper Bot</h2>
+          <p class="pnec-bot-status">
+            <span class="pnec-bot-status-dot" aria-hidden="true"></span>
+            <span id="pnec-bot-status-text">PNEC · ready</span>
+          </p>
+        </div>
+      </div>
+      <div class="pnec-bot-head-actions">
+        <button id="pnec-bot-settings" class="pnec-bot-icon-btn" type="button" aria-label="Settings">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+        <button id="pnec-bot-expand" class="pnec-bot-icon-btn" type="button" aria-label="Expand panel">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+        </button>
+        <button id="pnec-bot-modal" class="pnec-bot-icon-btn" type="button" aria-label="Full screen">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+        </button>
+        <button id="pnec-bot-close" class="pnec-bot-icon-btn" type="button" aria-label="Close panel">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Phase 3 emergency action drawer (toggled when emergency detected) -->
+    <div class="pnec-bot-action-drawer" id="pnec-bot-action-drawer" hidden>
+      <a class="pnec-bot-action-pill pnec-bot-action-emergency" href="tel:911">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Call 911
+      </a>
+      <button class="pnec-bot-action-pill" type="button" data-action="alerts">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Active alerts
+      </button>
+      <button class="pnec-bot-action-pill" type="button" data-action="evac">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Evacuation route
+      </button>
+      <button class="pnec-bot-action-pill" type="button" data-action="kit">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h18v13H3z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/></svg>
+        Kit status
+      </button>
+    </div>
+
+    <!-- ── Empty state / welcome ──────────────────────────────────── -->
+    <section class="pnec-bot-empty" id="pnec-bot-empty">
+      <div class="pnec-bot-empty-hero">
+        <span class="pnec-bot-empty-wave" aria-hidden="true">👋</span>
+        <h3 class="pnec-bot-empty-greeting" id="pnec-bot-empty-greeting">Hi, neighbor</h3>
+        <p class="pnec-bot-empty-sub" id="pnec-bot-greeting">
+          Ask me anything about emergency preparedness, your block, or PNEC programs.
+        </p>
+      </div>
+      <div class="pnec-bot-suggestions" id="pnec-bot-empty-suggestions" role="list"></div>
+      <button id="pnec-bot-browse-topics" type="button" class="pnec-bot-browse-link">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12" y2="16"/></svg>
+        Browse all topics
+        <span class="pnec-bot-browse-count" id="pnec-bot-browse-count"></span>
+      </button>
+
+      <!-- Expanded "all topics" panel (hidden by default) -->
+      <section id="pnec-bot-topics-panel" class="pnec-bot-topics-panel" hidden>
+        <div class="pnec-bot-topics-head">
+          <button id="pnec-bot-topics-back" type="button" class="pnec-bot-topics-back">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            Back
+          </button>
+          <h4>What can I help with?</h4>
+        </div>
+        <div id="pnec-bot-topics-body" class="pnec-bot-topics-body"></div>
+      </section>
+
+      <div class="pnec-bot-tips">
+        <span class="pnec-bot-tip">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Encrypted · personal
+        </span>
+        <span class="pnec-bot-tip">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12" y2="16"/></svg>
+          Cites sources
+        </span>
+        <span class="pnec-bot-tip">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+          Voice-ready
+        </span>
+      </div>
+    </section>
+
+    <!-- ── Conversation transcript ────────────────────────────────── -->
+    <section id="pnec-bot-transcript"
+             class="pnec-bot-transcript"
+             role="log"
+             aria-live="polite"
+             aria-relevant="additions"
+             hidden></section>
+
+    <!-- ── Suggestion chips (above composer) ──────────────────────── -->
+    <div id="pnec-bot-followups" class="pnec-bot-followups" role="list" hidden></div>
+
+    <!-- ── Composer ───────────────────────────────────────────────── -->
+    <form id="pnec-bot-composer" class="pnec-bot-composer" autocomplete="off">
+      <div class="pnec-bot-composer-attachments" id="pnec-bot-attachments" hidden></div>
+      <div class="pnec-bot-composer-row">
+        <button id="pnec-bot-attach"
+                class="pnec-bot-icon-btn pnec-bot-composer-btn"
+                type="button"
+                aria-label="Attach an image">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        </button>
+        <input id="pnec-bot-attach-input" type="file" accept="image/*" aria-label="Attach an image to your message" hidden>
+
+        <textarea id="pnec-bot-input"
+                  class="pnec-bot-input"
+                  rows="1"
+                  placeholder="Ask Helper Bot anything…"
+                  aria-label="Message Helper Bot"
+                  enterkeyhint="send"
+                  autocomplete="off"></textarea>
+
+        <button id="pnec-bot-mic"
+                class="pnec-bot-icon-btn pnec-bot-composer-btn pnec-bot-mic"
+                type="button"
+                aria-label="Speak"
+                aria-pressed="false">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </button>
+
+        <button id="pnec-bot-send"
+                class="pnec-bot-send"
+                type="submit"
+                aria-label="Send message"
+                disabled>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor"/></svg>
+        </button>
+      </div>
+      <div class="pnec-bot-composer-meta">
+        <span id="pnec-bot-composer-hint" class="pnec-bot-composer-hint">
+          Enter to send · Shift+Enter for new line
+        </span>
+        <span id="pnec-bot-counter" class="pnec-bot-counter" hidden></span>
+      </div>
+    </form>
+
+  </div><!-- /.pnec-bot-main -->
+
+  <!-- ── Settings drawer (v3.11 — real-AI settings panel) ─────────── -->
+  <aside class="pnec-bot-settings-drawer" id="pnec-bot-settings-drawer" aria-label="Helper Bot settings">
+    <header class="pnec-bot-settings-head">
+      <h3>Settings</h3>
+      <button id="pnec-bot-settings-close" class="pnec-bot-icon-btn" type="button" aria-label="Close settings">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </header>
+
+    <div class="pnec-bot-settings-body">
+
+      <!-- ─── Appearance ──────────────────────────────────────── -->
+      <section class="pnec-bot-settings-group" aria-labelledby="pb-grp-appearance">
+        <h4 id="pb-grp-appearance" class="pnec-bot-settings-group-title">Appearance</h4>
+
+        <div class="pnec-bot-settings-row pnec-bot-settings-row--block">
+          <span class="pnec-bot-settings-label">Theme</span>
+          <div class="pnec-bot-segmented" role="radiogroup" aria-label="Theme">
+            <button type="button" class="pb-seg" data-pref="theme" data-value="auto" role="radio">Auto</button>
+            <button type="button" class="pb-seg" data-pref="theme" data-value="light" role="radio">Light</button>
+            <button type="button" class="pb-seg" data-pref="theme" data-value="dark" role="radio">Dark</button>
+          </div>
+        </div>
+
+        <div class="pnec-bot-settings-row pnec-bot-settings-row--block">
+          <span class="pnec-bot-settings-label">Text size</span>
+          <div class="pnec-bot-segmented" role="radiogroup" aria-label="Text size">
+            <button type="button" class="pb-seg" data-pref="textSize" data-value="compact" role="radio">Compact</button>
+            <button type="button" class="pb-seg" data-pref="textSize" data-value="comfortable" role="radio">Comfortable</button>
+            <button type="button" class="pb-seg" data-pref="textSize" data-value="large" role="radio">Large</button>
+          </div>
+        </div>
+
+        <div class="pnec-bot-settings-row pnec-bot-settings-row--block">
+          <span class="pnec-bot-settings-label">Accent color</span>
+          <div class="pnec-bot-swatches" role="radiogroup" aria-label="Accent color">
+            <button type="button" class="pb-swatch" data-pref="accent" data-value="forest"   aria-label="Forest green"  role="radio" style="--pb-swatch:#1e8449"></button>
+            <button type="button" class="pb-swatch" data-pref="accent" data-value="sky"      aria-label="Sky blue"      role="radio" style="--pb-swatch:#3b82f6"></button>
+            <button type="button" class="pb-swatch" data-pref="accent" data-value="sunset"   aria-label="Sunset orange" role="radio" style="--pb-swatch:#e07a3f"></button>
+            <button type="button" class="pb-swatch" data-pref="accent" data-value="lavender" aria-label="Lavender"      role="radio" style="--pb-swatch:#8b5cf6"></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Conversation ────────────────────────────────────── -->
+      <section class="pnec-bot-settings-group" aria-labelledby="pb-grp-conv">
+        <h4 id="pb-grp-conv" class="pnec-bot-settings-group-title">Conversation</h4>
+
+        <div class="pnec-bot-settings-row pnec-bot-settings-row--block">
+          <span class="pnec-bot-settings-label">Reply style</span>
+          <div class="pnec-bot-segmented" role="radiogroup" aria-label="Reply style">
+            <button type="button" class="pb-seg" data-pref="style" data-value="concise"  role="radio">Concise</button>
+            <button type="button" class="pb-seg" data-pref="style" data-value="default"  role="radio">Default</button>
+            <button type="button" class="pb-seg" data-pref="style" data-value="detailed" role="radio">Detailed</button>
+          </div>
+          <p class="pnec-bot-settings-help">Concise: 1-2 sentences. Detailed: more context + step-by-step.</p>
+        </div>
+
+        <label class="pnec-bot-settings-row">
+          <span class="pnec-bot-settings-label">Language</span>
+          <select id="pnec-bot-pref-lang" class="pnec-bot-settings-input">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="tl">Tagalog</option>
+          </select>
+        </label>
+
+        <label class="pnec-bot-settings-row">
+          <span class="pnec-bot-settings-label">Voice replies <span class="pnec-bot-settings-help-inline">— read responses aloud</span></span>
+          <input id="pnec-bot-pref-voice" type="checkbox" class="pnec-bot-settings-toggle">
+        </label>
+
+        <label class="pnec-bot-settings-row">
+          <span class="pnec-bot-settings-label">Suggested follow-ups <span class="pnec-bot-settings-help-inline">— quick-reply chips after each answer</span></span>
+          <input id="pnec-bot-pref-suggestions" type="checkbox" class="pnec-bot-settings-toggle">
+        </label>
+      </section>
+
+      <!-- ─── Custom instructions ─────────────────────────────── -->
+      <section class="pnec-bot-settings-group" aria-labelledby="pb-grp-custom">
+        <h4 id="pb-grp-custom" class="pnec-bot-settings-group-title">Custom instructions</h4>
+        <p class="pnec-bot-settings-help">
+          Anything Helper Bot should know about you and your household —
+          medical needs, neighborhood, animals, mobility, language preference.
+          Stays on this device. Used to personalize answers.
+        </p>
+        <textarea id="pnec-bot-pref-custom" aria-label="Custom instructions — anything Helper Bot should know about you and your household"
+                  class="pnec-bot-settings-textarea"
+                  rows="4"
+                  maxlength="800"
+                  placeholder="e.g. I'm 72, live alone in High Valley (neighborhood 28), have a horse, and use a CPAP — I need to plan for power outages."></textarea>
+        <div class="pnec-bot-settings-textarea-foot">
+          <span id="pnec-bot-pref-custom-count" class="pnec-bot-settings-counter">0 / 800</span>
+        </div>
+      </section>
+
+      <!-- ─── Memory + data ──────────────────────────────────── -->
+      <section class="pnec-bot-settings-group" aria-labelledby="pb-grp-data">
+        <h4 id="pb-grp-data" class="pnec-bot-settings-group-title">Memory &amp; data</h4>
+
+        <label class="pnec-bot-settings-row">
+          <span class="pnec-bot-settings-label">Remember conversations <span class="pnec-bot-settings-help-inline">— keep chat history across visits</span></span>
+          <input id="pnec-bot-pref-remember" type="checkbox" class="pnec-bot-settings-toggle">
+        </label>
+
+        <div class="pnec-bot-settings-stat" id="pnec-bot-settings-storage-stat">
+          <span class="pnec-bot-settings-stat-label">Stored on this device</span>
+          <span class="pnec-bot-settings-stat-value" id="pnec-bot-settings-storage-value">—</span>
+        </div>
+
+        <div class="pnec-bot-settings-actions-row">
+          <button id="pnec-bot-export"      type="button" class="pnec-bot-settings-action">Export conversation</button>
+          <button id="pnec-bot-clear"       type="button" class="pnec-bot-settings-action pnec-bot-settings-warn">Clear conversation</button>
+          <button id="pnec-bot-clear-all"   type="button" class="pnec-bot-settings-action pnec-bot-settings-danger">Reset everything</button>
+        </div>
+        <p class="pnec-bot-settings-help">
+          <strong>Reset everything</strong> wipes history, custom instructions, and preferences. Cannot be undone.
+        </p>
+      </section>
+
+      <!-- ─── Accessibility ──────────────────────────────────── -->
+      <section class="pnec-bot-settings-group" aria-labelledby="pb-grp-a11y">
+        <h4 id="pb-grp-a11y" class="pnec-bot-settings-group-title">Accessibility</h4>
+        <label class="pnec-bot-settings-row">
+          <span class="pnec-bot-settings-label">Reduced motion <span class="pnec-bot-settings-help-inline">— disable animations</span></span>
+          <input id="pnec-bot-pref-motion" type="checkbox" class="pnec-bot-settings-toggle">
+        </label>
+        <label class="pnec-bot-settings-row">
+          <span class="pnec-bot-settings-label">High contrast <span class="pnec-bot-settings-help-inline">— stronger text + borders</span></span>
+          <input id="pnec-bot-pref-contrast" type="checkbox" class="pnec-bot-settings-toggle">
+        </label>
+        <label class="pnec-bot-settings-row">
+          <span class="pnec-bot-settings-label">Always-on labels <span class="pnec-bot-settings-help-inline">— never hide chip text</span></span>
+          <input id="pnec-bot-pref-labels" type="checkbox" class="pnec-bot-settings-toggle">
+        </label>
+      </section>
+
+      <!-- ─── About ─────────────────────────────────────────── -->
+      <section class="pnec-bot-settings-group pnec-bot-settings-group--about" aria-labelledby="pb-grp-about">
+        <h4 id="pb-grp-about" class="pnec-bot-settings-group-title">About</h4>
+        <dl class="pnec-bot-settings-about">
+          <dt>Version</dt><dd>Helper Bot v3.11</dd>
+          <dt>Knowledge base</dt><dd>PNEC programs + live conditions + 60 Poway neighborhoods</dd>
+          <dt>Privacy</dt><dd>Conversations are stored only on this device unless you explicitly submit to staff.</dd>
+        </dl>
+        <a href="{{ '/pages/contact.html' | relative_url }}" class="pnec-bot-settings-action pnec-bot-settings-action--link">Send feedback</a>
+      </section>
+
+    </div>
+    <footer class="pnec-bot-settings-foot">
+      <span>Helper Bot · Powered by PNEC</span>
+    </footer>
+  </aside>
+
+</aside>

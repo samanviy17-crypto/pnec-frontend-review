@@ -1,0 +1,80 @@
+---
+layout: pnec-base
+title: "Blog"
+description: "News, updates, and emergency preparedness resources from the Poway Neighborhood Emergency Corps."
+use_poway_live_styles: true
+use_poway_source_clone: true
+head_scss: "beasts/inline/pages/pages-blog-1"
+---
+
+<div class="blog-hero">
+  <div>
+    <h1>PNEC Blog</h1>
+    <p>Stay informed with the latest news, preparedness tips, and community updates from Poway NEC.</p>
+  </div>
+</div>
+
+<div class="blog-shell">
+  <div id="blog-loading" class="blog-loading">Loading posts…</div>
+  <div id="blog-grid" class="blog-grid" style="display:none;"></div>
+  <div id="blog-empty" class="blog-empty" style="display:none;">
+    <div class="blog-empty-icon">📰</div>
+    <h2>No posts yet</h2>
+    <p>Check back soon for updates from the PNEC team.</p>
+  </div>
+</div>
+
+<script>
+(function() {
+  var base = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+    ? 'http://127.0.0.1:8425'
+    : 'https://api.pnec-review.invalid';
+
+  var postBase = (location.pathname.includes('/Beasts_FrontEnd') || location.pathname.startsWith('/Beasts'))
+    ? '/Beasts_FrontEnd/pages/blog-post.html'
+    : '/pages/blog-post.html';
+
+  function fmt(iso) {
+    if (!iso) return '';
+    try { return new Date(iso).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' }); }
+    catch(e) { return ''; }
+  }
+
+  fetch(base + '/api/blog', { credentials: 'include' })
+    .then(function(r) { return r.ok ? r.json() : { posts: [] }; })
+    .then(function(data) {
+      var posts = data.posts || [];
+      document.getElementById('blog-loading').style.display = 'none';
+
+      if (!posts.length) {
+        document.getElementById('blog-empty').style.display = 'block';
+        return;
+      }
+
+      var grid = document.getElementById('blog-grid');
+      grid.style.display = '';
+      grid.innerHTML = posts.map(function(p) {
+        var imgHtml = p.cover_image_url
+          ? '<img class="blog-card-img" src="' + p.cover_image_url + '" alt="" loading="lazy">'
+          : '<div class="blog-card-img-placeholder">📰</div>';
+        var excerpt = (p.excerpt || '').slice(0, 140) + ((p.excerpt || '').length > 140 ? '…' : '');
+        return '<a class="blog-card" href="' + postBase + '?slug=' + encodeURIComponent(p.slug) + '">'
+          + imgHtml
+          + '<div class="blog-card-body">'
+          + '<div class="blog-card-date">' + fmt(p.created_at) + '</div>'
+          + '<h2 class="blog-card-title">' + _esc(p.title) + '</h2>'
+          + (excerpt ? '<p class="blog-card-excerpt">' + _esc(excerpt) + '</p>' : '')
+          + '<span class="blog-card-read">Read more →</span>'
+          + '</div></a>';
+      }).join('');
+    })
+    .catch(function() {
+      document.getElementById('blog-loading').style.display = 'none';
+      document.getElementById('blog-empty').style.display = 'block';
+    });
+
+  function _esc(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+})();
+</script>

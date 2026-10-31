@@ -1,0 +1,556 @@
+---
+layout: pnec-base
+title: "Profile"
+description: "Manage your PNEC account."
+use_poway_live_styles: true
+body_class: inner-page
+---
+
+<style>
+{{ '@import "beasts/inline/pages/pages-profile-1";' | scssify }}
+</style>
+
+<!-- Avatar upload modal -->
+<div class="avatar-modal-overlay" id="avatar-modal-overlay">
+  <div class="avatar-modal">
+    <h4>Change Profile Picture</h4>
+
+    <!-- File upload zone -->
+    <label id="avatar-drop-zone" for="avatar-file-input" class="avatar-drop-zone">
+      <div id="avatar-preview-wrap" class="avatar-preview-wrap">
+        <img id="avatar-preview-img" src="" alt="Preview" class="avatar-preview-image">
+      </div>
+      <span id="avatar-drop-label" class="avatar-drop-label">
+        📁 Click to choose a photo<br><span class="profile-muted-small">JPG, PNG, GIF, WebP · max 5 MB</span>
+      </span>
+      <input type="file" id="avatar-file-input" accept="image/*" class="profile-hidden">
+    </label>
+
+    <div id="avatar-error" class="avatar-error"></div>
+
+    <div class="avatar-modal-btns">
+      <button class="btn-modal-cancel" id="avatar-modal-cancel">Cancel</button>
+      <button class="avatar-apply btn-modal-save" id="avatar-modal-save" disabled>Apply</button>
+    </div>
+  </div>
+</div>
+
+<div class="profile-page">
+  <div id="profile-content">
+    <div class="profile-loading">
+      <span class="spinner"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+(function() {
+  var siteBase = window.PNEC_SITE_BASE || '';
+  var container = document.getElementById('profile-content');
+  var pendingAvatarUrl = null;
+  var neighborhoodsCache = [];
+
+  // Distinguish an expired session from an unavailable backend.
+  function loadProfile() {
+    fetchCurrentUser({strict: true}).then(function(user) {
+      if (!user) {
+        window.location.href = siteBase + '/pages/register.html?next=' + encodeURIComponent(siteBase + '/pages/profile.html') + '#login';
+        return;
+      }
+      _storeAuthResult({user: user}, localStorage.getItem('pnec_token') !== null);
+      renderProfile(user);
+    }).catch(function(error) {
+      container.innerHTML = '<div class="profile-edit-section"><p role="alert" id="profile-load-error"></p><button type="button" id="profile-retry-btn">Retry profile</button></div>';
+      document.getElementById('profile-load-error').textContent = 'Unable to load your profile. ' + error.message;
+      document.getElementById('profile-retry-btn').addEventListener('click', loadProfile);
+    });
+  }
+  loadProfile();
+
+  function calcCompletion(user) {
+    var score = 0;
+    var missing = [];
+    if (user.avatar_url) { score += 25; } else { missing.push({ label: 'Add a profile photo', pct: 25, action: 'avatar' }); }
+    if (user.bio && user.bio.trim().length > 10) { score += 25; } else { missing.push({ label: 'Write a short bio', pct: 25, action: 'bio' }); }
+    if (user.phone && user.phone.trim()) { score += 20; } else { missing.push({ label: 'Add your phone number', pct: 20, action: 'phone' }); }
+    if (user.neighborhood_id) { score += 30; } else { missing.push({ label: 'Set your neighborhood', pct: 30, action: 'neighborhood' }); }
+    return { score: score, missing: missing };
+  }
+
+  function buildBadges(user) {
+    var today = new Date().toISOString().slice(0, 10);
+    var streakData = null;
+    try { streakData = JSON.parse(localStorage.getItem('pnec_checkin_' + user.id) || 'null'); } catch(e) {}
+    var streakCount = 0;
+    if (streakData) {
+      var yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+      if (streakData.last === today || streakData.last === yesterday) streakCount = streakData.count || 0;
+    }
+    var kitData = null;
+    try { kitData = JSON.parse(localStorage.getItem('pnec_kit_' + user.id) || 'null'); } catch(e) {}
+    var kitCount = kitData ? Object.keys(kitData).filter(function(k) { return k !== 'evacuation' && k !== 'meeting' && kitData[k]; }).length : 0;
+
+    var comp = calcCompletion(user);
+    var badges = [
+      { icon: '🏠', label: 'Neighbor', desc: 'Created your account', earned: true },
+      { icon: '📸', label: 'Photo Ready', desc: 'Uploaded a profile photo', earned: !!user.avatar_url },
+      { icon: '✍️', label: 'Storyteller', desc: 'Wrote a bio', earned: !!(user.bio && user.bio.trim().length > 10) },
+      { icon: '📞', label: 'Connected', desc: 'Added your phone number', earned: !!(user.phone && user.phone.trim()) },
+      { icon: '📍', label: 'Local', desc: 'Set your neighborhood', earned: !!user.neighborhood_id },
+      { icon: '⭐', label: 'All In', desc: 'Completed your full profile (100%)', earned: comp.score === 100 },
+      { icon: '🔥', label: 'Daily Prep', desc: 'Checked in 3 days in a row', earned: streakCount >= 3 },
+      { icon: '💎', label: 'Week Warrior', desc: '7-day check-in streak', earned: streakCount >= 7 },
+      { icon: '🎒', label: 'Kit Starter', desc: 'Checked 5+ emergency kit items', earned: kitCount >= 5 },
+      { icon: '✅', label: 'Kit Builder', desc: 'Checked 15+ emergency kit items', earned: kitCount >= 15 },
+      { icon: '🛡️', label: 'Fully Prepared', desc: 'Completed your full emergency kit', earned: kitCount >= 20 },
+    ];
+    return badges;
+  }
+
+  function renderBadge(b) {
+    return '<div class="profile-badge' + (b.earned ? ' is-earned' : '') + '" title="' + escapeHtml(b.desc) + '">' +
+      '<span class="profile-badge-icon">' + b.icon + '</span>' +
+      '<span class="profile-badge-label">' + escapeHtml(b.label) + '</span></div>';
+  }
+
+  window.pnecRefreshBadges = function() {
+    var stored = localStorage.getItem('pnec_user') || sessionStorage.getItem('pnec_user');
+    if (!stored) return;
+    try {
+      var user = JSON.parse(stored);
+      var badgesEl = document.getElementById('profile-badges-grid');
+      if (!badgesEl) return;
+      badgesEl.innerHTML = buildBadges(user).map(function(b) {
+        return renderBadge(b);
+      }).join('');
+    } catch(e) {}
+  };
+
+  function renderProfile(user) {
+    var roleLabels = { coordinator: 'Coordinator', staff: 'Staff', admin: 'Admin' };
+    var roleClasses = { coordinator: 'badge-coordinator', staff: 'badge-staff', admin: 'badge-admin' };
+    var roleBadge = (user.role && user.role !== 'resident')
+      ? '<span class="badge ' + (roleClasses[user.role] || '') + '">' + (roleLabels[user.role] || user.role) + '</span>'
+      : '';
+
+    var joined = user.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) : '';
+    var joinedDays = user.created_at ? Math.floor((Date.now() - new Date(user.created_at).getTime()) / 86400000) : null;
+    var neighborhoodLabel = getNeighborhoodLabel(user.neighborhood_id);
+
+    var avatarHtml = user.avatar_url
+      ? '<img src="' + escapeHtml(user.avatar_url) + '" alt="Profile photo" onerror="this.style.display=\'none\';this.parentNode.dataset.initials=\'true\';">'
+      : escapeHtml(getInitials(user.display_name));
+
+    var oldBanner = document.getElementById('session-expired-banner');
+    if (oldBanner) oldBanner.remove();
+
+    // Completion meter
+    var comp = calcCompletion(user);
+    var barColor = comp.score < 40 ? '#e74c3c' : comp.score < 70 ? '#f39c12' : comp.score < 100 ? '#27ae60' : '#1a7a44';
+    var missingHtml = comp.missing.length
+      ? '<div class="profile-missing-actions">' +
+          comp.missing.map(function(m) {
+            var anchor = m.action === 'avatar' ? '#avatar-change-btn' : m.action === 'bio' ? '#edit-bio' : m.action === 'phone' ? '#edit-phone' : '#edit-neighborhood';
+            return '<a href="' + anchor + '" onclick="document.querySelector(\'' + anchor + '\')&&document.querySelector(\'' + anchor + '\').focus?document.querySelector(\'' + anchor + '\').focus():null" class="profile-missing-link">+ ' + escapeHtml(m.label) + ' <span style=\'color:#9e9e9e\'>(' + m.pct + '%)</span></a>';
+          }).join('') +
+        '</div>'
+      : '<div class="profile-complete">🎉 Profile fully complete!</div>';
+
+    var completionSection =
+      '<div class="profile-summary-card">' +
+        '<div class="profile-summary-heading">' +
+          '<span class="profile-summary-title">Profile Strength</span>' +
+          '<span class="profile-meter-value" style="color:' + barColor + ';">' + comp.score + '%</span>' +
+        '</div>' +
+        '<div class="profile-meter">' +
+          '<div class="profile-meter-fill" style="background:' + barColor + ';width:' + comp.score + '%;"></div>' +
+        '</div>' +
+        missingHtml +
+      '</div>';
+
+    // Badges section
+    var badges = buildBadges(user);
+    var badgesSection =
+      '<div class="profile-summary-card">' +
+        '<div class="profile-badges-heading">' +
+          '<span class="profile-summary-title">Preparedness Badges</span>' +
+          '<span class="profile-muted-small">' + badges.filter(function(b){ return b.earned; }).length + ' / ' + badges.length + ' earned</span>' +
+        '</div>' +
+        '<div id="profile-badges-grid" class="profile-badges-grid">' +
+          badges.map(function(b) {
+            return renderBadge(b);
+          }).join('') +
+        '</div>' +
+        '<p class="profile-badges-note">Hover a badge to see how to earn it. Keep checking in and building your kit!</p>' +
+      '</div>';
+
+    container.innerHTML =
+      '<div class="profile-card">' +
+        '<div class="profile-avatar-wrap">' +
+          '<div class="profile-avatar" id="profile-avatar-display">' + avatarHtml + '</div>' +
+          '<button class="avatar-change-btn" id="avatar-change-btn" title="Change photo" aria-label="Change profile picture">✎</button>' +
+        '</div>' +
+        '<div class="profile-meta-flex profile-meta">' +
+          '<h1 class="profile-name">' + escapeHtml(user.display_name) + ' ' + roleBadge + '</h1>' +
+          '<p class="profile-email">' + escapeHtml(user.email) + '</p>' +
+          '<p class="profile-phone">Phone: ' + escapeHtml(user.phone || 'Not provided') + '</p>' +
+          (user.bio ? '<p class="profile-bio-display">' + escapeHtml(user.bio) + '</p>' : '') +
+          '<div class="profile-details">' +
+            (joined ? '<span class="profile-detail">🗓 Member since ' + joined + (joinedDays !== null ? ' (' + joinedDays + ' days)' : '') + '</span>' : '') +
+            '<span id="profile-neighborhood-label" class="profile-detail">📍 ' + escapeHtml(neighborhoodLabel || 'Neighborhood not set') + '</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="profile-edit-section">' +
+        '<h3>Explore PNEC</h3><nav aria-label="PNEC profile navigation">' +
+        [['Calendar', '/pages/community-events-and-activities.html#pnec-community-calendar'],
+         ['Resources', '/pages/preparedness-resources.html'],
+         ['Preparedness Checklist', '/pages/checklist.html'],
+         ['Volunteer Opportunities', '/pages/volunteer.html'],
+         ['Neighborhood Information', '/pages/find-your-neighborhood.html'],
+         ['Risk Watch', '/#risk-widget'],
+         ['Hazard Reporting', '/pages/checklist.html#hazard-reporting'],
+         ['Home', '/']].map(function(link) {
+          return '<a class="btn btn-outline" href="' + siteBase + link[1] + '">' + link[0] + '</a>';
+        }).join(' ') + '</nav>' +
+      '</div>' +
+
+      completionSection +
+      badgesSection +
+
+      '<div class="profile-edit-section">' +
+        '<h3>Edit Profile</h3>' +
+        '<div class="form-field">' +
+          '<label for="edit-display-name">Full Name</label>' +
+          '<input type="text" id="edit-display-name" value="' + escapeHtml(user.display_name) + '" maxlength="100">' +
+        '</div>' +
+        '<div class="form-field">' +
+          '<label for="edit-email">Email Address</label>' +
+          '<input type="email" id="edit-email" value="' + escapeHtml(user.email) + '" maxlength="254" required>' +
+        '</div>' +
+        '<div class="form-field">' +
+          '<label for="edit-bio">Bio</label>' +
+          '<textarea id="edit-bio" maxlength="500" placeholder="Tell your neighbors a bit about yourself...">' + escapeHtml(user.bio || '') + '</textarea>' +
+          '<small>Max 500 characters</small>' +
+        '</div>' +
+        '<div class="form-field">' +
+          '<label for="edit-phone">Phone <span class="profile-optional">(optional)</span></label>' +
+          '<input type="tel" id="edit-phone" value="' + escapeHtml(user.phone || '') + '" placeholder="+1 (555) 000-0000" maxlength="30">' +
+        '</div>' +
+        '<div class="form-field">' +
+          '<label for="edit-neighborhood">Neighborhood</label>' +
+          '<select id="edit-neighborhood" data-current="' + escapeHtml(user.neighborhood_id || '') + '">' +
+            '<option value="">Loading neighborhoods...</option>' +
+          '</select>' +
+          '<small>Change this if you move or selected the wrong neighborhood during registration.</small>' +
+        '</div>' +
+        '<button class="profile-save-btn" id="profile-save-btn">Save Changes</button>' +
+        '<button class="btn btn-outline" id="profile-cancel-btn" type="button">Cancel</button>' +
+        '<div class="profile-success" role="status" id="profile-success">✓ Profile updated successfully.</div>' +
+        '<div class="profile-error" role="alert" id="profile-error"></div>' +
+      '</div>' +
+
+      '<div class="profile-status-section">' +
+        '<h3>Participation Status</h3>' +
+        '<p>If you move out of your neighborhood or no longer want to participate in PNEC website tools, you can mark your account inactive. This signs you out and removes the account from active participation lists.</p>' +
+        '<button class="profile-inactive-btn" id="profile-mark-inactive-btn">Mark my account inactive</button>' +
+        '<div class="profile-error" id="profile-inactive-error"></div>' +
+      '</div>' +
+
+      // v2.41: prominent Sign Out button. Logout used to be buried in the
+      // navbar dropdown / a separate top-level nav item — admins found it
+      // overcomplicated. Now it lives where you'd expect: on the profile page.
+      '<div class="profile-signout-section">' +
+        '<h3>Account</h3>' +
+        '<p>Done for now? Sign out of this device. You can sign back in anytime.</p>' +
+        '<button class="profile-signout-btn" id="profile-signout-btn" type="button">' +
+          '<span aria-hidden="true">↩</span> Sign out' +
+        '</button>' +
+        '<div class="profile-error" role="alert" id="profile-signout-error"></div>' +
+      '</div>' +
+
+      '<div class="profile-back-link">' +
+        '<a href="' + siteBase + '/" class="btn btn-outline">← Back to Home</a>' +
+      '</div>';
+
+    bindProfileActions(user);
+    populateNeighborhoodSelect(user.neighborhood_id);
+  }
+
+  function bindProfileActions(user) {
+    var saveBtn = document.getElementById('profile-save-btn');
+    var successEl = document.getElementById('profile-success');
+    var errorEl = document.getElementById('profile-error');
+    document.getElementById('profile-cancel-btn').addEventListener('click', function() {
+      pendingAvatarUrl = null;
+      renderProfile(user);
+    });
+    saveBtn.addEventListener('click', async function() {
+      successEl.style.display = 'none'; errorEl.style.display = 'none';
+      var payload = {
+        display_name: document.getElementById('edit-display-name').value.trim(),
+        email: document.getElementById('edit-email').value.trim().toLowerCase(),
+        bio: document.getElementById('edit-bio').value.trim() || null,
+        phone: document.getElementById('edit-phone').value.trim() || null,
+        neighborhood_id: document.getElementById('edit-neighborhood').value || null,
+      };
+      // A failed list request must not erase the stored neighborhood.
+      if (document.getElementById('edit-neighborhood').disabled) delete payload.neighborhood_id;
+      var validation = '';
+      if (!payload.display_name || payload.display_name.length > 100) validation = 'Full name must contain 1–100 characters.';
+      else if (!document.getElementById('edit-email').checkValidity() || !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(payload.email)) validation = 'Enter a valid email address.';
+      else if (payload.phone && (!/^\+?[0-9 ()\-.]+$/.test(payload.phone) || !/^[0-9]{7,15}$/.test(payload.phone.replace(/[^0-9]/g, '')))) validation = 'Enter a phone number with 7–15 digits and an optional + prefix.';
+      if (validation) { errorEl.textContent = validation; errorEl.style.display = 'block'; return; }
+      if (pendingAvatarUrl !== null) payload.avatar_url = pendingAvatarUrl || null;
+      saveBtn.disabled = true; saveBtn.textContent = 'Saving…';
+      try {
+        var updated = await updateProfile(payload);
+        pendingAvatarUrl = null;
+        renderProfile(updated);
+        document.getElementById('profile-success').style.display = 'block';
+      } catch (error) {
+        errorEl.textContent = error.status === 401 ? 'Your session expired. Sign in again to save changes.' : error.message;
+        errorEl.style.display = 'block';
+      } finally {
+        saveBtn.disabled = false; saveBtn.textContent = 'Save Changes';
+      }
+    });
+
+    // Avatar change button
+    var avatarBtn = document.getElementById('avatar-change-btn');
+    if (avatarBtn) {
+      avatarBtn.addEventListener('click', function() {
+        resetAvatarModal();
+        document.getElementById('avatar-modal-overlay').classList.add('open');
+      });
+    }
+
+    var inactiveBtn = document.getElementById('profile-mark-inactive-btn');
+    if (inactiveBtn) {
+      inactiveBtn.addEventListener('click', function() {
+        var confirmed = window.confirm('Mark your PNEC account inactive? You will be signed out and staff will no longer see you as an active participant.');
+        if (!confirmed) return;
+
+        inactiveBtn.disabled = true;
+        inactiveBtn.textContent = 'Marking inactive...';
+
+        var apiBase = (typeof API_BASE !== 'undefined' ? API_BASE : 'https://api.pnec-review.invalid');
+        var token = localStorage.getItem('pnec_token') || sessionStorage.getItem('pnec_token');
+        var headers = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = 'Bearer ' + token;
+
+        fetch(apiBase + '/api/auth/me/inactive', {
+          method: 'PATCH',
+          credentials: 'include',
+          headers: headers,
+        })
+          .then(function(response) {
+            if (!response.ok) throw new Error('inactive_failed');
+            localStorage.removeItem('pnec_token');
+            localStorage.removeItem('pnec_user');
+            localStorage.removeItem('pnec_new_user');
+            sessionStorage.removeItem('pnec_user');
+            sessionStorage.removeItem('pnec_token');
+            window.location.href = siteBase + '/pages/register.html#login';
+          })
+          .catch(function() {
+            var error = document.getElementById('profile-inactive-error');
+            if (error) {
+              error.textContent = 'Unable to mark the account inactive right now. Please try again or contact PNEC staff.';
+              error.style.display = 'block';
+            }
+            inactiveBtn.disabled = false;
+            inactiveBtn.textContent = 'Mark my account inactive';
+          });
+      });
+    }
+
+    // ── Sign out (v2.41) ─────────────────────────────────────────────────
+    var signOutBtn = document.getElementById('profile-signout-btn');
+    // If the user arrived via the navbar "Sign out" link (#signout hash),
+    // scroll to + briefly highlight the button so it's instantly findable.
+    if (signOutBtn && window.location.hash === '#signout') {
+      try {
+        signOutBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        signOutBtn.classList.add('profile-signout-highlight');
+        setTimeout(function () { signOutBtn.classList.remove('profile-signout-highlight'); }, 2000);
+      } catch (_e) {}
+    }
+    if (signOutBtn) {
+      signOutBtn.addEventListener('click', function () {
+        signOutBtn.disabled = true;
+        signOutBtn.textContent = 'Signing out…';
+        logoutUser().then(function() {
+          window.location.href = siteBase + '/';
+        }).catch(function() {
+          signOutBtn.disabled = false;
+          signOutBtn.textContent = 'Sign out';
+          var error = document.getElementById('profile-signout-error');
+          error.textContent = 'Unable to confirm sign out. Check your connection and try again.';
+          error.style.display = 'block';
+        });
+      });
+    }
+  }
+
+  function getNeighborhoodLabel(neighborhoodId) {
+    if (!neighborhoodId || !neighborhoodsCache.length) return '';
+    var match = neighborhoodsCache.find(function(neighborhood) {
+      return String(neighborhood.id) === String(neighborhoodId);
+    });
+    if (!match) return '';
+    return '#' + (match.number || match.id) + ' ' + match.name;
+  }
+
+  function populateNeighborhoodSelect(currentNeighborhoodId) {
+    var select = document.getElementById('edit-neighborhood');
+    if (!select) return;
+    select.disabled = true;
+
+    loadNeighborhoods()
+      .then(function(neighborhoods) {
+        neighborhoodsCache = neighborhoods || [];
+        select.innerHTML = '<option value="">No neighborhood selected</option>' + neighborhoodsCache.map(function(neighborhood) {
+          return '<option value="' + String(neighborhood.id) + '">' +
+            '#' + escapeHtml(neighborhood.number || neighborhood.id) + ' - ' + escapeHtml(neighborhood.name) +
+            '</option>';
+        }).join('');
+        select.value = currentNeighborhoodId ? String(currentNeighborhoodId) : '';
+        select.disabled = false;
+
+        var label = document.getElementById('profile-neighborhood-label');
+        if (label) label.textContent = '📍 ' + (getNeighborhoodLabel(currentNeighborhoodId) || 'Neighborhood not set');
+      })
+      .catch(function() {
+        select.innerHTML = '<option value="">Neighborhoods unavailable — existing selection will be kept</option>';
+      });
+  }
+
+  function loadNeighborhoods() {
+    if (neighborhoodsCache.length) return Promise.resolve(neighborhoodsCache);
+    if (typeof fetchNeighborhoodsForSelect === 'function') return fetchNeighborhoodsForSelect();
+
+    var apiBase = (typeof API_BASE !== 'undefined' ? API_BASE : 'https://api.pnec-review.invalid');
+    return fetch(apiBase + '/api/neighborhoods', { credentials: 'include' })
+      .then(function(response) { return response.json(); })
+      .then(function(data) { return data.neighborhoods || []; });
+  }
+
+  // ── Avatar modal logic ─────────────────────────────────────────────────────
+  var pendingAvatarDataUrl = null;
+  var avatarReadVersion = 0;
+
+  function resetAvatarModal() {
+    avatarReadVersion += 1;
+    pendingAvatarDataUrl = null;
+    var saveBtn = document.getElementById('avatar-modal-save');
+    if (saveBtn) { saveBtn.disabled = true;  }
+    var preview = document.getElementById('avatar-preview-wrap');
+    if (preview) preview.style.display = 'none';
+    var label = document.getElementById('avatar-drop-label');
+    if (label) label.innerHTML = '📁 Click to choose a photo<br><span class="profile-muted-small">JPG, PNG, GIF, WebP · max 5 MB</span>';
+    var err = document.getElementById('avatar-error');
+    if (err) { err.style.display = 'none'; err.textContent = ''; }
+    var fileInput = document.getElementById('avatar-file-input');
+    if (fileInput) fileInput.value = '';
+  }
+
+  function resizeImageToDataUrl(file, maxSize, callback, onError) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var img = new Image();
+      img.onload = function() {
+        var canvas = document.createElement('canvas');
+        var scale = Math.min(maxSize / img.width, maxSize / img.height, 1);
+        canvas.width  = Math.round(img.width  * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        callback(canvas.toDataURL('image/jpeg', 0.82));
+      };
+      img.onerror = onError;
+      img.src = e.target.result;
+    };
+    reader.onerror = onError;
+    reader.readAsDataURL(file);
+  }
+
+  document.getElementById('avatar-file-input').addEventListener('change', function() {
+    var file = this.files && this.files[0];
+    var err = document.getElementById('avatar-error');
+    if (!file) return;
+    var readVersion = ++avatarReadVersion;
+    pendingAvatarDataUrl = null;
+    document.getElementById('avatar-modal-save').disabled = true;
+    document.getElementById('avatar-preview-wrap').style.display = 'none';
+    if (!['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(file.type)) {
+      err.textContent = 'Choose a JPG, PNG, GIF or WebP image.';
+      err.style.display = 'block';
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      err.textContent = 'File too large — please choose an image under 5 MB.';
+      err.style.display = 'block';
+      return;
+    }
+    err.style.display = 'none';
+    resizeImageToDataUrl(file, 400, function(dataUrl) {
+      if (readVersion !== avatarReadVersion) return;
+      pendingAvatarDataUrl = dataUrl;
+      var previewImg = document.getElementById('avatar-preview-img');
+      var previewWrap = document.getElementById('avatar-preview-wrap');
+      var label = document.getElementById('avatar-drop-label');
+      if (previewImg) previewImg.src = dataUrl;
+      if (previewWrap) previewWrap.style.display = 'block';
+      if (label) label.innerHTML = '<span class="avatar-ready">✓ Photo ready to apply</span><br><span class="avatar-ready-help">Click to choose a different one</span>';
+      var saveBtn = document.getElementById('avatar-modal-save');
+      if (saveBtn) { saveBtn.disabled = false; }
+    }, function() {
+      if (readVersion !== avatarReadVersion) return;
+      err.textContent = 'This image could not be read. Choose another photo.';
+      err.style.display = 'block';
+    });
+  });
+
+  // Drag-and-drop support
+  var dropZone = document.getElementById('avatar-drop-zone');
+  dropZone.addEventListener('dragover', function(e) { e.preventDefault(); this.classList.add('is-dragging'); });
+  dropZone.addEventListener('dragleave', function() { this.classList.remove('is-dragging'); });
+  dropZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    this.classList.remove('is-dragging');
+    var file = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (file) {
+      var dt = new DataTransfer();
+      dt.items.add(file);
+      document.getElementById('avatar-file-input').files = dt.files;
+      document.getElementById('avatar-file-input').dispatchEvent(new Event('change'));
+    }
+  });
+
+  document.getElementById('avatar-modal-cancel').addEventListener('click', function() {
+    document.getElementById('avatar-modal-overlay').classList.remove('open');
+    resetAvatarModal();
+  });
+  document.getElementById('avatar-modal-save').addEventListener('click', function() {
+    if (!pendingAvatarDataUrl) return;
+    pendingAvatarUrl = pendingAvatarDataUrl;
+    var display = document.getElementById('profile-avatar-display');
+    if (display) display.innerHTML = '<img src="' + pendingAvatarDataUrl + '" alt="Profile photo">';
+    document.getElementById('avatar-modal-overlay').classList.remove('open');
+    resetAvatarModal();
+  });
+  document.getElementById('avatar-modal-overlay').addEventListener('click', function(e) {
+    if (e.target === this) { this.classList.remove('open'); resetAvatarModal(); }
+  });
+
+  function getInitials(name) {
+    if (!name) return '?';
+    var words = name.trim().split(/\s+/);
+    if (words.length === 1) return words[0][0].toUpperCase();
+    return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+  }
+})();
+});
+</script>

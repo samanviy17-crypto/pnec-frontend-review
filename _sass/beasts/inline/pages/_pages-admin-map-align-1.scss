@@ -1,0 +1,229 @@
+// Migrated from pages/admin-map-align.html; preserve selector order and runtime tokens.
+@import "beasts/foundation/tokens";
+@import "beasts/foundation/responsive";
+
+/* ════════════════════════════════════════════════════════════════
+   PNEC Map Alignment Tool (v3.22, May 2026)
+
+   Two modes:
+   - QUICK: prompts for each neighborhood in order. Admin clicks on
+     the painted number for that neighborhood on the map. ~30 seconds
+     for all 60.
+   - DRAG: shows all 60 markers; admin drags any to reposition.
+   Both modes export a downloadable JSON. No auth / no Flask required —
+   admin then commits the file via admin-editor or sends it to the dev.
+   ════════════════════════════════════════════════════════════════ */
+.admin-map-align-page { background:#fbf8f1; min-height:100vh; }
+.admin-map-align-page *, .admin-map-align-page *::before, .admin-map-align-page *::after { box-sizing:border-box; }
+
+.ama-topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; padding:14px 22px;
+  background:linear-gradient(180deg,#fff 0%,#fbf8f1 100%);
+  border-bottom:1px solid #e3e0d8;
+  position:sticky; top:0; z-index:30;
+  font-family:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+}
+.ama-topbar h1 { margin:0; font-size:1.08rem; font-weight:800; color:$beasts-forest; }
+.ama-topbar .sub { margin:1px 0 0; font-size:.78rem; color:#475569; }
+.ama-actions { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+
+.ama-btn {
+  padding:8px 14px;
+  border:1.5px solid #d8d4c4; background:$beasts-white; color:$beasts-forest;
+  border-radius:8px; font-size:.86rem; font-weight:700;
+  cursor:pointer; white-space:nowrap;
+  transition:background-color .15s,border-color .15s,color .15s,transform .06s;
+  font-family:'DM Sans',sans-serif;
+}
+.ama-btn:hover { background:#d4efdf; border-color:$beasts-green; }
+.ama-btn:disabled { opacity:.5; cursor:not-allowed; }
+.ama-btn.is-primary {
+  background:linear-gradient(135deg,#145a32 0%,#1e8449 100%);
+  color:#fffdf6; border-color:$beasts-green;
+  box-shadow:0 4px 12px rgba(20,90,50,.2);
+}
+.ama-btn.is-primary:hover { filter:brightness(1.08); color:#fffdf6; }
+.ama-btn.is-large { padding:11px 22px; font-size:.95rem; }
+
+/* ─── Mode tabs ───────────────────────────────────────────── */
+.ama-tabs { display:flex; gap:6px; padding:0 22px 8px; }
+.ama-tab {
+  padding:7px 14px; border:1.5px solid #d8d4c4;
+  background:$beasts-white; border-radius:8px 8px 0 0; cursor:pointer;
+  font-weight:700; font-size:.85rem; color:$beasts-forest;
+  font-family:'DM Sans',sans-serif;
+}
+.ama-tab.is-active { background:$beasts-green; color:#fffdf6; border-color:$beasts-green; }
+
+/* ─── Layout ──────────────────────────────────────────────── */
+.ama-shell {
+  display:grid;
+  grid-template-columns:1fr 320px;
+  gap:14px; padding:8px 14px 14px;
+  font-family:'DM Sans',sans-serif; color:#0a1628;
+  align-items:start;
+}
+@media (max-width:1100px) { .ama-shell { grid-template-columns:1fr; } }
+
+/* ─── Map stage ───────────────────────────────────────────── */
+.ama-stage-wrap {
+  background:$beasts-white; border:1.5px solid #e3e0d8; border-radius:12px;
+  padding:10px; position:relative; min-height:200px;
+}
+.ama-stage {
+  position:relative; width:100%;
+  aspect-ratio:1376/1844;
+  background:#f7f1e2;
+  border-radius:8px; overflow:hidden;
+  user-select:none;
+  cursor:crosshair;
+}
+.ama-stage.mode-drag { cursor:default; }
+.ama-stage img {
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:contain; pointer-events:none;
+}
+.ama-stage svg {
+  position:absolute; inset:0; width:100%; height:100%;
+  pointer-events:none;
+}
+.ama-stage.mode-drag svg { pointer-events:auto; }
+/* In drag mode, only the circles themselves should accept events.
+   In quick mode, the entire stage gets clicks. */
+.ama-hotspot {
+  pointer-events:auto;
+  cursor:grab;
+  transition:r .15s, fill .15s, stroke-width .15s;
+}
+.ama-hotspot:hover  { r:13; fill:#facc15; stroke-width:3; }
+.ama-hotspot.is-dragging { cursor:grabbing; r:16; fill:#facc15; stroke-width:4; }
+.ama-hotspot.is-current  { r:18; fill:#ef4444; stroke:$beasts-white; stroke-width:4; animation:ama-pulse 1.4s ease-in-out infinite; }
+@keyframes ama-pulse {
+  0%,100% { r:18; }
+  50%     { r:22; }
+}
+.ama-hotspot-label {
+  font:700 14px/1 'DM Sans',sans-serif;
+  fill:#0a1628; paint-order:stroke;
+  stroke:$beasts-white; stroke-width:3; stroke-linejoin:round;
+  pointer-events:none;
+  text-anchor:middle; dominant-baseline:central;
+}
+
+/* Cross-hair preview in quick mode */
+.ama-stage.mode-quick::after {
+  content:''; position:absolute; pointer-events:none;
+  width:1px; height:100%; background:rgba(220,38,38,0.5);
+  left:var(--mx, -10px); top:0;
+}
+.ama-stage.mode-quick::before {
+  content:''; position:absolute; pointer-events:none;
+  width:100%; height:1px; background:rgba(220,38,38,0.5);
+  top:var(--my, -10px); left:0;
+}
+
+/* ─── Side panel ──────────────────────────────────────────── */
+.ama-panel {
+  background:$beasts-white; border:1.5px solid #e3e0d8; border-radius:12px;
+  padding:16px;
+  position:sticky; top:78px;
+  max-height:calc(100vh - 100px); overflow:auto;
+}
+.ama-panel h2 { margin:0 0 8px; font-size:1rem; color:$beasts-forest; }
+.ama-panel .hint { margin:0 0 12px; font-size:.85rem; color:#475569; line-height:1.5; }
+
+/* ─── QUICK mode: big current-target card ────────────────── */
+.ama-quick-card {
+  background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);
+  border:2px solid #f59e0b; border-radius:12px;
+  padding:18px 16px; margin-bottom:14px;
+  text-align:center;
+}
+.ama-quick-card .num {
+  display:inline-block; font-size:2.2rem; font-weight:900; color:#92400e;
+  background:$beasts-white; border:3px solid #f59e0b; border-radius:50%;
+  width:64px; height:64px; line-height:58px;
+  margin-bottom:8px;
+  box-shadow:0 4px 12px rgba(245,158,11,0.3);
+}
+.ama-quick-card .name { font-size:1.05rem; font-weight:800; color:#0a1628; margin-bottom:4px; }
+.ama-quick-card .prompt { font-size:.88rem; color:#92400e; font-weight:600; }
+.ama-progress {
+  display:flex; align-items:center; gap:10px; margin:12px 0;
+  font-size:.85rem; color:#475569;
+}
+.ama-progress-bar {
+  flex:1; height:10px; background:#e5e7eb; border-radius:999px; overflow:hidden;
+}
+.ama-progress-fill {
+  height:100%; background:linear-gradient(90deg,#22c55e 0%,#16a34a 100%);
+  transition:width .25s ease;
+}
+.ama-quick-actions { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
+
+.ama-quick-done {
+  background:#d1fae5; border:2px solid #10b981; border-radius:12px;
+  padding:18px; text-align:center;
+}
+.ama-quick-done h3 { margin:0 0 6px; color:#065f46; font-size:1.1rem; }
+.ama-quick-done p  { margin:0 0 12px; color:$beasts-forest; font-size:.9rem; }
+
+/* ─── DRAG mode: filter + list ────────────────────────────── */
+.ama-filter {
+  display:block; width:100%; padding:7px 10px;
+  border:1.5px solid #d8d4c4; border-radius:7px;
+  font:inherit; font-size:.85rem; margin:6px 0 10px;
+}
+.ama-list {
+  list-style:none; margin:0; padding:4px;
+  display:flex; flex-direction:column; gap:3px;
+  max-height:55vh; overflow:auto;
+  border:1px solid #e3e0d8; border-radius:8px;
+  background:#fafaf6;
+}
+.ama-list li {
+  display:flex; align-items:center; gap:8px;
+  padding:5px 8px; border-radius:6px;
+  cursor:pointer; font-size:.83rem;
+  transition:background-color .12s;
+}
+.ama-list li:hover { background:#d4efdf; }
+.ama-list li.is-selected { background:$beasts-green; color:#fffdf6; font-weight:700; }
+.ama-list-num {
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:30px; height:22px; padding:0 6px;
+  border-radius:5px; font-weight:700; font-size:.78rem;
+  background:$beasts-forest; color:#fffdf6;
+}
+.ama-list li.is-aligned .amh-list-num { background:#16a34a; }
+
+/* ─── Status pill + toast ─────────────────────────────────── */
+.ama-status {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:4px 10px; border-radius:999px;
+  font-size:.74rem; font-weight:700; letter-spacing:.04em;
+  background:#dbeafe; color:#1e40af;
+}
+.ama-toast {
+  position:fixed; right:22px; bottom:22px; z-index:100;
+  background:$beasts-forest; color:#fffdf6; padding:12px 18px;
+  border-radius:10px; font-weight:600; font-size:.9rem;
+  font-family:'DM Sans',sans-serif;
+  box-shadow:0 12px 28px rgba(10,22,40,.30);
+  opacity:0; transform:translateY(6px);
+  transition:opacity .18s,transform .18s;
+  pointer-events:none;
+}
+.ama-toast.is-shown { opacity:1; transform:translateY(0); }
+.ama-toast.is-err { background:#80261b; }
+
+/* Help block above the map */
+.ama-help {
+  margin:0 14px 8px; padding:10px 14px;
+  background:#eef2ff; border:1px solid #c7d2fe;
+  border-radius:8px;
+  font-size:.85rem; color:#3730a3; font-family:'DM Sans',sans-serif;
+  line-height:1.5;
+}
+.ama-help strong { color:#1e3a8a; }

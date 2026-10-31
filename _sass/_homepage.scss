@@ -1,0 +1,315 @@
+// _homepage.scss
+// Homepage layout aligned to the public Poway NEC site structure
+
+.home-page {
+  background: #f7f7f7;
+}
+
+.section-heading {
+  margin-bottom: $spacing-xl;
+
+  h2 {
+    margin-top: 10px;
+    max-width: 760px;
+  }
+}
+
+.section-heading-light {
+  h2 { color: $color-white-pure; }
+}
+
+.section-tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: $color-red;
+}
+
+.home-hero {
+  background: #ffffff;
+  padding: 32px 0 48px;
+}
+
+.home-hero-grid {
+  display: grid;
+  grid-template-columns: 1.55fr 1fr;
+  gap: 24px;
+  align-items: start;
+
+  @media (max-width: $bp-lg) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hero-primary {
+  min-height: 460px;
+  border-radius: 0;
+  padding: 42px;
+  background:
+    linear-gradient(180deg, rgba(16, 31, 47, 0.12), rgba(16, 31, 47, 0.55)),
+    linear-gradient(135deg, #8ca3b8, #536b83);
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  @media (max-width: $bp-md) {
+    min-height: 340px;
+    padding: 28px;
+  }
+
+  h1 {
+    color: #fff;
+    font-size: 3rem;
+    max-width: 10ch;
+    margin-bottom: 16px;
+
+    @media (max-width: $bp-md) {
+      font-size: 2.45rem;
+    }
+  }
+}
+
+.hero-kicker {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  margin-bottom: auto;
+}
+
+.hero-summary {
+  max-width: 560px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 1.05rem;
+  margin-bottom: 24px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hero-feature-stack {
+  display: grid;
+  gap: 20px;
+}
+
+.hero-feature-card {
+  background: #fff;
+  border-radius: 0;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+
+  p {
+    color: #3f5267;
+    margin: 10px 0 16px;
+  }
+
+  a {
+    font-weight: 700;
+  }
+}
+
+.hero-feature-label {
+  color: #17324e;
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.home-news {
+  background: #ffffff;
+}
+
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+
+  @media (max-width: $bp-lg) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.news-card {
+  background: #fff;
+  border-radius: 0;
+  overflow: hidden;
+  border: 0;
+  box-shadow: none;
+}
+
+.news-card-media {
+  height: 190px;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 16px;
+}
+
+.news-card-media-fire {
+  background-image: linear-gradient(135deg, #d9692f, #7b1d15);
+}
+
+.news-card-media-trees {
+  background-image: linear-gradient(135deg, #5c7f47, #294632);
+}
+
+.news-card-media-party {
+  background-image: linear-gradient(135deg, #245a8c, #6d90b9);
+}
+
+.news-card-body {
+  padding: 0;
+
+  h3 {
+    margin-bottom: 10px;
+  }
+
+  p {
+    color: #536273;
+  }
+
+  a {
+    font-weight: 700;
+  }
+}
+
+.news-meta {
+  font-size: 0.88rem;
+  color: #7f8d9a;
+  margin-bottom: 14px;
+}
+
+.home-mission {
+  background: #ffffff;
+}
+
+.mission-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+
+  @media (max-width: $bp-lg) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mission-card {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+
+  h3 {
+    color: #16324d;
+    margin-bottom: 12px;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+  }
+
+  p {
+    color: #5d6b78;
+  }
+}
+
+.home-assistance {
+  background: #fff;
+}
+
+.assistance-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.9fr;
+  gap: 24px;
+
+  @media (max-width: $bp-lg) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.assistance-panel,
+.contact-panel {
+  border-radius: 0;
+  padding: 28px;
+  border: 0;
+}
+
+.assistance-panel {
+  background: #ffffff;
+}
+
+.contact-panel {
+  background: #ffffff;
+  text-align: left;
+}
+
+.assistance-number {
+  font-size: 2.15rem;
+  font-weight: 800;
+  color: $color-red;
+  margin: 10px 0 18px;
+}
+
+.contact-panel-logo {
+  width: 96px;
+  margin: 0 auto 16px;
+}
+
+.contact-panel-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+
+  a {
+    font-weight: 700;
+  }
+}
+
+.home-partners {
+  background: #ffffff;
+}
+
+.partners-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+
+  @media (max-width: $bp-lg) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: $bp-sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.partner-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 82px;
+  padding: 16px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #e4e4e4;
+  border-radius: 0;
+  color: #23415f;
+  font-weight: 800;
+  box-shadow: none;
+
+  &:hover {
+    background: #fff;
+    text-decoration: none;
+  }
+}
+
+.partners-note {
+  max-width: 760px;
+  margin-top: 20px;
+  color: #5b6b7a;
+}

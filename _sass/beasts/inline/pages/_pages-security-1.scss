@@ -1,0 +1,181 @@
+// Migrated from pages/security.html; preserve selector order and runtime tokens.
+@import "beasts/foundation/tokens";
+@import "beasts/foundation/responsive";
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
+
+  .security-page-body {
+    --sec-bg:     #fbf8f1;
+    --sec-card:   #fff;
+    --sec-fg:     #0a1628;
+    --sec-mute:   #5a6975;
+    --sec-faint:  #8b96a1;
+    --sec-green:  #1e8449;
+    --sec-deep:   #145a32;
+    --sec-soft:   #d4efdf;
+    --sec-amber:  #d97706;
+    --sec-red:    #c0392b;
+    --sec-border: rgba(15, 30, 25, 0.10);
+    background: var(--sec-bg);
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--sec-fg);
+  }
+  .security-page-body main#jupiterx-main { padding: 0 !important; background: transparent !important; }
+
+  .sec-wrap { max-width: 1100px; margin: 0 auto; padding: 60px 24px 48px; }
+
+  /* ── Hero ──────────────────────────────────────────────────────── */
+  .sec-hero {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  .sec-hero-eyebrow {
+    display: inline-block;
+    font-size: 0.78rem; font-weight: 800;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--sec-deep);
+    margin-bottom: 14px;
+  }
+  .sec-hero h1 {
+    margin: 0 0 14px;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: var(--sec-fg);
+  }
+  .sec-hero p {
+    margin: 0 auto;
+    max-width: 640px;
+    color: var(--sec-mute);
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  /* ── Cards (the 6 pillars) ────────────────────────────────────── */
+  .sec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+    margin-bottom: 56px;
+  }
+  .sec-card {
+    background: var(--sec-card);
+    border: 1px solid var(--sec-border);
+    border-radius: 16px;
+    padding: 26px 22px 22px;
+    position: relative;
+  }
+  .sec-card-icon {
+    width: 44px; height: 44px;
+    margin-bottom: 14px;
+    display: grid; place-items: center;
+    background: var(--sec-soft);
+    border-radius: 11px;
+    color: var(--sec-deep);
+  }
+  .sec-card-icon svg { width: 22px; height: 22px; }
+  .sec-card h3 {
+    margin: 0 0 8px;
+    font-size: 1.04rem;
+    font-weight: 800;
+    color: var(--sec-fg);
+    letter-spacing: -0.012em;
+  }
+  .sec-card p {
+    margin: 0;
+    color: var(--sec-mute);
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+  .sec-card strong { color: var(--sec-fg); font-weight: 700; }
+  .sec-card-foot {
+    margin-top: 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--sec-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* ── Disclosure section ───────────────────────────────────────── */
+  .sec-disclose {
+    background: var(--sec-card);
+    border: 1px solid var(--sec-border);
+    border-radius: 18px;
+    padding: 36px 32px;
+    margin-bottom: 32px;
+  }
+  .sec-disclose h2 {
+    margin: 0 0 12px;
+    font-size: 1.4rem;
+    font-weight: 900;
+    letter-spacing: -0.022em;
+    color: var(--sec-fg);
+  }
+  .sec-disclose p {
+    margin: 0 0 14px;
+    color: var(--sec-mute);
+    line-height: 1.65;
+    font-size: 0.96rem;
+  }
+  .sec-disclose ul {
+    margin: 14px 0 0;
+    padding-left: 22px;
+    color: var(--sec-fg);
+    font-size: 0.94rem;
+    line-height: 1.7;
+  }
+  .sec-disclose ul li { margin-bottom: 6px; }
+  .sec-disclose strong { color: var(--sec-deep); }
+
+  /* ── Contact CTA ───────────────────────────────────────────────── */
+  .sec-contact {
+    text-align: center;
+    margin-top: 32px;
+    padding: 28px 24px;
+    background: linear-gradient(135deg, #fff 0%, #fbf8f1 100%);
+    border: 1px solid var(--sec-border);
+    border-radius: 18px;
+  }
+  .sec-contact h3 {
+    margin: 0 0 8px;
+    font-size: 1.06rem; font-weight: 800;
+    color: var(--sec-fg);
+  }
+  .sec-contact p {
+    margin: 0 0 18px;
+    color: var(--sec-mute);
+    font-size: 0.94rem;
+  }
+  .sec-contact-btn {
+    display: inline-flex;
+    align-items: center; gap: 8px;
+    padding: 13px 24px;
+    background: linear-gradient(135deg, var(--sec-green), var(--sec-deep));
+    color: $beasts-white;
+    border-radius: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.30) inset,
+      0 4px 10px rgba(20, 90, 50, 0.30);
+    transition: transform 200ms ease, filter 160ms ease;
+  }
+  .sec-contact-btn:hover { transform: translateY(-2px); filter: brightness(1.06); }
+
+  .sec-trust-row {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    justify-content: center;
+    margin-top: 24px;
+  }
+  .sec-trust-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 6px 12px;
+    font-size: 0.74rem; font-weight: 700;
+    color: var(--sec-deep);
+    background: rgba(212, 239, 223, 0.6);
+    border: 1px solid rgba(30, 132, 73, 0.22);
+    border-radius: 999px;
+  }

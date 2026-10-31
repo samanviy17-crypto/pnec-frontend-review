@@ -1,0 +1,6 @@
+{% comment %}Compile page-specific SCSS at the original head_extra cascade position.{% endcomment %}
+{% if page.head_scss %}
+  {% capture page_style_import %}@import "{{ page.head_scss }}";{% endcapture %}
+  <style>{{ page_style_import | scssify }}</style>
+{% endif %}
+{% if page.head_extra %}{{ page.head_extra }}{% endif %}

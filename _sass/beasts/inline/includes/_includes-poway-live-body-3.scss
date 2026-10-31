@@ -1,0 +1,172 @@
+// Migrated from _includes/poway-live-body.html; preserve selector order and runtime tokens.
+@import "beasts/foundation/tokens";
+@import "beasts/foundation/responsive";
+
+.pnec-home-carousel {
+							position: relative;
+							min-height: 540px;
+							border-radius: 0;
+							overflow: hidden;
+							background: #111;
+							box-shadow: 0 22px 48px rgba(0, 0, 0, 0.18);
+						}
+
+						.pnec-home-carousel__slide {
+							position: absolute;
+							inset: 0;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							padding: 48px;
+							background-size: cover;
+							background-position: center;
+							opacity: 0;
+							visibility: hidden;
+							z-index: 0;
+							transition: opacity 0.45s ease, visibility 0.45s ease;
+						}
+
+						.pnec-home-carousel__slide.is-active {
+							opacity: 1;
+							visibility: visible;
+							z-index: 1;
+						}
+
+						.pnec-home-carousel__overlay {
+							position: absolute;
+							inset: 0;
+							background: linear-gradient(180deg, rgba(18, 22, 27, 0.22) 0%, rgba(10, 13, 18, 0.58) 100%);
+						}
+
+						.pnec-home-carousel__content {
+							position: relative;
+							z-index: 1;
+							max-width: 300px;
+							color: $beasts-white;
+							text-align: center;
+						}
+
+						.pnec-home-carousel__title {
+							margin: 0 0 18px;
+							font-size: clamp(2.5rem, 4vw, 4rem);
+							line-height: 0.95;
+							font-weight: 800;
+							letter-spacing: -0.04em;
+							text-shadow: 0 12px 36px rgba(0, 0, 0, 0.32);
+						}
+
+						.pnec-home-carousel__description {
+							margin: 0 0 28px;
+							font-size: 1rem;
+							line-height: 1.5;
+							text-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+						}
+
+						.pnec-home-carousel__link {
+							display: inline-flex;
+							align-items: center;
+							justify-content: center;
+							min-width: 180px;
+							padding: 14px 24px;
+							border: 2px solid rgba(255, 255, 255, 0.92);
+							color: $beasts-white;
+							font-size: 0.98rem;
+							font-weight: 600;
+							text-decoration: none;
+							backdrop-filter: blur(6px);
+							transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+						}
+
+						.pnec-home-carousel__link:hover,
+						.pnec-home-carousel__link:focus-visible {
+							background: rgba(255, 255, 255, 0.92);
+							color: #111;
+							transform: translateY(-1px);
+						}
+
+						.pnec-home-carousel__nav {
+							position: absolute;
+							top: 50%;
+							z-index: 2;
+							width: 52px;
+							height: 52px;
+							border: 0;
+							background: transparent;
+							color: $beasts-white;
+							font-size: 3.5rem;
+							line-height: 1;
+							transform: translateY(-50%);
+							cursor: pointer;
+							text-shadow: 0 8px 24px rgba(0, 0, 0, 0.42);
+						}
+
+						.pnec-home-carousel__nav--prev { left: 18px; }
+						.pnec-home-carousel__nav--next { right: 18px; }
+
+						.pnec-home-carousel__dots {
+							position: absolute;
+							bottom: 20px;
+							left: 50%;
+							z-index: 2;
+							display: flex;
+							gap: 10px;
+							transform: translateX(-50%);
+						}
+
+						.pnec-home-carousel__dot {
+							width: 11px;
+							height: 11px;
+							padding: 0;
+							border: 0;
+							border-radius: 999px;
+							background: rgba(255, 255, 255, 0.35);
+							cursor: pointer;
+						}
+
+						.pnec-home-carousel__dot.is-active {
+							background: #111;
+							box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85);
+						}
+
+						@media (max-width: 767px) {
+							.pnec-home-carousel {
+								min-height: 430px;
+							}
+
+							.pnec-home-carousel__slide {
+								padding: 36px 28px 54px;
+							}
+
+							.pnec-home-carousel__content {
+								max-width: 260px;
+							}
+
+							.pnec-home-carousel__nav {
+								width: 42px;
+								height: 42px;
+								font-size: 2.8rem;
+							}
+						}
+
+// The imported -22% offsets overhang the viewport below 1334px.
+// Keep the existing offset once the wide layout has room for it.
+.elementor-page-22 {
+  @include beasts-below(1333px) {
+    .elementor-element.elementor-element-7bddfff > .elementor-widget-container,
+    .elementor-element.elementor-element-4023c78 > .elementor-widget-container {
+      margin-right: 0;
+    }
+  }
+
+  @include beasts-below(map-get($beasts-breakpoints, phone)) {
+    .elementor-element-3590818 > .elementor-widget-wrap {
+      min-width: 0;
+      width: auto;
+      flex: 1 1 0%;
+    }
+
+    .elementor-element.elementor-element-5eab427 .elementor-headline {
+      font-size: clamp(1.5rem, 8vw, 2.625rem);
+    }
+  }
+}

@@ -1,0 +1,910 @@
+// Migrated from pages/admin-editor.html; preserve selector order and runtime tokens.
+@import "beasts/foundation/tokens";
+@import "beasts/foundation/responsive";
+
+/* ════════════════════════════════════════════════════════════════
+   PNEC Live Theme Editor v3.17 (May 2026)
+   Full rebuild from feedback "EVERYTHING about the admin live
+   theme editor is broken." Cream + forest theme matching the site.
+
+   Three-pane layout: page list / source editor / live preview.
+   Top bar shows the health of every required dependency (GitHub
+   PAT, Groq key, repo reachability) so admins know if anything is
+   misconfigured BEFORE they try to edit.
+
+   Endpoints used (all under /api/admin/):
+     GET  /publish/health              connection status
+     GET  /publish/file?path=…         read file from repo
+     POST /publish/file                commit file change
+     POST /publish/diff                unified diff for preview
+     GET  /publish/history?path=…      commits for a file
+     POST /publish/rollback            restore file to a SHA
+     GET  /publish/status              recent Pages workflow runs
+     POST /ai/prompt-engineer          Groq meta-prompt-engineer (for Claude/Gemini/ChatGPT)
+   ════════════════════════════════════════════════════════════════ */
+
+.admin-editor-page { background: #fbf8f1; min-height: 100vh; }
+.admin-editor-page *, .admin-editor-page *::before, .admin-editor-page *::after { box-sizing: border-box; }
+
+/* ─── Top bar ───────────────────────────────────────────────── */
+.ae-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 12px 22px;
+  background: linear-gradient(180deg, #ffffff 0%, #fbf8f1 100%);
+  border-bottom: 1px solid #e3e0d8;
+  position: sticky; top: 0; z-index: 30;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+.ae-topbar h1 {
+  margin: 0; font-size: 1.05rem; font-weight: 800; color: $beasts-forest;
+  letter-spacing: -0.012em; line-height: 1.15;
+}
+.ae-topbar .sub {
+  margin: 1px 0 0; font-size: 0.78rem; color: #5a6470;
+}
+.ae-topbar-actions {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+
+/* ─── Health bar (under top bar) ────────────────────────────── */
+.ae-health {
+  display: flex; gap: 8px; padding: 10px 22px;
+  background: #f7f1e2; border-bottom: 1px solid #e3e0d8;
+  font-family: 'DM Sans', sans-serif; font-size: 0.84rem;
+  flex-wrap: wrap; align-items: center;
+}
+.ae-health-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 999px;
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.ae-health-pill.is-ok       { background: #d4efdf; color: $beasts-green; }
+.ae-health-pill.is-fail     { background: #fee2e2; color: #80261b; }
+.ae-health-pill.is-pending  { background: #fdf0d5; color: #92400e; }
+.ae-health-pill::before {
+  content: ''; width: 7px; height: 7px; border-radius: 50%;
+  background: currentColor;
+}
+.ae-health-pill.is-pending::before { animation: ae-pulse 1s ease-in-out infinite; }
+@keyframes ae-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+.ae-health-msg {
+  flex: 1; min-width: 200px;
+  font-size: 0.84rem; color: #5a6470;
+}
+.ae-health-msg .err {
+  background: $beasts-white;
+  border: 1px solid #fee2e2;
+  border-left: 3px solid #c0392b;
+  padding: 6px 10px; border-radius: 6px;
+  color: #80261b;
+  margin-left: 6px;
+}
+
+/* ─── Buttons ────────────────────────────────────────────────── */
+.ae-btn {
+  padding: 8px 14px;
+  border: 1.5px solid #d8d4c4; background: $beasts-white; color: $beasts-forest;
+  border-radius: 8px; font: inherit; font-size: 0.86rem; font-weight: 700;
+  cursor: pointer; white-space: nowrap;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s, transform 0.06s, box-shadow 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.ae-btn:hover { background: #d4efdf; border-color: $beasts-green; }
+.ae-btn:active { transform: translateY(1px); }
+.ae-btn.is-primary {
+  background: linear-gradient(135deg, #145a32 0%, #1e8449 100%);
+  color: #fffdf6; border-color: $beasts-green;
+  box-shadow: 0 4px 12px rgba(20,90,50,0.20);
+}
+.ae-btn.is-primary:hover { filter: brightness(1.08); color: #fffdf6; }
+.ae-btn.is-primary:disabled {
+  background: #b9c4b9; color: #fffdf6; cursor: wait; filter: none; box-shadow: none;
+}
+.ae-btn.is-ghost { background: transparent; border-color: transparent; padding: 6px 10px; }
+.ae-btn.is-ghost:hover { background: #d4efdf; }
+.ae-btn.is-danger {
+  color: #80261b; border-color: rgba(192,57,43,0.32);
+}
+.ae-btn.is-danger:hover { background: rgba(192,57,43,0.10); }
+
+/* ─── Status pill (top-right) ────────────────────────────────── */
+.ae-status-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 999px;
+  font-size: 0.74rem; font-weight: 700; letter-spacing: 0.04em;
+  font-family: 'DM Sans', sans-serif;
+}
+.ae-status-pill.is-saved        { background: #d4efdf; color: $beasts-green; }
+.ae-status-pill.is-dirty        { background: #fdf0d5; color: #92400e; }
+.ae-status-pill.is-publishing   { background: #dbeafe; color: #1e40af; }
+.ae-status-pill.is-error        { background: #fee2e2; color: #80261b; }
+.ae-status-pill::before {
+  content: ''; width: 7px; height: 7px; border-radius: 50%;
+  background: currentColor;
+}
+.ae-status-pill.is-publishing::before { animation: ae-pulse 1s ease-in-out infinite; }
+
+/* ─── Shell layout ──────────────────────────────────────────── */
+.ae-shell {
+  display: grid;
+  grid-template-columns: 300px 1fr 460px;
+  gap: 0;
+  /* viewport - top bar - health bar */
+  height: calc(100vh - 64px - 50px);
+  font-family: 'DM Sans', sans-serif; color: #0a1628;
+  background: #fbf8f1;
+}
+@media (max-width: 1200px) {
+  .ae-shell { grid-template-columns: 260px 1fr 380px; }
+}
+@include beasts-below(map-get($beasts-breakpoints, desktop)) {
+  .ae-shell { grid-template-columns: 240px 1fr; }
+  .ae-preview { display: none; }
+}
+@media (max-width: 720px) {
+  .ae-shell { grid-template-columns: 1fr; height: auto; }
+  .ae-sidebar { max-height: 280px; }
+}
+
+/* ─── Sidebar (page list + search) ───────────────────────────── */
+.ae-sidebar {
+  background: #f7f1e2; border-right: 1px solid #e3e0d8;
+  overflow-y: auto; padding: 14px 0;
+  font-family: 'DM Sans', sans-serif;
+}
+.ae-sidebar-search {
+  padding: 0 14px 12px;
+}
+.ae-sidebar-search input {
+  width: 100%; padding: 9px 12px;
+  border: 1.5px solid #d8d4c4; border-radius: 8px;
+  font: inherit; font-size: 0.86rem;
+  background: $beasts-white;
+}
+.ae-sidebar-search input:focus {
+  outline: none; border-color: #1e8449;
+  box-shadow: 0 0 0 3px rgba(30,132,73,0.16);
+}
+.ae-sidebar-section { margin-bottom: 6px; }
+.ae-sidebar-section.is-hidden { display: none; }
+.ae-sidebar-section-title {
+  padding: 4px 18px;
+  font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em;
+  text-transform: uppercase; color: #5a6470;
+  margin: 0 0 4px;
+}
+.ae-page-list { list-style: none; margin: 0; padding: 0; }
+.ae-page-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 18px;
+  font-size: 0.9rem; font-weight: 600; color: #0a1628;
+  cursor: pointer; border-left: 3px solid transparent;
+  transition: background-color 0.12s, color 0.12s, border-color 0.12s;
+  position: relative;
+}
+.ae-page-item.is-hidden { display: none; }
+.ae-page-item:hover { background: rgba(212,239,223,0.6); color: $beasts-green; }
+.ae-page-item.is-active {
+  background: $beasts-white; color: $beasts-green;
+  border-left-color: #1e8449;
+  font-weight: 800;
+}
+.ae-page-item-icon { width: 14px; height: 14px; flex-shrink: 0; color: #475569; }
+.ae-page-item.is-active .ae-page-item-icon { color: #1e8449; }
+.ae-page-item-text {
+  flex: 1; min-width: 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ae-page-item-test {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: transparent;
+  flex-shrink: 0;
+}
+.ae-page-item-test.is-ok    { background: #1e8449; }
+.ae-page-item-test.is-fail  { background: #c0392b; }
+.ae-page-item-test.is-pending { background: #f39c12; animation: ae-pulse 1s ease-in-out infinite; }
+
+.ae-sidebar-footer {
+  padding: 14px 18px; border-top: 1px solid #e3e0d8;
+  margin-top: 10px; font-size: 0.74rem; color: #5a6470;
+}
+.ae-sidebar-footer a { color: $beasts-green; font-weight: 700; }
+
+/* ─── Editor (center column) ─────────────────────────────────── */
+.ae-editor {
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  background: $beasts-white; border-right: 1px solid #e3e0d8;
+  font-family: 'DM Sans', sans-serif;
+}
+.ae-editor-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 12px 18px; border-bottom: 1px solid #e3e0d8; background: #fbf8f1;
+}
+.ae-editor-head-title {
+  font-weight: 800; color: $beasts-forest; font-size: 0.96rem;
+}
+.ae-editor-head-path {
+  font-family: 'SF Mono', 'Menlo', Consolas, monospace;
+  font-size: 0.72rem; color: #5a6470; font-weight: 500;
+}
+.ae-editor-tabs {
+  display: flex; gap: 2px;
+  padding: 6px 12px; background: #fbf8f1;
+  border-bottom: 1px solid #e3e0d8;
+}
+.ae-editor-tab {
+  padding: 6px 14px;
+  background: transparent; border: 0;
+  font: inherit; font-size: 0.84rem; font-weight: 700;
+  color: #5a6470; cursor: pointer;
+  border-radius: 6px 6px 0 0;
+}
+.ae-editor-tab:hover { background: #d4efdf; color: $beasts-green; }
+.ae-editor-tab.is-active {
+  background: $beasts-white; color: $beasts-green;
+  box-shadow: inset 0 -2px 0 #1e8449;
+}
+.ae-editor-tab-badge {
+  margin-left: 6px;
+  padding: 1px 7px; border-radius: 999px;
+  font-size: 0.66rem; font-weight: 800;
+  background: #c87042; color: $beasts-white;
+}
+
+.ae-editor-pane { flex: 1; display: none; overflow: hidden; flex-direction: column; }
+.ae-editor-pane.is-active { display: flex; }
+
+.ae-editor-textarea {
+  flex: 1; width: 100%;
+  padding: 18px;
+  border: 0; resize: none;
+  font-family: 'SF Mono', 'Menlo', Consolas, monospace;
+  font-size: 0.86rem; line-height: 1.55;
+  color: #0a1628; background: #fffdf6;
+  outline: none; tab-size: 2;
+}
+.ae-editor-textarea:focus { background: $beasts-white; }
+
+.ae-editor-foot {
+  padding: 10px 18px; border-top: 1px solid #e3e0d8; background: #fbf8f1;
+  font-size: 0.78rem; color: #5a6470;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.ae-editor-counter { font-variant-numeric: tabular-nums; }
+
+/* ─── Diff pane ──────────────────────────────────────────────── */
+.ae-diff-pane {
+  padding: 14px 18px;
+  overflow-y: auto;
+  font-family: 'SF Mono', 'Menlo', Consolas, monospace;
+  font-size: 0.84rem; line-height: 1.5;
+}
+.ae-diff-summary {
+  padding: 10px 14px; margin-bottom: 14px;
+  background: #f7f1e2; border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.ae-diff-summary strong { color: $beasts-forest; }
+.ae-diff-summary .added   { color: $beasts-green; font-weight: 700; }
+.ae-diff-summary .removed { color: #80261b; font-weight: 700; }
+.ae-diff-pre {
+  margin: 0; padding: 12px; border-radius: 8px;
+  background: #fffdf6; border: 1px solid #e3e0d8;
+  white-space: pre; overflow-x: auto;
+}
+.ae-diff-line { white-space: pre; }
+.ae-diff-line.diff-add { background: #d4efdf; color: $beasts-forest; }
+.ae-diff-line.diff-del { background: #fde4e1; color: #80261b; }
+.ae-diff-line.diff-hunk { background: #fdf0d5; color: #92400e; font-weight: 700; padding: 4px 0; }
+.ae-diff-line.diff-file { color: #5a6470; font-weight: 700; }
+
+.ae-history-pane {
+  padding: 14px 18px; overflow-y: auto;
+}
+.ae-history-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; margin-bottom: 8px;
+  background: #fffdf6; border: 1px solid #e3e0d8; border-radius: 8px;
+}
+.ae-history-sha {
+  font-family: 'SF Mono', Consolas, monospace; font-size: 0.78rem;
+  color: $beasts-green; font-weight: 800;
+  text-decoration: none;
+}
+.ae-history-msg {
+  flex: 1; min-width: 0; font-size: 0.86rem; color: #0a1628;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ae-history-when {
+  font-size: 0.74rem; color: #5a6470; white-space: nowrap;
+}
+
+/* ─── Preview (right column) ─────────────────────────────────── */
+.ae-preview {
+  display: flex; flex-direction: column;
+  background: #f7f1e2; overflow: hidden;
+}
+.ae-preview-head {
+  padding: 12px 18px; background: $beasts-white;
+  border-bottom: 1px solid #e3e0d8;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.ae-preview-title { font-weight: 800; color: $beasts-forest; font-size: 0.96rem; }
+.ae-preview-url {
+  font-family: 'SF Mono', monospace; font-size: 0.72rem; color: #5a6470;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 220px;
+}
+.ae-preview-frame {
+  flex: 1; border: 0; width: 100%; background: $beasts-white;
+}
+.ae-preview-empty {
+  flex: 1; display: grid; place-items: center; padding: 32px;
+  text-align: center; color: #5a6470;
+}
+.ae-preview-empty h3 { color: $beasts-forest; margin: 0 0 6px; font-weight: 800; }
+
+/* ─── AI modal (v3.29: "Prompt engineer with AI") ────────────── */
+/* Groq is used as a meta-prompt-engineer — it reads the current
+   page + the user's plain-English change request, and emits a
+   tailored prompt the user pastes into Claude / Gemini / ChatGPT. */
+.ae-ai-modal {
+  position: fixed; inset: 0;
+  background: rgba(10,22,40,0.55);
+  display: none; align-items: center; justify-content: center;
+  z-index: 100; padding: 20px;
+  overflow-y: auto;
+}
+.ae-ai-modal.is-open { display: flex; }
+.ae-ai-card {
+  background: $beasts-white; border-radius: 16px;
+  width: 100%; max-width: 760px;
+  max-height: calc(100vh - 40px); overflow-y: auto;
+  padding: 28px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  position: relative;
+}
+.ae-ai-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px;
+  background: linear-gradient(90deg, #145a32 0%, #1e8449 50%, #27ae60 100%);
+  border-radius: 16px 16px 0 0;
+}
+.ae-ai-card h2 { margin: 0 0 6px; font-size: 1.3rem; font-weight: 900; color: $beasts-forest; }
+.ae-ai-card .sub { margin: 0 0 18px; font-size: 0.9rem; color: #5a6470; line-height: 1.55; }
+.ae-ai-card .sub code {
+  background: #f0ece0; padding: 1px 6px; border-radius: 4px;
+  font-size: 0.82rem; color: $beasts-green; font-weight: 700;
+}
+.ae-ai-field { margin-bottom: 14px; }
+.ae-ai-field label {
+  display: block; font-size: 0.78rem; font-weight: 800;
+  color: $beasts-forest; margin-bottom: 6px; letter-spacing: 0.02em;
+}
+.ae-ai-field input, .ae-ai-field select, .ae-ai-field textarea {
+  width: 100%; padding: 10px 12px;
+  border: 1.5px solid #d8d4c4; border-radius: 8px;
+  font: inherit; font-size: 0.92rem;
+  background: #fbf8f1; color: #0a1628;
+}
+.ae-ai-field input:focus, .ae-ai-field select:focus, .ae-ai-field textarea:focus {
+  outline: none; background: $beasts-white; border-color: #1e8449;
+  box-shadow: 0 0 0 3px rgba(30,132,73,0.16);
+}
+.ae-ai-field textarea { min-height: 110px; resize: vertical; line-height: 1.5; }
+.ae-ai-field-hint {
+  font-size: 0.78rem; color: #6b7280; margin-top: 4px;
+  display: block; line-height: 1.45;
+}
+
+/* ── Target AI selector: three radio cards (Claude / Gemini / GPT) ── */
+.ae-ai-targets {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+}
+.ae-ai-target {
+  position: relative; cursor: pointer;
+  border: 1.5px solid #d8d4c4; border-radius: 10px;
+  padding: 12px 10px; background: #fbf8f1;
+  text-align: center; transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.ae-ai-target:hover { border-color: #1e8449; background: $beasts-white; }
+.ae-ai-target input[type="radio"] {
+  position: absolute; opacity: 0; pointer-events: none;
+}
+.ae-ai-target input[type="radio"]:focus-visible + .ae-ai-target-inner {
+  box-shadow: 0 0 0 3px rgba(30,132,73,0.20);
+  border-radius: 8px;
+}
+.ae-ai-target.is-selected {
+  border-color: #1e8449; background: $beasts-white;
+  box-shadow: 0 0 0 2px rgba(30,132,73,0.18), 0 4px 10px rgba(30,132,73,0.10);
+}
+.ae-ai-target-logo {
+  width: 28px; height: 28px; display: block;
+  color: $beasts-forest;
+}
+.ae-ai-target.is-selected .ae-ai-target-logo { color: #1e8449; }
+.ae-ai-target-name {
+  font-size: 0.82rem; font-weight: 800; color: $beasts-forest;
+  letter-spacing: 0.01em;
+}
+.ae-ai-target-vendor {
+  font-size: 0.68rem; color: #6b7280; text-transform: uppercase;
+  letter-spacing: 0.06em; font-weight: 700;
+}
+
+.ae-ai-buttons { display: flex; gap: 10px; margin-top: 18px; }
+.ae-ai-buttons .ae-btn { flex: 1; padding: 12px; font-size: 0.95rem; }
+
+/* ── "Groq is thinking" loading animation ─────────────────────── */
+/* CSS-only: a soft pulsing bolt + three offset dots + a shimmer bar.
+   No JS-driven RAF loop, no transform-on-large-element. The shimmer
+   uses background-position-x — cheap on the compositor. */
+.ae-ai-thinking {
+  display: none; margin-top: 18px;
+  padding: 18px 18px 14px;
+  background: linear-gradient(135deg, #f7f1e2 0%, #f0eadd 100%);
+  border: 1.5px dashed #1e8449; border-radius: 12px;
+  text-align: center;
+}
+.ae-ai-thinking.is-active { display: block; }
+.ae-ai-thinking-headline {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  font-size: 0.95rem; font-weight: 800; color: $beasts-green;
+  margin-bottom: 12px;
+}
+.ae-ai-thinking-bolt {
+  width: 22px; height: 22px;
+  animation: ae-ai-bolt-pulse 1.8s ease-in-out infinite;
+  transform-origin: center;
+  color: #1e8449;
+}
+@keyframes ae-ai-bolt-pulse {
+  /* Calm, no rotation — the rotation tic felt jittery next to the
+     shimmer. Now it's a gentle scale/opacity breathe. */
+  0%, 100% { opacity: 0.55; transform: scale(0.95); }
+  50%      { opacity: 1.0;  transform: scale(1.05); }
+}
+.ae-ai-thinking-dots {
+  display: inline-flex; gap: 4px; align-items: center;
+}
+.ae-ai-thinking-dots span {
+  width: 5px; height: 5px; border-radius: 50%; background: #1e8449;
+  animation: ae-ai-dot 1.2s ease-in-out infinite;
+  opacity: 0.6;
+}
+.ae-ai-thinking-dots span:nth-child(1) { animation-delay: 0s; }
+.ae-ai-thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+.ae-ai-thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes ae-ai-dot {
+  /* Drop the translateY bounce — purely opacity, more elegant and
+     less attention-grabbing next to the shimmer. */
+  0%, 80%, 100% { opacity: 0.25; }
+  40%           { opacity: 1; }
+}
+.ae-ai-thinking-shimmer {
+  height: 6px; border-radius: 4px;
+  background: linear-gradient(90deg,
+    rgba(30,132,73,0.08) 0%,
+    rgba(30,132,73,0.42) 35%,
+    rgba(30,132,73,0.08) 70%);
+  background-size: 220% 100%;
+  animation: ae-ai-shimmer 2.0s linear infinite;
+  margin: 4px 0 0;
+}
+@keyframes ae-ai-shimmer {
+  0%   { background-position-x: 100%; }
+  100% { background-position-x: -100%; }
+}
+.ae-ai-thinking-stages {
+  margin-top: 10px;
+  font-size: 0.78rem; color: #475569; font-weight: 600;
+  line-height: 1.5; min-height: 1.5em;
+  transition: opacity 0.3s ease;
+}
+.ae-ai-thinking-cancel {
+  margin-top: 10px;
+  text-align: center;
+}
+.ae-ai-thinking-cancel .ae-btn {
+  font-size: 0.78rem; padding: 6px 14px;
+  color: #6b7280; border: 1px solid #d8d4c4;
+}
+.ae-ai-thinking-cancel .ae-btn:hover {
+  background: #fbf8f1; color: #80261b; border-color: rgba(192,57,43,0.32);
+}
+
+/* ── "Try the same description with: [Claude] [Gemini] [ChatGPT]" ── */
+/* Shown inside the result panel once a prompt has been generated. */
+.ae-ai-switch-target {
+  display: none; align-items: center; flex-wrap: wrap; gap: 8px;
+  margin-top: 14px; padding-top: 12px;
+  border-top: 1px dashed #e3e0d8;
+}
+.ae-ai-switch-target.is-visible { display: flex; }
+.ae-ai-switch-target-label {
+  font-size: 0.78rem; font-weight: 700; color: #6b7280;
+}
+.ae-ai-switch-target-btn {
+  padding: 6px 14px;
+  border: 1.5px solid #d8d4c4; border-radius: 999px;
+  background: #fbf8f1; color: $beasts-forest;
+  font: inherit; font-size: 0.82rem; font-weight: 700;
+  cursor: pointer; white-space: nowrap;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+.ae-ai-switch-target-btn:hover {
+  background: #d4efdf; border-color: $beasts-green;
+}
+.ae-ai-switch-target-btn.is-current {
+  background: $beasts-green; color: #fffdf6; border-color: $beasts-green;
+  cursor: default;
+}
+.ae-ai-switch-target-btn:disabled {
+  opacity: 0.5; cursor: not-allowed;
+}
+
+/* ── "Show the page summary Groq used" expandable ─────────────── */
+/* Surfaces the trimmed page representation that Groq actually saw
+   when writing the engineered prompt, so admins can sanity-check
+   that key landmarks (h1/h2 anchors, sections) made it through. */
+.ae-ai-summary-details {
+  margin-top: 14px; padding-top: 12px;
+  border-top: 1px dashed #e3e0d8;
+}
+.ae-ai-summary-details summary {
+  cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.78rem; font-weight: 700; color: #6b7280;
+  user-select: none;
+  list-style: none;        /* Hide default disclosure triangle (we use the ▸/▾ span) */
+}
+.ae-ai-summary-details summary::-webkit-details-marker { display: none; }
+.ae-ai-summary-details summary:hover .ae-ai-summary-summary-label { color: $beasts-green; }
+.ae-ai-summary-arrow {
+  display: inline-block; width: 0.9em; text-align: center;
+  color: #1e8449; font-size: 0.85em;
+  transition: transform 0.2s ease;
+}
+.ae-ai-summary-details[open] .ae-ai-summary-arrow {
+  transform: rotate(90deg);
+}
+.ae-ai-summary-meta {
+  font-size: 0.7rem; color: #94a3b8; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+.ae-ai-summary-pre {
+  margin: 10px 0 0; padding: 12px;
+  background: #fbf8f1; border: 1px solid #e3e0d8; border-radius: 8px;
+  font-family: 'SF Mono', 'Menlo', Consolas, monospace;
+  font-size: 0.72rem; line-height: 1.5; color: #475569;
+  max-height: 240px; overflow-y: auto; white-space: pre-wrap;
+}
+
+/* ── "Recent prompts" expandable ──────────────────────────────── */
+/* Lives at the top of the modal so admins can quickly re-use a
+   recent description without re-typing it. */
+.ae-ai-history-details {
+  margin-bottom: 14px; padding: 0;
+  border: 1px solid #e3deca; border-radius: 8px;
+  background: #fbf8f1;
+}
+.ae-ai-history-details summary {
+  cursor: pointer;
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  font-size: 0.8rem; font-weight: 800; color: $beasts-green;
+  user-select: none; list-style: none;
+}
+.ae-ai-history-details summary::-webkit-details-marker { display: none; }
+.ae-ai-history-details[open] .ae-ai-summary-arrow { transform: rotate(90deg); }
+.ae-ai-history-meta {
+  font-size: 0.7rem; color: #6b7280; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  margin-left: auto;
+}
+.ae-ai-history-list {
+  list-style: none; margin: 0; padding: 0;
+  max-height: 240px; overflow-y: auto;
+  border-top: 1px solid #e3deca;
+}
+.ae-ai-history-list li {
+  padding: 10px 12px; cursor: pointer;
+  border-bottom: 1px solid #e3deca;
+  transition: background 0.12s ease;
+}
+.ae-ai-history-list li:last-child { border-bottom: none; }
+.ae-ai-history-list li:hover { background: #ecf6f0; }
+.ae-ai-history-list li:focus-visible {
+  outline: none;
+  background: #ecf6f0;
+  box-shadow: inset 0 0 0 2px #1e8449;
+}
+.ae-ai-history-list .ae-ai-history-row1 {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  font-size: 0.78rem; color: $beasts-green; font-weight: 800;
+}
+.ae-ai-history-list .ae-ai-history-target {
+  font-size: 0.68rem; padding: 2px 8px; border-radius: 999px;
+  background: #d4efdf; color: $beasts-green; font-weight: 800;
+  letter-spacing: 0.02em; text-transform: uppercase;
+}
+.ae-ai-history-list .ae-ai-history-ts {
+  font-size: 0.7rem; color: #6b7280; font-weight: 700; margin-left: auto;
+}
+.ae-ai-history-list .ae-ai-history-desc {
+  margin-top: 4px;
+  font-size: 0.8rem; color: #475569; line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.ae-ai-history-actions {
+  padding: 8px 12px; border-top: 1px solid #e3deca;
+  display: flex; justify-content: flex-end;
+}
+.ae-ai-history-actions .ae-btn { padding: 5px 10px; font-size: 0.72rem; }
+
+/* ── "Step 2: Paste & apply" expandable ──────────────────────── */
+/* Visually distinct from the summary expandable (forest-green
+   leading bar) so the admin can find it as the "next thing to do"
+   after copying the engineered prompt. */
+.ae-ai-paste-details {
+  margin-top: 14px; padding: 0;
+  border: 1.5px solid #1e8449; border-radius: 10px;
+  background: #f7f8f4;
+  overflow: hidden;
+}
+.ae-ai-paste-details summary {
+  cursor: pointer;
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px;
+  font-size: 0.84rem; font-weight: 800; color: $beasts-green;
+  user-select: none; list-style: none;
+  background: #ecf6f0;
+}
+.ae-ai-paste-details summary::-webkit-details-marker { display: none; }
+.ae-ai-paste-details[open] summary { border-bottom: 1px solid #d4efdf; }
+.ae-ai-paste-details[open] .ae-ai-summary-arrow { transform: rotate(90deg); }
+.ae-ai-paste-title { color: $beasts-green; }
+.ae-ai-paste-meta {
+  font-size: 0.7rem; color: #6b7280; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  margin-left: auto;
+}
+.ae-ai-paste-body { padding: 14px; }
+.ae-ai-paste-hint {
+  margin: 0 0 10px; font-size: 0.82rem; line-height: 1.5; color: #475569;
+}
+.ae-ai-paste-body textarea#ae-ai-paste-input {
+  width: 100%; min-height: 140px; max-height: 280px;
+  padding: 10px 12px;
+  border: 1.5px solid #d8d4c4; border-radius: 8px;
+  font-family: 'SF Mono', 'Menlo', Consolas, monospace;
+  font-size: 0.76rem; line-height: 1.5; color: #0a1628;
+  background: $beasts-white;
+  resize: vertical; white-space: pre-wrap;
+}
+.ae-ai-paste-body textarea#ae-ai-paste-input:focus {
+  outline: none; border-color: #1e8449;
+  box-shadow: 0 0 0 3px rgba(30,132,73,0.16);
+}
+.ae-ai-paste-actions {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-top: 10px;
+}
+.ae-ai-paste-status {
+  font-size: 0.76rem; font-weight: 700; color: #6b7280;
+  margin-left: auto;
+}
+.ae-ai-paste-status.is-valid   { color: $beasts-green; }
+.ae-ai-paste-status.is-invalid { color: #80261b; }
+iframe#ae-ai-paste-iframe {
+  display: block; width: 100%; min-height: 360px; margin-top: 12px;
+  border: 1.5px solid #d8d4c4; border-radius: 10px;
+  background: $beasts-white;
+}
+iframe#ae-ai-paste-iframe[hidden] { display: none; }
+
+/* Respect prefers-reduced-motion — replace animation with a calm,
+   static "Working…" badge so it's still clear something is happening. */
+@media (prefers-reduced-motion: reduce) {
+  .ae-ai-thinking-bolt   { animation: none; opacity: 0.85; }
+  .ae-ai-thinking-dots span { animation: none; opacity: 0.7; }
+  .ae-ai-thinking-shimmer { animation: none; background-position-x: 0; opacity: 0.6; }
+}
+
+/* ── Engineered-prompt result panel ────────────────────────────── */
+.ae-ai-result {
+  margin-top: 16px; padding: 16px;
+  border: 1.5px solid #1e8449;
+  background: #fffdf6;
+  border-radius: 12px; display: none;
+  box-shadow: 0 6px 18px rgba(30,132,73,0.08);
+}
+.ae-ai-result.is-visible { display: block; }
+.ae-ai-result-header {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 8px; margin-bottom: 10px;
+}
+.ae-ai-result h3 {
+  margin: 0; font-size: 0.92rem; font-weight: 900;
+  letter-spacing: 0.01em; color: $beasts-green;
+}
+.ae-ai-result-meta {
+  font-size: 0.74rem; color: #6b7280; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+
+/* Inline warning shown when the user changes the target-AI radio
+   AFTER an engineered prompt has been rendered. The active prompt
+   is still for the old target — the hint tells them to re-engineer
+   if they want a re-tailored version. */
+.ae-ai-stale-hint {
+  display: flex; align-items: flex-start; gap: 8px;
+  margin: 0 0 10px; padding: 8px 12px;
+  background: #fff8e1;
+  border: 1px solid #f1d57a; border-radius: 8px;
+  font-size: 0.78rem; line-height: 1.45; color: #6b5400;
+}
+.ae-ai-stale-hint[hidden] { display: none; }
+.ae-ai-stale-hint-icon { font-size: 0.95rem; line-height: 1.2; }
+.ae-ai-prompt-wrap {
+  position: relative;
+}
+.ae-ai-result textarea#ae-ai-output {
+  width: 100%; min-height: 180px; max-height: 320px;
+  padding: 12px 12px 12px 14px;
+  background: $beasts-white; border-radius: 8px;
+  font-family: 'SF Mono', 'Menlo', Consolas, monospace;
+  font-size: 0.78rem; line-height: 1.55; color: #0a1628;
+  border: 1px solid #e3e0d8;
+  resize: vertical; white-space: pre-wrap;
+}
+.ae-ai-result textarea#ae-ai-output:focus {
+  outline: none; border-color: #1e8449;
+  box-shadow: 0 0 0 3px rgba(30,132,73,0.16);
+}
+.ae-ai-result-actions {
+  display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;
+}
+.ae-ai-result-actions .ae-btn { flex: 0 1 auto; padding: 10px 14px; }
+.ae-ai-result-actions .ae-btn.is-link-style {
+  text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+}
+.ae-ai-steps {
+  margin: 16px 0 0; padding: 14px 14px 14px 16px;
+  background: #f7f1e2; border-radius: 10px;
+  border: 1px solid #e3deca;
+}
+.ae-ai-steps-title {
+  font-size: 0.78rem; font-weight: 900; color: $beasts-green;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  margin: 0 0 8px;
+}
+.ae-ai-steps ol {
+  margin: 0; padding-left: 22px;
+  font-size: 0.86rem; line-height: 1.6; color: #0a1628;
+}
+.ae-ai-steps li { margin-bottom: 4px; }
+.ae-ai-steps li:last-child { margin-bottom: 0; }
+.ae-ai-steps li strong { color: $beasts-green; }
+
+/* ── Mobile: tighten the modal so the form fits on phones ─────── */
+@media (max-width: 540px) {
+  .ae-ai-modal { padding: 10px; }
+  .ae-ai-card { padding: 20px 18px; border-radius: 14px; }
+  .ae-ai-card h2 { font-size: 1.15rem; }
+  .ae-ai-card .sub { font-size: 0.84rem; line-height: 1.5; }
+
+  /* Target AI cards: stack rows instead of grid */
+  .ae-ai-targets { grid-template-columns: 1fr; }
+  .ae-ai-target {
+    flex-direction: row; justify-content: flex-start;
+    gap: 12px; text-align: left; padding: 10px 12px;
+  }
+  .ae-ai-target-vendor { margin-left: auto; }
+
+  /* Result-actions buttons: stack full-width so the longest label
+     ("Copy & open ChatGPT") doesn't truncate */
+  .ae-ai-result-actions { flex-direction: column; }
+  .ae-ai-result-actions .ae-btn { flex: 1 1 100%; padding: 11px 12px; }
+
+  /* Switch-target row: stack label above buttons, buttons full-width
+     pills (still 3-up if they fit) */
+  .ae-ai-switch-target { flex-direction: column; align-items: stretch; gap: 6px; }
+  .ae-ai-switch-target-label { font-size: 0.74rem; }
+
+  /* Steps list: smaller, more compact */
+  .ae-ai-steps { padding: 12px 12px 12px 14px; }
+  .ae-ai-steps ol { font-size: 0.82rem; line-height: 1.55; padding-left: 18px; }
+
+  /* Result panel inner padding */
+  .ae-ai-result { padding: 12px; }
+  .ae-ai-result textarea#ae-ai-output { min-height: 140px; font-size: 0.74rem; }
+
+  /* Thinking animation: tighten */
+  .ae-ai-thinking { padding: 14px 12px 10px; }
+  .ae-ai-thinking-headline { font-size: 0.86rem; gap: 8px; }
+
+  /* Field hints small enough to not push the modal too tall */
+  .ae-ai-field-hint { font-size: 0.74rem; }
+}
+
+/* ── Very small phones (iPhone SE / mini) ──────────────────────── */
+@media (max-width: 380px) {
+  .ae-ai-card { padding: 18px 14px; }
+  .ae-ai-card h2 { font-size: 1.06rem; }
+  .ae-ai-buttons { flex-direction: column; }
+  .ae-ai-buttons .ae-btn { flex: 1 1 100%; }
+}
+
+/* ─── Confirm dialog (publish, rollback) ─────────────────────── */
+.ae-dlg {
+  position: fixed; inset: 0; background: rgba(10,22,40,0.55);
+  display: none; align-items: center; justify-content: center;
+  z-index: 110; padding: 20px;
+}
+.ae-dlg.is-open { display: flex; }
+.ae-dlg-card {
+  background: $beasts-white; border-radius: 14px;
+  width: 100%; max-width: 520px; padding: 24px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+}
+.ae-dlg-card h2 {
+  margin: 0 0 8px; font-size: 1.15rem; font-weight: 800; color: $beasts-forest;
+}
+.ae-dlg-card p { margin: 0 0 14px; color: #5a6470; line-height: 1.55; font-size: 0.92rem; }
+.ae-dlg-card input, .ae-dlg-card textarea {
+  width: 100%; padding: 10px 12px;
+  border: 1.5px solid #d8d4c4; border-radius: 8px;
+  font: inherit; font-size: 0.92rem; background: #fbf8f1; margin-bottom: 14px;
+}
+.ae-dlg-card input:focus, .ae-dlg-card textarea:focus {
+  outline: none; border-color: #1e8449;
+  box-shadow: 0 0 0 3px rgba(30,132,73,0.16); background: $beasts-white;
+}
+.ae-dlg-buttons { display: flex; gap: 10px; justify-content: flex-end; }
+
+/* ─── Toast ──────────────────────────────────────────────────── */
+.ae-toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: $beasts-green; color: #fffdf6;
+  padding: 12px 18px; border-radius: 10px;
+  font-size: 0.9rem; font-weight: 700;
+  box-shadow: 0 8px 28px rgba(20,90,50,0.40);
+  z-index: 200; transform: translateY(80px); opacity: 0;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  max-width: 420px;
+}
+.ae-toast.is-visible { transform: translateY(0); opacity: 1; }
+.ae-toast.is-error { background: #80261b; }
+.ae-toast a { color: #ffe8a7; font-weight: 800; }
+
+/* ─── Auth gate ──────────────────────────────────────────────── */
+.ae-auth-gate {
+  max-width: 480px; margin: 80px auto; padding: 32px;
+  background: $beasts-white; border: 1px solid #e3e0d8; border-radius: 16px;
+  text-align: center; box-shadow: 0 6px 20px rgba(20,90,50,0.08);
+  font-family: 'DM Sans', sans-serif;
+}
+.ae-auth-gate h2 { margin: 0 0 6px; color: $beasts-forest; font-weight: 800; }
+.ae-auth-gate p { color: #5a6470; margin: 0 0 16px; line-height: 1.55; }
+.ae-auth-gate input[type="password"] {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid #d8d4c4; border-radius: 10px;
+  font: inherit; margin-bottom: 12px;
+}
+.ae-auth-gate input[type="password"]:focus {
+  outline: none; border-color: #1e8449;
+  box-shadow: 0 0 0 3px rgba(30,132,73,0.16);
+}
+.ae-auth-error {
+  color: #80261b; background: rgba(192,57,43,0.08);
+  border: 1px solid rgba(192,57,43,0.32);
+  padding: 8px 12px; border-radius: 8px;
+  font-size: 0.86rem; margin-bottom: 12px; display: none;
+}
+.ae-auth-error.is-visible { display: block; }
