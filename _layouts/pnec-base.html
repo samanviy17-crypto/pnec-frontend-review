@@ -8,7 +8,7 @@
   <title>{% if page.title %}{{ page.title }} — {% endif %}{{ site.title }}</title>
   <meta name="description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
 
-  <script>window.PNEC_SITE_BASE = {{ site.baseurl | default: "" | jsonify }};</script>
+  {% include runtime-config.html %}
 
   <!-- SEO -->
   <meta property="og:title" content="{% if page.title %}{{ page.title }} — {% endif %}{{ site.title }}">
@@ -41,8 +41,8 @@
                   location.pathname.slice(window.PNEC_SITE_BASE.length).replace(/^\/pages\//, '').replace(/\.html$/, ''));
       var host = location.hostname;
       var apiBase = (host === 'localhost' || host === '127.0.0.1')
-        ? 'http://127.0.0.1:8425'
-        : 'https://api.pnec-review.invalid';
+        ? (window.PNEC_API_BASE || 'http://127.0.0.1:8425')
+        : (window.PNEC_API_BASE || 'https://api.pnec-review.invalid');
       fetch(apiBase + '/api/cms/page/' + encodeURIComponent(slug) + '/seo')
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (s) {
@@ -81,8 +81,8 @@
     (function () {
       var host = window.location.hostname;
       var apiBase = (host === 'localhost' || host === '127.0.0.1')
-        ? 'http://127.0.0.1:8425'
-        : 'https://api.pnec-review.invalid';
+        ? (window.PNEC_API_BASE || 'http://127.0.0.1:8425')
+        : (window.PNEC_API_BASE || 'https://api.pnec-review.invalid');
       var qs = new URLSearchParams(window.location.search);
       var state = qs.get('preview') === '1' ? 'draft' : 'published';
       var url = apiBase + '/api/cms/theme.css?state=' + state;
@@ -99,16 +99,8 @@
   {% if page.use_poway_source_clone %}
   {% include poway-live-head.html %}
   {% elsif page.use_poway_live_styles %}
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/all.min.css?ver=3.35.7">
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/jupiterx/compiler/jupiterx/b517470.css?ver=4.9.2">
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/jupiterx/compiler/jupiterx-elements-dynamic-styles/41d6799.css?ver=4.9.2">
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/elementor/css/custom-frontend.min.css?ver=1773234694">
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/elementor/css/custom-pro-widget-nav-menu.min.css?ver=1773234694">
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/plugins/jupiterx-core/includes/extensions/raven/assets/css/frontend.min.css?ver=6.9.1">
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/elementor/css/post-771.css?ver=1773234694">
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/elementor/css/post-22.css?ver=1773234695">
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/elementor/css/post-6.css?ver=1773234695">
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/elementor/google-fonts/css/roboto.css?ver=1742222182">
+
+
   {% endif %}
 
   <!-- Leaflet (loaded only on map page) -->

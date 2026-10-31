@@ -126,12 +126,12 @@ body_class: inner-page volunteer-page
     <div id="vol-alert-success" class="vol-alert vol-alert--success" role="status" aria-live="polite">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
       <div>
-        <strong>Thanks — we got it!</strong> A PNEC coordinator will email you within a few business days. Watch for a message from <strong>contact@example.test</strong>.
+        <strong>Thanks — we got it!</strong> A PNEC coordinator will email you within a few business days. Watch for a message from <strong>{{ site.contact_email | default: 'contact@example.test' }}</strong>.
       </div>
     </div>
     <div id="vol-alert-error" class="vol-alert vol-alert--error" role="alert" aria-live="assertive">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <div id="vol-alert-error-msg">Something went wrong. Please email us directly at <a href="mailto:contact@example.test">contact@example.test</a>.</div>
+      <div id="vol-alert-error-msg">Something went wrong. Please email us directly at <a href="mailto:{{ site.contact_email | default: 'contact@example.test' }}">{{ site.contact_email | default: 'contact@example.test' }}</a>.</div>
     </div>
 
     <form class="vol-form" id="vol-form" novalidate>
@@ -179,7 +179,7 @@ body_class: inner-page volunteer-page
 
       <p class="vol-form-foot">
         Your info goes only to PNEC's coordinator team. We don't sell, share, or publish it.
-        Questions? Email <a href="mailto:contact@example.test">contact@example.test</a>.
+        Questions? Email <a href="mailto:{{ site.contact_email | default: 'contact@example.test' }}">{{ site.contact_email | default: 'contact@example.test' }}</a>.
       </p>
     </form>
   </div>
@@ -194,8 +194,8 @@ body_class: inner-page volunteer-page
 (function() {
   var API_BASE = (window.PNEC_API_BASE || (
     (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-      ? 'http://127.0.0.1:8425'
-      : 'https://api.pnec-review.invalid'
+      ? (window.PNEC_API_BASE || 'http://127.0.0.1:8425')
+      : (window.PNEC_API_BASE || 'https://api.pnec-review.invalid')
   ));
 
   var form = document.getElementById('vol-form');
@@ -280,11 +280,11 @@ body_class: inner-page volunteer-page
       } else {
         var detail = (result.data && (result.data.detail || result.data.message || result.data.error))
                   || ('Server returned ' + result.status + '.');
-        alertErrMsg.innerHTML = detail + ' If this keeps happening, email <a href="mailto:contact@example.test">contact@example.test</a>.';
+        alertErrMsg.innerHTML = detail + ' If this keeps happening, email <a href="mailto:{{ site.contact_email | default: 'contact@example.test' }}">{{ site.contact_email | default: 'contact@example.test' }}</a>.';
         showOnly(alertErr);
       }
     }).catch(function() {
-      alertErrMsg.innerHTML = 'Could not reach the PNEC server. Please check your connection or email <a href="mailto:contact@example.test">contact@example.test</a> directly.';
+      alertErrMsg.innerHTML = 'Could not reach the PNEC server. Please check your connection or email <a href="mailto:{{ site.contact_email | default: 'contact@example.test' }}">{{ site.contact_email | default: 'contact@example.test' }}</a> directly.';
       showOnly(alertErr);
     }).finally(function() {
       submitBtn.disabled = false;

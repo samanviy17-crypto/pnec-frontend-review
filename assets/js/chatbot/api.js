@@ -25,8 +25,8 @@ function defaultApiBase() {
   if (cfg.apiBase) return cfg.apiBase;
   const h = window.location.hostname;
   return (h === 'localhost' || h === '127.0.0.1')
-    ? 'http://127.0.0.1:8425'
-    : 'https://api.pnec-review.invalid';
+    ? (window.PNEC_API_BASE || 'http://127.0.0.1:8425')
+    : (window.PNEC_API_BASE || 'https://api.pnec-review.invalid');
 }
 
 function defaultEndpoint() {
@@ -40,7 +40,7 @@ function streamEndpoint() {
   // Convention: same host, /api/gemini-stream. Backend may not implement
   // it yet — that's fine, we'll silently fall back.
   const base = defaultEndpoint().replace(/\/api\/gemini\/?$/, '');
-  return `${base}/api/gemini-stream`;
+  return null; // Streaming is deferred unless explicitly configured; use supported one-shot API.
 }
 
 // ─── One-shot completion (today's Flask /api/gemini) ──────────────
@@ -52,8 +52,8 @@ export async function sendCompletion({ systemPrompt, userMessage, history = [], 
   // goes through with the text component.
   const payload = { prompt: systemPrompt, text: userMessage, history };
   if (image && image.dataUrl) {
-    payload.image_base64 = image.dataUrl.replace(/^data:image\/[^;]+;base64,/, '');
-    payload.image_mime   = image.mime || 'image/jpeg';
+    payload.image_data = image.dataUrl.replace(/^data:image\/[^;]+;base64,/, '');
+    payload.image_mime_type = image.mime || 'image/jpeg';
   }
   const body = JSON.stringify(payload);
 
@@ -82,6 +82,7 @@ export async function sendCompletion({ systemPrompt, userMessage, history = [], 
 
 export async function* sendCompletionStream({ systemPrompt, userMessage, history = [], signal }) {
   const url = streamEndpoint();
+  if (!url) { yield {kind:'unsupported',status:501}; return; }
   const body = JSON.stringify({ prompt: systemPrompt, text: userMessage, history, stream: true });
 
   let res;
@@ -337,7 +338,7 @@ export async function getRiskNow() {
     try { return await window.PNEC_RISK_API.fetchTodayRisk(); } catch (_e) { /* fall through */ }
   }
   try {
-    const res = await fetch(`${defaultApiBase()}/api/risk/today`);
+    const res = await fetch(`${defaultApiBase()}/api/risk`);
     if (!res.ok) return null;
     return await res.json();
   } catch (_e) { return null; }

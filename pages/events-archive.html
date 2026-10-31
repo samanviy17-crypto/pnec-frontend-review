@@ -172,7 +172,7 @@ permalink: /pages/events-archive.html
         <li>Written report with priority-ranked actions</li>
       </ul>
       <p><strong>Why it works:</strong> the research from the 2018 Camp Fire showed Zone Zero hardening saved homes that "shouldn't have survived" — embers traveled a mile, but the homes with non-combustible immediate surroundings made it through. Distance from fuel matters less than what's right next to your siding.</p>
-      <p><strong>Schedule one:</strong> Email <a href="mailto:contact@example.test?subject=HIZ%20assessment%20request">contact@example.test</a> with your address. Assessments take 60–90 minutes.</p>
+      <p><strong>Schedule one:</strong> Email <a href="mailto:{{ site.contact_email | default: 'contact@example.test' }}?subject=HIZ%20assessment%20request">{{ site.contact_email | default: 'contact@example.test' }}</a> with your address. Assessments take 60–90 minutes.</p>
       <a class="ev-article-cta" href="{{ '/pages/programs-and-services.html' | relative_url }}">All PNEC programs →</a>
       <a class="ev-article-cta ev-article-cta--ghost" href="#fire-smart-landscaping">Fire Smart Landscaping →</a>
     </div>

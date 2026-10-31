@@ -57,13 +57,13 @@ if (!isAdmin()) {
 } else {
   // Try server endpoint first; fall back to local aggregation.
   const apiBase = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-    ? 'http://127.0.0.1:8425' : 'https://api.pnec-review.invalid';
+    ? (window.PNEC_API_BASE || 'http://127.0.0.1:8425') : (window.PNEC_API_BASE || 'https://api.pnec-review.invalid');
   fetch(`${apiBase}/api/chat/analytics`, {
     credentials: 'include',
-    headers: { 'Accept': 'application/json' }
+    headers: { 'Accept': 'application/json', ...((localStorage.getItem('pnec_token') || sessionStorage.getItem('pnec_token')) ? {Authorization: 'Bearer ' + (localStorage.getItem('pnec_token') || sessionStorage.getItem('pnec_token'))} : {}) }
   })
     .then(r => (r.ok ? r.json() : Promise.reject('no-server')))
-    .then(serverData => render(serverData, true))
+    .then(serverData => serverData.totalMsgs ? render(serverData, true) : render(aggregateLocal(), false))
     .catch(() => render(aggregateLocal(), false));
 }
 

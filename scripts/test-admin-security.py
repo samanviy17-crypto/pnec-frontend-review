@@ -105,6 +105,26 @@ with sync_playwright() as play:
             assert page.locator('a[href="/pages/login.html"]').count() == 0, filename
         context.close()
 
+    # Main dashboard verifies server identity after shared helpers load. Exercise
+    # session-only credentials and a forged cached admin label without a token.
+    for identity in ('guest','resident','admin'):
+        context=browser.new_context()
+        context.add_init_script('sessionStorage.setItem("pnec_user", JSON.stringify({role:"admin",display_name:"Synthetic"}));')
+        if identity in tokens:
+            context.add_init_script('sessionStorage.setItem("pnec_token", '+repr(tokens[identity])+');')
+        context.route('**/*',handler(identity))
+        page=context.new_page()
+        errors=[];page.on('pageerror',lambda error:errors.append(str(error)))
+        page.goto(ORIGIN+'/pages/admin.html',wait_until='domcontentloaded')
+        if identity=='admin':
+            expect(page.locator('#adm-shell')).to_be_visible()
+            page.wait_for_function('Number(document.getElementById("stat-users").textContent)>0')
+        else:
+            expect(page.locator('#adm-gate')).to_be_visible()
+            expect(page.locator('#adm-shell')).not_to_be_visible()
+        assert not errors,errors
+        context.close()
+
     # Ten fresh browser sessions: actually follow each tool's login link,
     # authenticate through the served PNEC form, then return to that exact tool.
     # Distinct test clients use distinct peer addresses, without bypassing limits
@@ -152,7 +172,7 @@ assert journeys == 10
 assert not missing_local, sorted(set(missing_local))
 assert any(who == 'admin' and status == 200 and authenticated for who, _, status, authenticated in observed)
 assert all(status in (401, 403) for who, path, status, _ in observed if who == 'resident' and path in ('/api/admin/publish/health', '/api/volunteer/interests', '/api/blog'))
-print('PASS: original 15 admin-page/identity combinations plus 10 click-through/login/return journeys; actual role authorization and HTTPS production API only')
+print('PASS: original 15 admin-page/identity combinations plus 3 session-only/forged-cache dashboard checks and 10 click-through/login/return journeys; actual role authorization and HTTPS production API only')
 with app.app_context():
     db.session.remove()
     db.engine.dispose()

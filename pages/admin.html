@@ -431,7 +431,7 @@ use_poway_live_styles: false
 <!-- Toast -->
 <div class="adm-toast" id="adm-toast"></div>
 
-<script src="{{ '/assets/js/utils/errors.js' | relative_url }}"></script>
+
 <script src="{{ '/assets/js/api/admin-api.js' | relative_url }}"></script>
 <script>
 /* ── Admin Dashboard Orchestrator ─────────────────────────────────────────── */
@@ -446,8 +446,11 @@ let admConfigEntries = [];
 
 // ── Boot ─────────────────────────────────────────────────────────────────────
 
-(function boot() {
-  const u = JSON.parse(localStorage.getItem('pnec_user') || 'null');
+document.addEventListener('DOMContentLoaded', async function boot() {
+  // Shared API helpers load at the end of the layout. Verify the server identity
+  // before opening the dashboard; cached role labels are not authorization.
+  let u = null;
+  try { u = await fetchCurrentUser({strict:true}); } catch (_) { /* keep gate closed */ }
   if (!u || u.role !== 'admin') {
     document.getElementById('adm-gate').classList.add('visible');
     return;
@@ -455,10 +458,9 @@ let admConfigEntries = [];
   admCurrentUser = u;
   document.getElementById('adm-shell').classList.add('visible');
   document.getElementById('adm-user-name').textContent = u.display_name || u.email;
-
   admLoadOverview();
   admBindNav();
-})();
+});
 
 // ── Navigation ────────────────────────────────────────────────────────────────
 

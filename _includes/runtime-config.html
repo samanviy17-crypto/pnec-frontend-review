@@ -1,0 +1,7 @@
+<script>
+window.PNEC_SITE_BASE = {{ site.baseurl | default: "" | jsonify }};
+window.PNEC_API_BASE = {{ site.api_base_url | default: "https://api.pnec-review.invalid" | jsonify }}.replace(/\/$/, '');
+if ((location.hostname === 'localhost' || location.hostname === '127.0.0.1') && window.PNEC_API_BASE === 'https://api.pnec-review.invalid') {
+  window.PNEC_API_BASE = 'http://127.0.0.1:8425';
+}
+</script>

@@ -5,8 +5,8 @@
 const API_BASE = (
   location.hostname === 'localhost' || location.hostname === '127.0.0.1'
 )
-  ? 'http://127.0.0.1:8425'
-  : 'https://api.pnec-review.invalid';
+  ? (window.PNEC_API_BASE || 'http://127.0.0.1:8425')
+  : (window.PNEC_API_BASE || 'https://api.pnec-review.invalid');
 
 // ─── Error type enum ──────────────────────────────────────────────────────────
 const ERROR_TYPES = Object.freeze({

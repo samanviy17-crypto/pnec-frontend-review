@@ -2,7 +2,7 @@
 <html lang="en-US">
 <head>
   <meta charset="UTF-8" />
-  <script>window.PNEC_SITE_BASE = {{ site.baseurl | default: "" | jsonify }};</script>
+  {% include runtime-config.html %}
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{% if page.title %}{{ page.title }} &#8211; {% endif %}Poway NEC &amp; FSC</title>
   <meta name="robots" content="max-image-preview:large" />
@@ -20,28 +20,14 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{% if page.title %}{{ page.title }} — {% endif %}Poway NEC &amp; FSC">
   <meta name="twitter:description" content="{{ _desc }}">
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/all.min.css?ver=3.35.9" />
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/v4-shims.min.css?ver=3.35.9" />
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/plugins/constant-contact-forms/assets/css/style.css?ver=2.17.0" />
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/themes/jupiterx/lib/assets/dist/css/frontend.min.css?ver=4.9.2" />
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/jupiterx/compiler/jupiterx/b517470.css?ver=4.9.2" />
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/jupiterx/compiler/jupiterx-elements-dynamic-styles/41d6799.css?ver=4.9.2" />
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/elementor/css/custom-frontend.min.css?ver=1774488131" />
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/elementor/css/custom-pro-widget-nav-menu.min.css?ver=1774488131" />
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/plugins/jupiterx-core/includes/extensions/raven/assets/css/frontend.min.css?ver=6.9.4" />
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/elementor/css/post-771.css?ver=1774488132" />
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/elementor/css/post-2820.css?ver=1774488132" />
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/elementor/css/post-238.css?ver=1774488132" />
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/elementor/google-fonts/css/roboto.css?ver=1742222182" />
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/plugins/elementor/assets/lib/eicons/css/elementor-icons.min.css?ver=5.47.0" />
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/plugins/elementor-pro/assets/css/widget-posts.min.css?ver=3.35.1" />
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/plugins/elementor/assets/css/widget-social-icons.min.css?ver=3.35.9" />
+
+
   <link rel="stylesheet" href="{{ '/assets/css/poway-unified-ui.css' | relative_url }}" />
   <!-- v3.20: chatbot CSS below-the-fold; load non-blocking. -->
   <link rel="preload" href="{{ '/assets/css/chatbot.css' | relative_url }}" as="style"
         onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="{{ '/assets/css/chatbot.css' | relative_url }}" /></noscript>
-  <link rel="icon" href="https://powaynec.com/wp-content/uploads/2020/05/cropped-PNEC-init-32x32.jpg" sizes="32x32" />
+
   {% include scss-head.html %}
 <link rel="stylesheet" href="{{ "/assets/css/review-fallback.css" | relative_url }}">
 </head>

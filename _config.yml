@@ -2,7 +2,7 @@ title: "PNEC — isolated source review"
 description: "Poway Neighborhood Emergency Corps review snapshot"
 url: "https://pnec-review.invalid"
 baseurl: ""
-api_base_url: "http://127.0.0.1:8425"
+api_base_url: "https://api.pnec-review.invalid"
 encoding: utf-8
 theme: minima
 plugins:
@@ -10,6 +10,9 @@ plugins:
   - jekyll-seo-tag
 exclude:
   - scripts/
+  - deploy/
+  - DEPLOYMENT_HANDOFF.md
+  - VALIDATION_REPORT.md
   - README.md
   - SOURCE-NOTES.md
   - SECURITY.md

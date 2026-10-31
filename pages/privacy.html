@@ -44,7 +44,7 @@ body_class: inner-page
     <p>Passwords are hashed using industry-standard algorithms and are never stored in plaintext. All data is stored on secured servers.</p>
 
     <h2>Contact</h2>
-    <p>Questions about this privacy policy? Email <a href="mailto:contact@example.test">contact@example.test</a>.</p>
+    <p>Questions about this privacy policy? Email <a href="mailto:{{ site.contact_email | default: 'contact@example.test' }}">{{ site.contact_email | default: 'contact@example.test' }}</a>.</p>
 
   </div>
 </div>

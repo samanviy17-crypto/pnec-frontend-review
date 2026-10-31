@@ -14,8 +14,8 @@ head_scss: "beasts/inline/pages/pages-blog-post-1"
 <script>
 (function() {
   var base = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-    ? 'http://127.0.0.1:8425'
-    : 'https://api.pnec-review.invalid';
+    ? (window.PNEC_API_BASE || 'http://127.0.0.1:8425')
+    : (window.PNEC_API_BASE || 'https://api.pnec-review.invalid');
 
   var blogListUrl = (location.pathname.includes('/Beasts_FrontEnd') || location.pathname.startsWith('/Beasts'))
     ? '/Beasts_FrontEnd/pages/blog.html'
@@ -30,8 +30,9 @@ head_scss: "beasts/inline/pages/pages-blog-post-1"
 
   if (!slug) { showError('No post specified.'); return; }
 
-  var token = localStorage.getItem('pnec_token');
-  var user  = JSON.parse(localStorage.getItem('pnec_user') || 'null');
+  var token = localStorage.getItem('pnec_token') || sessionStorage.getItem('pnec_token');
+  var user = null;
+  try { user = JSON.parse(localStorage.getItem('pnec_user') || sessionStorage.getItem('pnec_user') || 'null'); } catch (_) { /* ignore invalid local cache */ }
   var isAdmin = user && user.role === 'admin';
 
   var headers = { 'Content-Type': 'application/json' };

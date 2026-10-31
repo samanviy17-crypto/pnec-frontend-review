@@ -72,7 +72,7 @@ Jekyll::Commands::Build.process({
     thread.start()
     scripts = ['test-pnec-scss.py', 'test-request-worker.py', 'test-quiz.py', 'test-account-regression.py',
                'test-profile.py', 'test-community-tools.py', 'test-responsive.py',
-               'test-production-contract.py', 'test-admin-security.py', 'test-media-release.py']
+               'test-production-contract.py', 'test-admin-security.py', 'test-media-release.py', 'audit-site.py']
     results = []
     try:
         for script in scripts:
@@ -81,7 +81,7 @@ Jekyll::Commands::Build.process({
             with (artifacts / (script + '.log')).open('w') as log:
                 run = subprocess.run([sys.executable, '-B', str(frontend / 'scripts' / script)],
                     cwd=artifacts, env=environment, stdout=log, stderr=subprocess.STDOUT,
-                    timeout=180)
+                    timeout=420 if script == 'audit-site.py' else 180)
             results.append({'script': script, 'exit_code': run.returncode})
             print(('PASS' if run.returncode == 0 else 'FAIL') + ': ' + script, flush=True)
             if run.returncode:

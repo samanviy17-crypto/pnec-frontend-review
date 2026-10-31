@@ -92,7 +92,7 @@
   <footer class="pnec-nmap-foot">
     <div class="pnec-nmap-foot-row">
       <strong>Need a coordinator's direct contact?</strong>
-      Email <a href="mailto:contact@example.test?subject=NEC contact request">contact@example.test</a> with your neighborhood number.
+      Email <a href="mailto:{{ site.contact_email | default: 'contact@example.test' }}?subject=NEC contact request">{{ site.contact_email | default: 'contact@example.test' }}</a> with your neighborhood number.
     </div>
     <div class="pnec-nmap-foot-row">
       <strong>Homebound helpline:</strong> <a href="tel:8586681250">858-668-1250</a> &nbsp;·&nbsp;

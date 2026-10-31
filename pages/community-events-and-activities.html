@@ -9,7 +9,7 @@ permalink: /pages/community-events-and-activities.html
 </style>
 {% capture pnec_calendar_styles %}@import "variables"; #pnec-community-calendar { margin-top: 160px; scroll-margin-top: 240px; button { scroll-margin-top: 240px; } @import "pages"; }{% endcapture %}
 <style>{{ pnec_calendar_styles | scssify }}</style>
-<script>window.PNEC_SITE_BASE = {{ site.baseurl | default: "" | jsonify }};</script>
+{% include runtime-config.html %}
 <title>Community Events and Activities &#8211; Poway NEC &amp; FSC</title>
 <!-- PNEC SEO meta v3 -->
 <meta name="description" content="Upcoming PNEC events, drills, training sessions, and the annual Emergency & Safety Fair. RSVP and bring a neighbor — preparedness is a team sport.">
@@ -25,14 +25,11 @@ permalink: /pages/community-events-and-activities.html
 
 <meta name='robots' content='max-image-preview:large' />
 <!-- v3.20: open the TCP+TLS handshake to powaynec.com early so the 40+ external stylesheets and 30+ scripts cloned from there don't pay the full RTT cost serially. -->
-<link rel="preconnect" href="https://powaynec.com" crossorigin>
-<link rel="dns-prefetch" href="//powaynec.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+
 <link rel='dns-prefetch' href='//www.googletagmanager.com' />
-<link rel="alternate" type="application/rss+xml" title="Poway NEC &amp; FSC &raquo; Feed" href="https://powaynec.com/feed/" />
-<link rel="alternate" type="application/rss+xml" title="Poway NEC &amp; FSC &raquo; Comments Feed" href="https://powaynec.com/comments/feed/" />
-<link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed" href="https://powaynec.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fpowaynec.com%2Fcommunity-events-and-activities%2F" />
-<link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed" href="https://powaynec.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fpowaynec.com%2Fcommunity-events-and-activities%2F&#038;format=xml" />
+
+
 <style id='wp-img-auto-sizes-contain-inline-css' type='text/css'>
 img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
 /*# sourceURL=wp-img-auto-sizes-contain-inline-css */
@@ -137,8 +134,8 @@ img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
   padding-bottom: 10px !important;
 }
 </style>
-<link rel='stylesheet' id='font-awesome-5-all-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/all.min.css?ver=3.35.9' type='text/css' media='all' />
-<link rel='stylesheet' id='font-awesome-4-shim-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/v4-shims.min.css?ver=3.35.9' type='text/css' media='all' />
+
+
 <style id='wp-emoji-styles-inline-css' type='text/css'>
 
 	img.wp-smiley, img.emoji {
@@ -167,82 +164,22 @@ img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
 :root :where(.wp-block-pullquote){font-size: 1.5em;line-height: 1.6;}
 /*# sourceURL=global-styles-inline-css */
 </style>
-<link rel='stylesheet' id='ctct_form_styles-css' href='https://powaynec.com/wp-content/plugins/constant-contact-forms/assets/css/style.css?ver=2.17.0' type='text/css' media='all' />
-<link rel='stylesheet' id='wp-components-css' href='https://powaynec.com/wp-includes/css/dist/components/style.min.css?ver=6.9.4' type='text/css' media='all' />
-<link rel='stylesheet' id='godaddy-styles-css' href='https://powaynec.com/wp-content/mu-plugins/vendor/wpex/godaddy-launch/includes/Dependencies/GoDaddy/Styles/build/latest.css?ver=2.0.2' type='text/css' media='all' />
-<link rel='stylesheet' id='jupiterx-popups-animation-css' href='https://powaynec.com/wp-content/plugins/jupiterx-core/includes/extensions/raven/assets/lib/animate/animate.min.css?ver=4.9.2' type='text/css' media='all' />
-<link rel='stylesheet' id='jupiterx-css' href='https://powaynec.com/wp-content/uploads/jupiterx/compiler/jupiterx/b517470.css?ver=4.9.2' type='text/css' media='all' />
-<link rel='stylesheet' id='jupiterx-elements-dynamic-styles-css' href='https://powaynec.com/wp-content/uploads/jupiterx/compiler/jupiterx-elements-dynamic-styles/41d6799.css?ver=4.9.2' type='text/css' media='all' />
-<link rel='stylesheet' id='elementor-frontend-css' href='https://powaynec.com/wp-content/uploads/elementor/css/custom-frontend.min.css?ver=1774488131' type='text/css' media='all' />
-<link rel='stylesheet' id='widget-image-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/css/widget-image.min.css?ver=3.35.9' type='text/css' media='all' />
-<link rel='stylesheet' id='e-animation-grow-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/lib/animations/styles/e-animation-grow.min.css?ver=3.35.9' type='text/css' media='all' />
-<link rel='stylesheet' id='e-animation-shrink-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/lib/animations/styles/e-animation-shrink.min.css?ver=3.35.9' type='text/css' media='all' />
-<link rel='stylesheet' id='e-animation-pulse-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/lib/animations/styles/e-animation-pulse.min.css?ver=3.35.9' type='text/css' media='all' />
-<link rel='stylesheet' id='e-animation-pop-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/lib/animations/styles/e-animation-pop.min.css?ver=3.35.9' type='text/css' media='all' />
-<link rel='stylesheet' id='e-animation-grow-rotate-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/lib/animations/styles/e-animation-grow-rotate.min.css?ver=3.35.9' type='text/css' media='all' />
-<link rel='stylesheet' id='e-animation-wobble-skew-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/lib/animations/styles/e-animation-wobble-skew.min.css?ver=3.35.9' type='text/css' media='all' />
-<link rel='stylesheet' id='e-animation-buzz-out-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/lib/animations/styles/e-animation-buzz-out.min.css?ver=3.35.9' type='text/css' media='all' />
-<link rel='stylesheet' id='widget-spacer-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/css/widget-spacer.min.css?ver=3.35.9' type='text/css' media='all' />
-<link rel='stylesheet' id='widget-nav-menu-css' href='https://powaynec.com/wp-content/uploads/elementor/css/custom-pro-widget-nav-menu.min.css?ver=1774488131' type='text/css' media='all' />
-<link rel='stylesheet' id='elementor-icons-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/lib/eicons/css/elementor-icons.min.css?ver=5.47.0' type='text/css' media='all' />
-<link rel='stylesheet' id='font-awesome-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/font-awesome.min.css?ver=4.7.0' type='text/css' media='all' />
-<link rel='stylesheet' id='jupiterx-core-raven-frontend-css' href='https://powaynec.com/wp-content/plugins/jupiterx-core/includes/extensions/raven/assets/css/frontend.min.css?ver=6.9.4' type='text/css' media='all' />
-<link rel='stylesheet' id='elementor-post-771-css' href='https://powaynec.com/wp-content/uploads/elementor/css/post-771.css?ver=1774488132' type='text/css' media='all' />
-<link rel='stylesheet' id='flatpickr-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/lib/flatpickr/flatpickr.min.css?ver=4.6.13' type='text/css' media='all' />
-<link rel='stylesheet' id='widget-heading-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/css/widget-heading.min.css?ver=3.35.9' type='text/css' media='all' />
-<link rel='stylesheet' id='widget-animated-headline-css' href='https://powaynec.com/wp-content/plugins/elementor-pro/assets/css/widget-animated-headline.min.css?ver=3.35.1' type='text/css' media='all' />
-<link rel='stylesheet' id='widget-divider-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/css/widget-divider.min.css?ver=3.35.9' type='text/css' media='all' />
-<link rel='stylesheet' id='dashicons-css' href='https://powaynec.com/wp-includes/css/dashicons.min.css?ver=6.9.4' type='text/css' media='all' />
-<link rel='stylesheet' id='swiper-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/lib/swiper/v8/css/swiper.min.css?ver=8.4.5' type='text/css' media='all' />
-<link rel='stylesheet' id='e-swiper-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/css/conditionals/e-swiper.min.css?ver=3.35.9' type='text/css' media='all' />
-<link rel='stylesheet' id='elementor-post-1149-css' href='https://powaynec.com/wp-content/uploads/elementor/css/post-1149.css?ver=1774491628' type='text/css' media='all' />
-<link rel='stylesheet' id='elementor-post-2820-css' href='https://powaynec.com/wp-content/uploads/elementor/css/post-2820.css?ver=1774488132' type='text/css' media='all' />
-<link rel='stylesheet' id='elementor-post-238-css' href='https://powaynec.com/wp-content/uploads/elementor/css/post-238.css?ver=1774488132' type='text/css' media='all' />
-<link rel='stylesheet' id='elementor-gf-local-roboto-css' href='https://powaynec.com/wp-content/uploads/elementor/google-fonts/css/roboto.css?ver=1742222182' type='text/css' media='all' />
-<link rel='stylesheet' id='elementor-icons-shared-0-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/fontawesome.min.css?ver=5.15.3' type='text/css' media='all' />
-<link rel='stylesheet' id='elementor-icons-fa-solid-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/solid.min.css?ver=5.15.3' type='text/css' media='all' />
-<link rel='stylesheet' id='elementor-icons-fa-brands-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/brands.min.css?ver=5.15.3' type='text/css' media='all' />
-<script type="text/javascript" src="https://powaynec.com/wp-content/plugins/elementor/assets/lib/font-awesome/js/v4-shims.min.js?ver=3.35.9" id="font-awesome-4-shim-js"></script>
-<script type="text/javascript" src="https://powaynec.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1" id="jquery-core-js"></script>
-<script type="text/javascript" src="https://powaynec.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1" id="jquery-migrate-js"></script>
-<script type="text/javascript" src="https://powaynec.com/wp-content/themes/jupiterx/lib/admin/assets/lib/webfont/webfont.min.js?ver=1.6.26" id="jupiterx-webfont-js"></script>
-<script type="text/javascript" id="jupiterx-webfont-js-after">
-/* <![CDATA[ */
-WebFont.load({
-				google: {
-					families: ['Roboto:100,200,300,400,500,600,700,800,900,100italic,200italic,300italic,400italic,500italic,600italic,700italic,800italic,900italic','Amatic SC:100,200,300,400,500,600,700,800,900,100italic,200italic,300italic,400italic,500italic,600italic,700italic,800italic,900italic']
-				}
-			});
-//# sourceURL=jupiterx-webfont-js-after
-/* ]]> */
-</script>
-<script type="text/javascript" src="https://powaynec.com/wp-content/themes/jupiterx/lib/assets/dist/js/utils.min.js?ver=4.9.2" id="jupiterx-utils-js"></script>
+
 
 <!-- Google tag (gtag.js) snippet added by Site Kit -->
 <!-- Google Analytics snippet added by Site Kit -->
-<script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=GT-55XBSG8" id="google_gtagjs-js" async></script>
-<script type="text/javascript" id="google_gtagjs-js-after">
-/* <![CDATA[ */
-window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}
-gtag("set","linker",{"domains":["powaynec.com"]});
-gtag("js", new Date());
-gtag("set", "developer_id.dZTNiMT", true);
-gtag("config", "GT-55XBSG8");
-//# sourceURL=google_gtagjs-js-after
-/* ]]> */
-</script>
-<link rel="https://api.w.org/" href="https://powaynec.com/wp-json/" /><link rel="alternate" title="JSON" type="application/json" href="https://powaynec.com/wp-json/wp/v2/pages/1149" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://powaynec.com/xmlrpc.php?rsd" />
+
+
 <meta name="generator" content="WordPress 6.9.4" />
 <link rel="canonical" href="community-events-and-activities.html" />
-<link rel='shortlink' href='https://powaynec.com/?p=1149' />
+
 <meta name="generator" content="Site Kit by Google 1.175.0" /><meta name="generator" content="Elementor 3.35.9; features: additional_custom_breakpoints; settings: css_print_method-external, google_font-enabled, font_display-auto">
 <style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>			<style>
 {{ '@import "beasts/inline/includes/includes-poway-live-head-6";' | scssify }}
 </style>
-			<link rel="icon" href="https://powaynec.com/wp-content/uploads/2020/05/cropped-PNEC-init-32x32.jpg" sizes="32x32" />
-<link rel="icon" href="https://powaynec.com/wp-content/uploads/2020/05/cropped-PNEC-init-192x192.jpg" sizes="192x192" />
-<link rel="apple-touch-icon" href="https://powaynec.com/wp-content/uploads/2020/05/cropped-PNEC-init-180x180.jpg" />
-<meta name="msapplication-TileImage" content="https://powaynec.com/wp-content/uploads/2020/05/cropped-PNEC-init-270x270.jpg" />
+
+
+<meta name="msapplication-TileImage" content="{{ '/assets/images/Poway_Fire.webp' | relative_url }}" />
 <link rel="stylesheet" href="{{ '/assets/css/poway-unified-ui.css' | relative_url }}" />
 <!-- v3.20: chatbot CSS is below-the-fold, load it without blocking first paint -->
 <link rel="preload" href="{{ '/assets/css/chatbot.css' | relative_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'" />
@@ -253,89 +190,7 @@ gtag("config", "GT-55XBSG8");
 {{ '@import "beasts/inline/pages/pages-community-events-and-activities-8";' | scssify }}
 </style>
 <link rel="stylesheet" href="{{ "/assets/css/review-fallback.css" | relative_url }}">
-</head><body class="wp-singular page-template-default page page-id-1149 wp-theme-jupiterx no-js ctct-jupiterx elementor-default elementor-kit-771 elementor-page elementor-page-1149 jupiterx-header-overlapped jupiterx-header-overlapped-tablet jupiterx-header-overlapped-mobile" itemscope="itemscope" itemtype="http://schema.org/WebPage"><a class="jupiterx-a11y jupiterx-a11y-skip-navigation-link" href="#jupiterx-main">Skip to content</a><div class="jupiterx-site"><header class="jupiterx-header jupiterx-header-custom" data-jupiterx-settings="{&quot;breakpoint&quot;:&quot;767.98&quot;,&quot;template&quot;:&quot;2820&quot;,&quot;overlap&quot;:&quot;desktop,tablet,mobile&quot;}" role="banner" itemscope="itemscope" itemtype="http://schema.org/WPHeader">		<header data-elementor-type="header" data-elementor-id="2820" class="elementor elementor-2820" data-elementor-post-type="elementor_library">
-					<section class="elementor-section elementor-top-section elementor-element elementor-element-090b3a9 elementor-section-content-top elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="090b3a9" data-element_type="section" data-e-type="section">
-						<div class="elementor-container elementor-column-gap-default">
-					<div class="elementor-column elementor-col-33 elementor-top-column elementor-element elementor-element-e77c02d" data-id="e77c02d" data-element_type="column" data-e-type="column">
-			<div class="elementor-widget-wrap elementor-element-populated">
-						<div class="elementor-element elementor-element-5ee66e4 elementor-widget elementor-widget-image" data-id="5ee66e4" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
-				<div class="elementor-widget-container">
-																<a href="../">
-															</a>
-															</div>
-				</div>
-					</div>
-		</div>
-				<div class="elementor-column elementor-col-33 elementor-top-column elementor-element elementor-element-2cefb0c" data-id="2cefb0c" data-element_type="column" data-e-type="column">
-			<div class="elementor-widget-wrap">
-							</div>
-		</div>
-				<div class="elementor-column elementor-col-33 elementor-top-column elementor-element elementor-element-9812144" data-id="9812144" data-element_type="column" data-e-type="column">
-			<div class="elementor-widget-wrap elementor-element-populated">
-						<div class="elementor-element elementor-element-8155940 elementor-align-right donatepopup elementor-mobile-align-center elementor-hidden-tablet elementor-hidden-mobile elementor-widget elementor-widget-raven-button" data-id="8155940" data-element_type="widget" data-e-type="widget" data-settings="{&quot;turn_to_popup_action_button&quot;:&quot;no&quot;}" data-widget_type="raven-button.default">
-				<div class="elementor-widget-container">
-							<div class="raven-widget-wrapper">
-			<a class="raven-button raven-button-widget-normal-effect-none  raven-button-text-align-center raven-button-link elementor-animation-shrink" href="{{ '/donation-form/' | relative_url }}">				<div class="raven-button-overlay" ></div>
-				<span class="raven-button-content">
-					
-					<div class="button-text-container">
-												<div class="raven-button-texts-wrapper">
-							<div class="button-text">
-								<span class="raven-button-text">
-									donate now								</span>
-							</div>
-													</div>
-									<span class="raven-button-icon raven-button-icon-position-right raven-button-mobile-align-icon-left">
-				<i aria-hidden="true" class="fas fa-heart"></i>			</span>
-							</div>
-					
-									</span>
-			</a>		</div>
-						</div>
-				</div>
-					</div>
-		</div>
-					</div>
-		</section>
-				<section class="elementor-section elementor-top-section elementor-element elementor-element-c8c3c8c elementor-section-content-top elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="c8c3c8c" data-element_type="section" data-e-type="section">
-						<div class="elementor-container elementor-column-gap-default">
-					<div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-b9360bd" data-id="b9360bd" data-element_type="column" data-e-type="column">
-			<div class="elementor-widget-wrap elementor-element-populated">
-						<div class="elementor-element elementor-element-7484f8e elementor-widget elementor-widget-spacer" data-id="7484f8e" data-element_type="widget" data-e-type="widget" data-widget_type="spacer.default">
-				<div class="elementor-widget-container">
-							<div class="elementor-spacer">
-			<div class="elementor-spacer-inner"></div>
-		</div>
-						</div>
-				</div>
-				<div class="elementor-element elementor-element-3ce387b elementor-nav-menu__align-center elementor-nav-menu--stretch elementor-nav-menu--dropdown-tablet elementor-nav-menu__text-align-aside elementor-nav-menu--toggle elementor-nav-menu--burger elementor-widget elementor-widget-nav-menu" data-id="3ce387b" data-element_type="widget" data-e-type="widget" data-settings="{&quot;full_width&quot;:&quot;stretch&quot;,&quot;layout&quot;:&quot;horizontal&quot;,&quot;submenu_icon&quot;:{&quot;value&quot;:&quot;&lt;i class=\&quot;fas fa-caret-down\&quot; aria-hidden=\&quot;true\&quot;&gt;&lt;\/i&gt;&quot;,&quot;library&quot;:&quot;fa-solid&quot;},&quot;toggle&quot;:&quot;burger&quot;}" data-widget_type="nav-menu.default">
-				<div class="elementor-widget-container">
-								<nav aria-label="Menu" class="elementor-nav-menu--main elementor-nav-menu__container elementor-nav-menu--layout-horizontal e--pointer-underline e--animation-fade">
-				<ul id="menu-1-3ce387b" class="elementor-nav-menu"><li class="menu-item menu-item-type-custom menu-item-home pnec-nav-home"><a href="{{ '/' | relative_url }}" class="elementor-item" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-right:6px;"><path d="M3 12L12 3l9 9"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg><span class="pnec-nav-home-label">Home</span></a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1243"><a href="about.html" class="elementor-item">About</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1242"><a href="programs-and-services.html" class="elementor-item">Programs and Services</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1241"><a href="preparedness-resources.html" class="elementor-item">Preparedness Resources</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-1149 current_page_item menu-item-1240"><a href="community-events-and-activities.html" aria-current="page" class="elementor-item elementor-item-active">Community Events</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-login"><a href="register.html#login" class="elementor-item">Login</a></li>
-</ul>			</nav>
-					<div class="elementor-menu-toggle" role="button" tabindex="0" aria-label="Menu Toggle" aria-expanded="false">
-			<i aria-hidden="true" role="presentation" class="elementor-menu-toggle__icon--open eicon-menu-bar"></i><i aria-hidden="true" role="presentation" class="elementor-menu-toggle__icon--close eicon-close"></i>		</div>
-					<nav class="elementor-nav-menu--dropdown elementor-nav-menu__container" aria-hidden="true">
-				<ul id="menu-2-3ce387b" class="elementor-nav-menu"><li class="menu-item menu-item-type-custom menu-item-home pnec-nav-home"><a href="{{ '/' | relative_url }}" class="elementor-item" aria-label="Home" title="Home" tabindex="-1"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-right:6px;"><path d="M3 12L12 3l9 9"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg><span class="pnec-nav-home-label">Home</span></a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1243"><a href="about.html" class="elementor-item" tabindex="-1">About</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1242"><a href="programs-and-services.html" class="elementor-item" tabindex="-1">Programs and Services</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1241"><a href="preparedness-resources.html" class="elementor-item" tabindex="-1">Preparedness Resources</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-1149 current_page_item menu-item-1240"><a href="community-events-and-activities.html" aria-current="page" class="elementor-item elementor-item-active" tabindex="-1">Community Events</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-login"><a href="register.html#login" class="elementor-item" tabindex="-1">Login</a></li>
-</ul>			</nav>
-						</div>
-				</div>
-					</div>
-		</div>
-					</div>
-		</section>
-				</header>
-		</header><main id="jupiterx-main" class="jupiterx-main">
+</head><body class="wp-singular page-template-default page page-id-1149 wp-theme-jupiterx no-js ctct-jupiterx elementor-default elementor-kit-771 elementor-page elementor-page-1149 jupiterx-header-overlapped jupiterx-header-overlapped-tablet jupiterx-header-overlapped-mobile" itemscope="itemscope" itemtype="http://schema.org/WebPage"><a class="jupiterx-a11y jupiterx-a11y-skip-navigation-link" href="#jupiterx-main">Skip to content</a><div class="jupiterx-site">{% include resident-header.html %}<main id="jupiterx-main" class="jupiterx-main">
 <section id="pnec-community-calendar" class="community-tools" aria-label="Community calendar">
   <h2>Community Calendar</h2>
   <button id="view-calendar-btn" class="btn btn-secondary btn-sm" aria-pressed="true">Calendar view</button>
@@ -480,13 +335,13 @@ gtag("config", "GT-55XBSG8");
 							<div class="raven-posts-carousel raven-swiper-slider">
 			<div class="raven-posts-carousel-swiper-container swiper">
 				<div class="swiper-wrapper swiper-columns-3" data-swiper='{&quot;rtl&quot;:false}'>
-		
+
 		<div class="swiper-slide">
 			<div class="raven-post-wrapper">
 				<div class="raven-post">
 							<div class="raven-post-image-wrap">
-			<a class="raven-post-image raven-image-fit"  href="{{ '/pages/events-archive.html#eleventh-annual-fair' | relative_url }}"><img decoding="async" width="1024" height="462" src="https://powaynec.com/wp-content/uploads/2021/08/20210814_092450-1024x462.jpg" class="attachment-large size-large wp-image-1366" alt="" srcset="https://powaynec.com/wp-content/uploads/2021/08/20210814_092450-1024x462.jpg 1024w, https://powaynec.com/wp-content/uploads/2021/08/20210814_092450-scaled-600x270.jpg 600w, https://powaynec.com/wp-content/uploads/2021/08/20210814_092450-300x135.jpg 300w, https://powaynec.com/wp-content/uploads/2021/08/20210814_092450-768x346.jpg 768w, https://powaynec.com/wp-content/uploads/2021/08/20210814_092450-1536x692.jpg 1536w, https://powaynec.com/wp-content/uploads/2021/08/20210814_092450-2048x923.jpg 2048w" sizes="(max-width: 1024px) 100vw, 1024px" / loading="lazy"> <span class="raven-post-image-overlay"></span></a>		</div>
-		
+			<a class="raven-post-image raven-image-fit"  href="{{ '/pages/events-archive.html#eleventh-annual-fair' | relative_url }}"><img decoding="async" width="1024" height="462" src="{{ '/assets/images/Poway_Fire.webp' | relative_url }}" class="attachment-large size-large wp-image-1366" alt="" srcset="{{ '/assets/images/Poway_Fire.webp' | relative_url }} 1024w, {{ '/assets/images/Poway_Fire.webp' | relative_url }} 600w, {{ '/assets/images/Poway_Fire.webp' | relative_url }} 300w, {{ '/assets/images/Poway_Fire.webp' | relative_url }} 768w, {{ '/assets/images/Poway_Fire.webp' | relative_url }} 1536w, {{ '/assets/images/Poway_Fire.webp' | relative_url }} 2048w" sizes="(max-width: 1024px) 100vw, 1024px" / loading="lazy"> <span class="raven-post-image-overlay"></span></a>		</div>
+
 					<div class="raven-post-content">
 						<h3 class="raven-post-title"><a class="raven-post-title-link" href="{{ '/pages/events-archive.html#eleventh-annual-fair' | relative_url }}">11th Annual Emergency &#038; Safety Fair</a></h3><div class="raven-post-excerpt">Saturday May 31, 2025 9 AM - 1 PM
 
@@ -497,13 +352,13 @@ Join us in Old Poway Park to receive preparedness information and other valuable
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="swiper-slide">
 			<div class="raven-post-wrapper">
 				<div class="raven-post">
 							<div class="raven-post-image-wrap">
-			<a class="raven-post-image raven-image-fit"  href="{{ '/pages/events-archive.html#safe-poway-neighborhoods' | relative_url }}"><img decoding="async" width="1024" height="683" src="https://powaynec.com/wp-content/uploads/2023/04/Poway-SDSO-1024x683.jpg" class="attachment-large size-large wp-image-2524" alt="" srcset="https://powaynec.com/wp-content/uploads/2023/04/Poway-SDSO-1024x683.jpg 1024w, https://powaynec.com/wp-content/uploads/2023/04/Poway-SDSO-300x200.jpg 300w, https://powaynec.com/wp-content/uploads/2023/04/Poway-SDSO-768x512.jpg 768w, https://powaynec.com/wp-content/uploads/2023/04/Poway-SDSO-1536x1024.jpg 1536w, https://powaynec.com/wp-content/uploads/2023/04/Poway-SDSO-600x400.jpg 600w, https://powaynec.com/wp-content/uploads/2023/04/Poway-SDSO.jpg 1920w" sizes="(max-width: 1024px) 100vw, 1024px" / loading="lazy"> <span class="raven-post-image-overlay"></span></a>		</div>
-		
+			<a class="raven-post-image raven-image-fit"  href="{{ '/pages/events-archive.html#safe-poway-neighborhoods' | relative_url }}"><img decoding="async" width="1024" height="683" src="{{ '/assets/images/Poway_Fire.webp' | relative_url }}" class="attachment-large size-large wp-image-2524" alt="" srcset="{{ '/assets/images/Poway_Fire.webp' | relative_url }} 1024w, {{ '/assets/images/Poway_Fire.webp' | relative_url }} 300w, {{ '/assets/images/Poway_Fire.webp' | relative_url }} 768w, {{ '/assets/images/Poway_Fire.webp' | relative_url }} 1536w, {{ '/assets/images/Poway_Fire.webp' | relative_url }} 600w, {{ '/assets/images/Poway_Fire.webp' | relative_url }} 1920w" sizes="(max-width: 1024px) 100vw, 1024px" / loading="lazy"> <span class="raven-post-image-overlay"></span></a>		</div>
+
 					<div class="raven-post-content">
 						<h3 class="raven-post-title"><a class="raven-post-title-link" href="{{ '/pages/events-archive.html#safe-poway-neighborhoods' | relative_url }}">Safe Poway Neighborhoods</a></h3><div class="raven-post-excerpt">At the April 2023 Community Meeting the San Diego Sheriff Poway Station presented on various safety topics.</div>		<div class="raven-post-read-more">
 			<a class="raven-post-button" href="{{ '/pages/events-archive.html#safe-poway-neighborhoods' | relative_url }}"><span class="raven-post-button-text">Read More</span></a>
@@ -512,13 +367,13 @@ Join us in Old Poway Park to receive preparedness information and other valuable
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="swiper-slide">
 			<div class="raven-post-wrapper">
 				<div class="raven-post">
 							<div class="raven-post-image-wrap">
-			<a class="raven-post-image raven-image-fit"  href="{{ '/pages/events-archive.html#alternative-power-options' | relative_url }}"><img loading="lazy" decoding="async" width="1024" height="672" src="https://powaynec.com/wp-content/uploads/2023/02/solar-power-1024x672.jpg" class="attachment-large size-large wp-image-2268" alt="" srcset="https://powaynec.com/wp-content/uploads/2023/02/solar-power-1024x672.jpg 1024w, https://powaynec.com/wp-content/uploads/2023/02/solar-power-300x197.jpg 300w, https://powaynec.com/wp-content/uploads/2023/02/solar-power-768x504.jpg 768w, https://powaynec.com/wp-content/uploads/2023/02/solar-power-1536x1009.jpg 1536w, https://powaynec.com/wp-content/uploads/2023/02/solar-power-2048x1345.jpg 2048w, https://powaynec.com/wp-content/uploads/2023/02/solar-power-600x394.jpg 600w" sizes="(max-width: 1024px) 100vw, 1024px" /> <span class="raven-post-image-overlay"></span></a>		</div>
-		
+			<a class="raven-post-image raven-image-fit"  href="{{ '/pages/events-archive.html#alternative-power-options' | relative_url }}"><img loading="lazy" decoding="async" width="1024" height="672" src="{{ '/assets/images/Poway_Fire.webp' | relative_url }}" class="attachment-large size-large wp-image-2268" alt="" srcset="{{ '/assets/images/Poway_Fire.webp' | relative_url }} 1024w, {{ '/assets/images/Poway_Fire.webp' | relative_url }} 300w, {{ '/assets/images/Poway_Fire.webp' | relative_url }} 768w, {{ '/assets/images/Poway_Fire.webp' | relative_url }} 1536w, {{ '/assets/images/Poway_Fire.webp' | relative_url }} 2048w, {{ '/assets/images/Poway_Fire.webp' | relative_url }} 600w" sizes="(max-width: 1024px) 100vw, 1024px" /> <span class="raven-post-image-overlay"></span></a>		</div>
+
 					<div class="raven-post-content">
 						<h3 class="raven-post-title"><a class="raven-post-title-link" href="{{ '/pages/events-archive.html#alternative-power-options' | relative_url }}">Alternative Power Options</a></h3><div class="raven-post-excerpt">At the February 2023 Community Meeting we discussed alternative power options to plan for public safety power shutoffs.</div>		<div class="raven-post-read-more">
 			<a class="raven-post-button" href="{{ '/pages/events-archive.html#alternative-power-options' | relative_url }}"><span class="raven-post-button-text">Read More</span></a>
@@ -527,13 +382,13 @@ Join us in Old Poway Park to receive preparedness information and other valuable
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="swiper-slide">
 			<div class="raven-post-wrapper">
 				<div class="raven-post">
 							<div class="raven-post-image-wrap">
-			<a class="raven-post-image raven-image-fit"  href="{{ '/pages/events-archive.html#kusi-segment' | relative_url }}"><img loading="lazy" decoding="async" width="768" height="436" src="https://powaynec.com/wp-content/uploads/2020/05/KUSI-Terri-Sorenson.jpg" class="attachment-large size-large wp-image-933" alt="" srcset="https://powaynec.com/wp-content/uploads/2020/05/KUSI-Terri-Sorenson.jpg 768w, https://powaynec.com/wp-content/uploads/2020/05/KUSI-Terri-Sorenson-600x341.jpg 600w, https://powaynec.com/wp-content/uploads/2020/05/KUSI-Terri-Sorenson-300x170.jpg 300w" sizes="(max-width: 768px) 100vw, 768px" /> <span class="raven-post-image-overlay"></span></a>		</div>
-		
+			<a class="raven-post-image raven-image-fit"  href="{{ '/pages/events-archive.html#kusi-segment' | relative_url }}"><img loading="lazy" decoding="async" width="768" height="436" src="{{ '/assets/images/Poway_Fire.webp' | relative_url }}" class="attachment-large size-large wp-image-933" alt="" srcset="{{ '/assets/images/Poway_Fire.webp' | relative_url }} 768w, {{ '/assets/images/Poway_Fire.webp' | relative_url }} 600w, {{ '/assets/images/Poway_Fire.webp' | relative_url }} 300w" sizes="(max-width: 768px) 100vw, 768px" /> <span class="raven-post-image-overlay"></span></a>		</div>
+
 					<div class="raven-post-content">
 						<h3 class="raven-post-title"><a class="raven-post-title-link" href="{{ '/pages/events-archive.html#kusi-segment' | relative_url }}">Watch the KUSI Segment with PNEC’s Terri Sorenson on Emergency Preparation</a></h3><div class="raven-post-excerpt">Watch the KUSI Segment with PNEC’s Terri Sorenson on Emergency Preparation Click here to watch the video above. POWAY (KUSI) – Preparation for an emergency starts well before tragedy strikes,</div>		<div class="raven-post-read-more">
 			<a class="raven-post-button" href="{{ '/pages/events-archive.html#kusi-segment' | relative_url }}"><span class="raven-post-button-text">Read More</span></a>
@@ -548,7 +403,7 @@ Join us in Old Poway Park to receive preparedness information and other valuable
 
 							<div class="swiper-button-prev"></div>
 				<div class="swiper-button-next"></div>
-			
+
 		</div>
 						</div>
 				</div>
@@ -579,7 +434,7 @@ Join us in Old Poway Park to receive preparedness information and other valuable
 				</div>
 				<div class="elementor-element elementor-element-b1013d3 elementor-widget__width-inherit my-form elementor-widget elementor-widget-constant-contact" data-id="b1013d3" data-element_type="widget" data-e-type="widget" id="my-form" data-widget_type="constant-contact.default">
 				<div class="elementor-widget-container">
-					<div data-form-id="3032" id="ctct-form-wrapper-0" class="ctct-form-wrapper"><form class="ctct-form ctct-form-3032 comment-form  no-recaptcha ctct-default" id="ctct-form-1334644266" data-doajax="off" style="" action="" method="post"><p class="ctct-form-field ctct-form-field-email ctct-form-field-required"><span class="ctct-label-hidden"  style="color: #ffffff;"><label for="email___b723d708d7570dbe082fb3bed8ee0676_0_1611574573">Email (required) <span class="ctct-required-indicatior" title="This is a required field">*</span></label></span><input required aria-required="true"  type="email" id="email___b723d708d7570dbe082fb3bed8ee0676_0_1611574573" name="email___b723d708d7570dbe082fb3bed8ee0676"  value="" class="ctct-email ctct-label-hidden email___b723d708d7570dbe082fb3bed8ee0676"  placeholder="Please enter your Email Address"   /></p><div class='ctct-list-selector' style='display:none;'><div class="ctct-form-field ctct-form-field-checkbox ctct-form-field-required"><fieldset><legend class="ctct-label-top">Select list(s) to subscribe to</legend><input type="checkbox" name="lists___1cc63ac057d35b473f3c6f20e75fd99d[]" id="lists___1cc63ac057d35b473f3c6f20e75fd99d_0_0" value="b3a833a4-1b0e-11ec-9e9d-fa163e0f8365" class="ctct-checkbox ctct-label-right" checked /><span class="ctct-label-right"><label for="lists___1cc63ac057d35b473f3c6f20e75fd99d_0_0">General Interest</label></span></fieldset></div></div><div class="ctct-optin-hide" style="display:none;"><p class="ctct-form-field ctct-form-field-checkbox"><span class="ctct-input-container"><input type="checkbox" checked name="ctct-opt-in" class="ctct-checkbox ctct-opt-in" value="1" id="ctct-opt-in_0" /><label for="ctct-opt-in_0"> Example: Yes, I would like to receive emails from Poway NEC &amp; FSC. (You can unsubscribe anytime)</label></span></p></div><!--.ctct-optin-hide --><p class="ctct-form-field ctct-form-field-submit"><input aria-required="false"  type="submit" id="ctct-submitted_0_1277813114" name="ctct-submitted" style="font-size: 20px; color: #ffffff; background-color: #72af2f;" value="Sign up" class="ctct-submit ctct-label-top ctct-submitted"     /></p><div class="ctct_usage" style="border: 0 none; clip: rect( 0, 0, 0, 0 ); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px;"><label for="ctct_usage_field">Constant Contact Use. Please leave this field blank.</label><input type="text" value="" id="ctct_usage_field" name="ctct_usage_field" class="ctct_usage_field" tabindex="-1" /></div><input type="hidden" name="ctct-id" value="3032" /><input type="hidden" name="ctct-verify" value="M4PXtMsfxU4IOc8RggM8K8Agv" /><input type="hidden" name="ctct-instance" value="0" /><input type="hidden" name="ctct_time" value="1774491629" /></form><div class="ctct-disclosure" style="color: #ffffff"><hr><small>Thank you.</small></div><script type="text/javascript">var ajaxurl = "https://powaynec.com/wp-admin/admin-ajax.php";</script></div>				</div>
+					<div data-form-id="3032" id="ctct-form-wrapper-0" class="ctct-form-wrapper"><p>For newsletter subscriptions, please <a href="{{ "/pages/contact.html" | relative_url }}">contact PNEC</a>.</p><div class="ctct-disclosure" style="color: #ffffff"><hr><small>Thank you.</small></div></div>				</div>
 				</div>
 					</div>
 		</div>
@@ -615,14 +470,7 @@ Join us in Old Poway Park to receive preparedness information and other valuable
 </ul>			</nav>
 					<div class="elementor-menu-toggle" role="button" tabindex="0" aria-label="Menu Toggle" aria-expanded="false">
 			<i aria-hidden="true" role="presentation" class="elementor-menu-toggle__icon--open eicon-menu-bar"></i><i aria-hidden="true" role="presentation" class="elementor-menu-toggle__icon--close eicon-close"></i>		</div>
-					<nav class="elementor-nav-menu--dropdown elementor-nav-menu__container" aria-hidden="true">
-				<ul id="menu-2-55465df" class="elementor-nav-menu sm-vertical"><li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1243"><a href="about.html" class="elementor-item" tabindex="-1">About</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1242"><a href="programs-and-services.html" class="elementor-item" tabindex="-1">Programs and Services</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1241"><a href="preparedness-resources.html" class="elementor-item" tabindex="-1">Preparedness Resources</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-1149 current_page_item menu-item-1240"><a href="community-events-and-activities.html" aria-current="page" class="elementor-item elementor-item-active" tabindex="-1">Community Events</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1239"><a href="find-your-neighborhood.html" class="elementor-item" tabindex="-1">Find Your Neighborhood</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1297"><a href="contact.html" class="elementor-item" tabindex="-1">Contact</a></li>
-</ul>			</nav>
+
 						</div>
 				</div>
 					</div>
@@ -647,7 +495,7 @@ Join us in Old Poway Park to receive preparedness information and other valuable
 			<p>Hear from the experts! Learn about your Home Ignition Zone, including Zone Zero, and our FREE HIZ assessment program.<br />
 February 25 | 6:30PM</p>
 		</div>
-		
+
 		<a class="elementor-post__read-more" href="{{ '/pages/events-archive.html#home-ignition-zone-assessment' | relative_url }}" aria-label="Read more about Home Ignition Zone Assessment" tabindex="-1" >
 			Read More »		</a>
 
@@ -663,7 +511,7 @@ February 25 | 6:30PM</p>
 			<p>Saturday May 31, 2025 9 AM &#8211; 1 PM</p>
 <p>Join us in Old Poway Park to receive preparedness information and other valuable resources.</p>
 		</div>
-		
+
 		<a class="elementor-post__read-more" href="{{ '/pages/events-archive.html#eleventh-annual-fair' | relative_url }}" aria-label="Read more about 11th Annual Emergency &#038; Safety Fair" tabindex="-1" >
 			Read More »		</a>
 
@@ -678,14 +526,14 @@ February 25 | 6:30PM</p>
 				<div class="elementor-post__excerpt">
 			<p>Fire Smart Landscaping is more than just maintenance. These concepts and practices can help protect your home from wildfire. View the presentation from Fire Advisor Luca Carmignani here.</p>
 		</div>
-		
+
 		<a class="elementor-post__read-more" href="{{ '/pages/events-archive.html#fire-smart-landscaping' | relative_url }}" aria-label="Read more about Fire Smart Landscaping" tabindex="-1" >
 			Read More »		</a>
 
 				</div>
 				</article>
 				</div>
-		
+
 						</div>
 				</div>
 					</div>
@@ -735,9 +583,7 @@ February 25 | 6:30PM</p>
 					</div>
 		</section>
 				</footer>
-		</footer><div class="jupiterx-corner-buttons" data-jupiterx-scroll="{&quot;offset&quot;:1000}"><button class="jupiterx-scroll-top jupiterx-icon-angle-up" data-jupiterx-scroll-target="0" aria-label="Scroll to top"></button></div></div><script type="speculationrules">
-{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/jupiterx/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
-</script>
+		</footer><div class="jupiterx-corner-buttons" data-jupiterx-scroll="{&quot;offset&quot;:1000}"><button class="jupiterx-scroll-top jupiterx-icon-angle-up" data-jupiterx-scroll-target="0" aria-label="Scroll to top"></button></div></div>
 			<script>
 				const lazyloadRunObserver = () => {
 					const lazyloadBackgrounds = document.querySelectorAll( `.e-con.e-parent:not(.e-lazyloaded)` );
@@ -764,82 +610,15 @@ February 25 | 6:30PM</p>
 					document.addEventListener( event, lazyloadRunObserver );
 				} );
 			</script>
-			<link rel='stylesheet' id='widget-posts-css' href='https://powaynec.com/wp-content/plugins/elementor-pro/assets/css/widget-posts.min.css?ver=3.35.1' type='text/css' media='all' />
-<link rel='stylesheet' id='widget-social-icons-css' href='https://powaynec.com/wp-content/plugins/elementor/assets/css/widget-social-icons.min.css?ver=3.35.9' type='text/css' media='all' />
-<link rel='stylesheet' id='e-apple-webkit-css' href='https://powaynec.com/wp-content/uploads/elementor/css/custom-apple-webkit.min.css?ver=1774488131' type='text/css' media='all' />
-<script type="text/javascript" src="https://powaynec.com/wp-content/plugins/constant-contact-forms/assets/js/ctct-plugin-frontend.min.js?ver=2.17.0" id="ctct_frontend_forms-js"></script>
-<script type="text/javascript" src="https://powaynec.com/wp-content/plugins/jupiterx-core/includes/woocommerce/wc-quick-view.js?ver=4.9.2" id="jupiterx-wc-quickview-js"></script>
-<script type="text/javascript" src="https://powaynec.com/wp-includes/js/underscore.min.js?ver=1.13.7" id="underscore-js"></script>
-<script type="text/javascript" id="jupiterx-js-extra">
-/* <![CDATA[ */
-var jupiterxOptions = {"smoothScroll":"0","videMedia":"0","quantityFieldSwitch":"undefined"};
-//# sourceURL=jupiterx-js-extra
-/* ]]> */
-</script>
-<script type="text/javascript" src="https://powaynec.com/wp-content/themes/jupiterx/lib/assets/dist/js/frontend.min.js?ver=4.9.2" id="jupiterx-js"></script>
-<script type="text/javascript" src="https://powaynec.com/wp-content/plugins/elementor/assets/js/webpack.runtime.min.js?ver=3.35.9" id="elementor-webpack-runtime-js"></script>
-<script type="text/javascript" src="https://powaynec.com/wp-content/plugins/elementor/assets/js/frontend-modules.min.js?ver=3.35.9" id="elementor-frontend-modules-js"></script>
-<script type="text/javascript" src="https://powaynec.com/wp-includes/js/jquery/ui/core.min.js?ver=1.13.3" id="jquery-ui-core-js"></script>
-<script type="text/javascript" id="elementor-frontend-js-before">
-/* <![CDATA[ */
-var elementorFrontendConfig = {"environmentMode":{"edit":false,"wpPreview":false,"isScriptDebug":false},"i18n":{"shareOnFacebook":"Share on Facebook","shareOnTwitter":"Share on Twitter","pinIt":"Pin it","download":"Download","downloadImage":"Download image","fullscreen":"Fullscreen","zoom":"Zoom","share":"Share","playVideo":"Play Video","previous":"Previous","next":"Next","close":"Close","a11yCarouselPrevSlideMessage":"Previous slide","a11yCarouselNextSlideMessage":"Next slide","a11yCarouselFirstSlideMessage":"This is the first slide","a11yCarouselLastSlideMessage":"This is the last slide","a11yCarouselPaginationBulletMessage":"Go to slide"},"is_rtl":false,"breakpoints":{"xs":0,"sm":480,"md":768,"lg":1026,"xl":1440,"xxl":1600},"responsive":{"breakpoints":{"mobile":{"label":"Mobile Portrait","value":767,"default_value":767,"direction":"max","is_enabled":true},"mobile_extra":{"label":"Mobile Landscape","value":880,"default_value":880,"direction":"max","is_enabled":false},"tablet":{"label":"Tablet Portrait","value":1025,"default_value":1024,"direction":"max","is_enabled":true},"tablet_extra":{"label":"Tablet Landscape","value":1200,"default_value":1200,"direction":"max","is_enabled":false},"laptop":{"label":"Laptop","value":1366,"default_value":1366,"direction":"max","is_enabled":false},"widescreen":{"label":"Widescreen","value":2400,"default_value":2400,"direction":"min","is_enabled":false}},"hasCustomBreakpoints":true},"version":"3.35.9","is_static":false,"experimentalFeatures":{"additional_custom_breakpoints":true,"theme_builder_v2":true,"home_screen":true,"global_classes_should_enforce_capabilities":true,"e_variables":true,"cloud-library":true,"e_opt_in_v4_page":true,"e_components":true,"e_interactions":true,"e_editor_one":true,"import-export-customization":true,"e_pro_variables":true},"urls":{"assets":"https:\/\/powaynec.com\/wp-content\/plugins\/elementor\/assets\/","ajaxurl":"https:\/\/powaynec.com\/wp-admin\/admin-ajax.php","uploadUrl":"https:\/\/powaynec.com\/wp-content\/uploads"},"nonces":{"floatingButtonsClickTracking":"a61ad5e52b"},"swiperClass":"swiper","settings":{"page":[],"editorPreferences":[]},"kit":{"viewport_tablet":1025,"active_breakpoints":["viewport_mobile","viewport_tablet"],"global_image_lightbox":"yes","lightbox_enable_counter":"yes","lightbox_enable_fullscreen":"yes","lightbox_enable_zoom":"yes","lightbox_enable_share":"yes","lightbox_title_src":"title","lightbox_description_src":"description"},"post":{"id":1149,"title":"Community%20Events%20and%20Activities%20%E2%80%93%20Poway%20NEC%20%26%20FSC","excerpt":"","featuredImage":false}};
-//# sourceURL=elementor-frontend-js-before
-/* ]]> */
-</script>
-<script type="text/javascript" src="https://powaynec.com/wp-content/plugins/elementor/assets/js/frontend.min.js?ver=3.35.9" id="elementor-frontend-js"></script>
-<script type="text/javascript" src="https://powaynec.com/wp-content/plugins/elementor-pro/assets/lib/smartmenus/jquery.smartmenus.min.js?ver=1.2.1" id="smartmenus-js"></script>
-<script type="text/javascript" src="https://powaynec.com/wp-content/plugins/elementor/assets/lib/swiper/v8/swiper.min.js?ver=8.4.5" id="swiper-js"></script>
-<script type="text/javascript" src="https://powaynec.com/wp-content/plugins/jupiterx-core/includes/extensions/raven/assets/lib/object-fit/object-fit.min.js?ver=2.1.1" id="jupiterx-core-raven-object-fit-js"></script>
-<script type="text/javascript" src="https://powaynec.com/wp-includes/js/imagesloaded.min.js?ver=5.0.0" id="imagesloaded-js"></script>
-<script type="text/javascript" src="https://powaynec.com/wp-content/plugins/elementor-pro/assets/js/webpack-pro.runtime.min.js?ver=3.35.1" id="elementor-pro-webpack-runtime-js"></script>
-<script type="text/javascript" src="https://powaynec.com/wp-includes/js/dist/hooks.min.js?ver=dd5603f07f9220ed27f1" id="wp-hooks-js"></script>
-<script type="text/javascript" src="https://powaynec.com/wp-includes/js/dist/i18n.min.js?ver=c26c3dc7bed366793375" id="wp-i18n-js"></script>
-<script type="text/javascript" id="wp-i18n-js-after">
-/* <![CDATA[ */
-wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
-//# sourceURL=wp-i18n-js-after
-/* ]]> */
-</script>
-<script type="text/javascript" id="elementor-pro-frontend-js-before">
-/* <![CDATA[ */
-var ElementorProFrontendConfig = {"ajaxurl":"https:\/\/powaynec.com\/wp-admin\/admin-ajax.php","nonce":"206305c84d","urls":{"assets":"https:\/\/powaynec.com\/wp-content\/plugins\/elementor-pro\/assets\/","rest":"https:\/\/powaynec.com\/wp-json\/"},"settings":{"lazy_load_background_images":true},"popup":{"hasPopUps":false},"shareButtonsNetworks":{"facebook":{"title":"Facebook","has_counter":true},"twitter":{"title":"Twitter"},"linkedin":{"title":"LinkedIn","has_counter":true},"pinterest":{"title":"Pinterest","has_counter":true},"reddit":{"title":"Reddit","has_counter":true},"vk":{"title":"VK","has_counter":true},"odnoklassniki":{"title":"OK","has_counter":true},"tumblr":{"title":"Tumblr"},"digg":{"title":"Digg"},"skype":{"title":"Skype"},"stumbleupon":{"title":"StumbleUpon","has_counter":true},"mix":{"title":"Mix"},"telegram":{"title":"Telegram"},"pocket":{"title":"Pocket","has_counter":true},"xing":{"title":"XING","has_counter":true},"whatsapp":{"title":"WhatsApp"},"email":{"title":"Email"},"print":{"title":"Print"},"x-twitter":{"title":"X"},"threads":{"title":"Threads"}},"facebook_sdk":{"lang":"en_US","app_id":""},"lottie":{"defaultAnimationUrl":"https:\/\/powaynec.com\/wp-content\/plugins\/elementor-pro\/modules\/lottie\/assets\/animations\/default.json"}};
-//# sourceURL=elementor-pro-frontend-js-before
-/* ]]> */
-</script>
-<script type="text/javascript" src="https://powaynec.com/wp-content/plugins/elementor-pro/assets/js/frontend.min.js?ver=3.35.1" id="elementor-pro-frontend-js"></script>
-<script type="text/javascript" src="https://powaynec.com/wp-content/plugins/elementor-pro/assets/js/elements-handlers.min.js?ver=3.35.1" id="pro-elements-handlers-js"></script>
-<script type="text/javascript" id="wp-util-js-extra">
-/* <![CDATA[ */
-var _wpUtilSettings = {"ajax":{"url":"/wp-admin/admin-ajax.php"}};
-//# sourceURL=wp-util-js-extra
-/* ]]> */
-</script>
-<script type="text/javascript" src="https://powaynec.com/wp-includes/js/wp-util.min.js?ver=6.9.4" id="wp-util-js"></script>
-<script type="text/javascript" id="jupiterx-core-raven-frontend-js-extra">
-/* <![CDATA[ */
-var ravenFormsTranslations = {"validation":{"required":"Please fill in this field","invalidEmail":"The value is not a valid email address","invalidPhone":"The value should only consist numbers and phone characters (-, +, (), etc)","invalidNumber":"The value is not a valid number","invalidMaxValue":"Value must be less than or equal to MAX_VALUE","invalidMinValue":"Value must be greater than or equal to MIN_VALUE"},"itiValidation":{"invalidCountryCode":"Invalid country code","tooShort":"Phone number is too short","tooLong":"Phone number is too long","areaCodeMissing":"Area code is required.","invalidLength":"Phone number has an invalid length","invalidGeneral":"Invalid phone number","forceMinLength":"Phone number must be more than X digits","typeMismatch":["Phone number must be of type: Fixed Line","Phone number must be of type: Mobile","Phone number must be of type: Fixed Line or Mobile","Phone number must be of type: Toll Free","Phone number must be of type: Premium Rate","Phone number must be of type: Shared Cost","Phone number must be of type: VOIP","Phone number must be of type: Personal Number","Phone number must be of type: Pager","Phone number must be of type: UAN","Phone number must be of type: Voicemail"]}};
-var ravenTools = {"nonce":"7e502c76a9","activeElements":["animated-gradient","alert","advanced-accordion","button","categories","code-highlight","countdown","counter","divider","flex-spacer","forms","global-widget","heading","icon","text-marquee","content-marquee","testimonial-marquee","image","image-accordion","image-comparison","image-gallery","inline-svg","nav-menu","photo-album","photo-roller","posts","advanced-posts","post-content","post-comments","post-meta","post-navigation","products","search-form","shopping-cart","site-logo","tabs","video","video-playlist","breadcrumbs","add-to-cart","advanced-nav-menu","sticky-media-scroller","archive-title","author-box","animated-heading","archive-description","business-hours","call-to-action","cart","carousel","content-switch","custom-css","flip-box","hotspot","lottie","product-data-tabs","post-title","post-terms","preview-settings","product-reviews","media-gallery","product-additional-info","price-list","pricing-table","product-rating","product-gallery","product-meta","product-short-description","product-price","progress-tracker","site-title","table-of-contents","slider","social-share","tooltip","product-title","role-manager","team-members","product-content","custom-attributes","woocommerce-breadcrumbs","woocommerce-settings","woocommerce-notices","motion_effects","wrapper-link","my-account","paypal","stripe","products-carousel","circle-progress"],"globalTypography":{"fontFamily":"","fontSize":{"size":"","unit":""},"lineHeight":{"size":"","unit":""},"color":""},"wc":{"wcAjaxAddToCart":"yes","disableAjaxToCartInArchive":true},"maxFileUploadSize":"1073741824"};
-var lottie_defaultAnimationUrl = {"url":"https://powaynec.com/wp-content/plugins/jupiterx-core/includes/extensions/raven/assets/animations/default.json"};
-//# sourceURL=jupiterx-core-raven-frontend-js-extra
-/* ]]> */
-</script>
-<script type="text/javascript" src="https://powaynec.com/wp-content/plugins/jupiterx-core/includes/extensions/raven/assets/js/frontend.min.js?ver=6.9.4" id="jupiterx-core-raven-frontend-js"></script>
-<script type="text/javascript" src="https://powaynec.com/wp-content/plugins/elementor/assets/lib/flatpickr/flatpickr.min.js?ver=4.6.13" id="flatpickr-js"></script>
+
+
 <script type="text/javascript">
 		(function() {
 			document.body.className = document.body.className.replace('no-js','js');
 		}());
 	</script>
-	<script id="wp-emoji-settings" type="application/json">
-{"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"https://powaynec.com/wp-includes/js/wp-emoji-release.min.js?ver=6.9.4"}}
-</script>
-<script type="module">
-/* <![CDATA[ */
-/*! This file is auto-generated */
-const a=JSON.parse(document.getElementById("wp-emoji-settings").textContent),o=(window._wpemojiSettings=a,"wpEmojiSettingsSupports"),s=["flag","emoji"];function i(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function c(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0);const a=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);return t.every((e,t)=>e===a[t])}function p(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var n=e.getImageData(16,16,1,1);for(let e=0;e<n.data.length;e++)if(0!==n.data[e])return!1;return!0}function u(e,t,n,a){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!a(e,"\ud83e\u1fac8")}return!1}function f(e,t,n,a){let r;const o=(r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):document.createElement("canvas")).getContext("2d",{willReadFrequently:!0}),s=(o.textBaseline="top",o.font="600 32px Arial",{});return e.forEach(e=>{s[e]=t(o,e,n,a)}),s}function r(e){var t=document.createElement("script");t.src=e,t.defer=!0,document.head.appendChild(t)}a.supports={everything:!0,everythingExceptFlag:!0},new Promise(t=>{let n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),c.toString(),p.toString()].join(",")+"));",a=new Blob([e],{type:"text/javascript"});const r=new Worker(URL.createObjectURL(a),{name:"wpTestEmojiSupports"});return void(r.onmessage=e=>{i(n=e.data),r.terminate(),t(n)})}catch(e){}i(n=f(s,u,c,p))}t(n)}).then(e=>{for(const n in e)a.supports[n]=e[n],a.supports.everything=a.supports.everything&&a.supports[n],"flag"!==n&&(a.supports.everythingExceptFlag=a.supports.everythingExceptFlag&&a.supports[n]);var t;a.supports.everythingExceptFlag=a.supports.everythingExceptFlag&&!a.supports.flag,a.supports.everything||((t=a.source||{}).concatemoji?r(t.concatemoji):t.wpemoji&&t.twemoji&&(r(t.twemoji),r(t.wpemoji)))});
-//# sourceURL=https://powaynec.com/wp-includes/js/wp-emoji-loader.min.js
-/* ]]> */
-</script>
+
+
 <script src="{{ '/assets/js/utils/errors.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/api/auth-api.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/api/faq-api.js' | relative_url }}"></script>
