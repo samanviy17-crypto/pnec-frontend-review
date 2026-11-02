@@ -34,7 +34,7 @@ def main():
     site = artifacts / 'site'
     print('Disposable artifacts:', artifacts, flush=True)
     environment = {**os.environ, 'PYTHONDONTWRITEBYTECODE': '1',
-                   'JEKYLL_NO_BUNDLER_REQUIRE': 'true',
+                   'JEKYLL_NO_BUNDLER_REQUIRE': 'true', 'EVENT_STORAGE_TIMEZONE': 'UTC',
                    'PNEC_FRONTEND_ROOT': str(frontend), 'PNEC_BACKEND_ROOT': str(backend),
                    'PNEC_SITE_ROOT': str(site), 'PNEC_TEST_BACKEND_PORT': '0'}
     # Build from a temporary working directory so inherited Sass cache defaults

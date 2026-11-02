@@ -11,12 +11,12 @@ body_class: inner-page
 </style>
 
 <!-- Avatar upload modal -->
-<div class="avatar-modal-overlay" id="avatar-modal-overlay">
+<dialog class="avatar-modal-overlay" id="avatar-modal-overlay" aria-modal="true" aria-labelledby="avatar-modal-title">
   <div class="avatar-modal">
-    <h4>Change Profile Picture</h4>
+    <h4 id="avatar-modal-title">Change Profile Picture</h4>
 
     <!-- File upload zone -->
-    <label id="avatar-drop-zone" for="avatar-file-input" class="avatar-drop-zone">
+    <label id="avatar-drop-zone" role="button" tabindex="0" aria-label="Choose a profile photo" for="avatar-file-input" class="avatar-drop-zone">
       <div id="avatar-preview-wrap" class="avatar-preview-wrap">
         <img id="avatar-preview-img" src="" alt="Preview" class="avatar-preview-image">
       </div>
@@ -26,14 +26,14 @@ body_class: inner-page
       <input type="file" id="avatar-file-input" accept="image/*" class="profile-hidden">
     </label>
 
-    <div id="avatar-error" class="avatar-error"></div>
+    <div id="avatar-error" class="avatar-error" role="alert"></div>
 
     <div class="avatar-modal-btns">
       <button class="btn-modal-cancel" id="avatar-modal-cancel">Cancel</button>
       <button class="avatar-apply btn-modal-save" id="avatar-modal-save" disabled>Apply</button>
     </div>
   </div>
-</div>
+</dialog>
 
 <div class="profile-page">
   <div id="profile-content">
@@ -323,7 +323,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (avatarBtn) {
       avatarBtn.addEventListener('click', function() {
         resetAvatarModal();
-        document.getElementById('avatar-modal-overlay').classList.add('open');
+        avatarReturnFocus = avatarBtn;
+        var dialog = document.getElementById('avatar-modal-overlay');
+        dialog.classList.add('open');
+        dialog.showModal();
+        document.getElementById('avatar-drop-zone').focus();
       });
     }
 
@@ -441,6 +445,34 @@ document.addEventListener('DOMContentLoaded', function() {
   // ── Avatar modal logic ─────────────────────────────────────────────────────
   var pendingAvatarDataUrl = null;
   var avatarReadVersion = 0;
+  var avatarReturnFocus = null;
+
+  function closeAvatarModal() {
+    var dialog = document.getElementById('avatar-modal-overlay');
+    dialog.close();
+    dialog.classList.remove('open');
+    resetAvatarModal();
+    if (avatarReturnFocus && avatarReturnFocus.isConnected) avatarReturnFocus.focus();
+  }
+
+  var avatarDialog = document.getElementById('avatar-modal-overlay');
+  avatarDialog.addEventListener('cancel', function(event) {
+    event.preventDefault();
+    closeAvatarModal();
+  });
+  avatarDialog.addEventListener('keydown', function(event) {
+    if (event.key !== 'Tab') return;
+    var focusable = Array.from(avatarDialog.querySelectorAll('[tabindex="0"], button:not(:disabled)'));
+    var first = focusable[0], last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  });
+  document.getElementById('avatar-drop-zone').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      document.getElementById('avatar-file-input').click();
+    }
+  });
 
   function resetAvatarModal() {
     avatarReadVersion += 1;
@@ -467,7 +499,11 @@ document.addEventListener('DOMContentLoaded', function() {
         canvas.width  = Math.round(img.width  * scale);
         canvas.height = Math.round(img.height * scale);
         canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-        callback(canvas.toDataURL('image/jpeg', 0.82));
+        // Keep both input and server-canonical JPEG below the 60KB TEXT budget.
+        // 160px at quality .65 is bounded even for noisy phone photographs.
+        var result = canvas.toDataURL('image/jpeg', 0.65);
+        if (result.length > 50000) { onError(); return; }
+        callback(result);
       };
       img.onerror = onError;
       img.src = e.target.result;
@@ -495,7 +531,7 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     err.style.display = 'none';
-    resizeImageToDataUrl(file, 400, function(dataUrl) {
+    resizeImageToDataUrl(file, 160, function(dataUrl) {
       if (readVersion !== avatarReadVersion) return;
       pendingAvatarDataUrl = dataUrl;
       var previewImg = document.getElementById('avatar-preview-img');
@@ -530,19 +566,17 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   document.getElementById('avatar-modal-cancel').addEventListener('click', function() {
-    document.getElementById('avatar-modal-overlay').classList.remove('open');
-    resetAvatarModal();
+    closeAvatarModal();
   });
   document.getElementById('avatar-modal-save').addEventListener('click', function() {
     if (!pendingAvatarDataUrl) return;
     pendingAvatarUrl = pendingAvatarDataUrl;
     var display = document.getElementById('profile-avatar-display');
     if (display) display.innerHTML = '<img src="' + pendingAvatarDataUrl + '" alt="Profile photo">';
-    document.getElementById('avatar-modal-overlay').classList.remove('open');
-    resetAvatarModal();
+    closeAvatarModal();
   });
   document.getElementById('avatar-modal-overlay').addEventListener('click', function(e) {
-    if (e.target === this) { this.classList.remove('open'); resetAvatarModal(); }
+    if (e.target === this) closeAvatarModal();
   });
 
   function getInitials(name) {

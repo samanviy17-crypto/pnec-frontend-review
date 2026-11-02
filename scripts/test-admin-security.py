@@ -88,7 +88,7 @@ with sync_playwright() as play:
     browser = play.chromium.launch()
     # Preserve the original 15 guest/resident/admin authorization scenarios.
     for identity in ('guest', 'resident', 'admin'):
-        context = browser.new_context()
+        context = browser.new_context(timezone_id='America/Los_Angeles')
         if identity in tokens:
             context.add_init_script('localStorage.setItem("pnec_token", '+repr(tokens[identity])+');')
         context.route('**/*', handler(identity))
@@ -97,6 +97,10 @@ with sync_playwright() as play:
             page.goto(ORIGIN + '/pages/' + filename, wait_until='domcontentloaded')
             if identity == 'admin':
                 expect(page.locator(selector)).to_be_visible(timeout=10000)
+                if filename == 'admin.html':
+                    # Real rendered function: editing UTC must preserve local wall time.
+                    assert page.evaluate("eventLocalInputValue('2030-11-11T02:00:00Z')") == '2030-11-10T18:00'
+                    assert page.evaluate("eventLocalInputValue('2030-07-11T01:00:00Z')") == '2030-07-10T18:00'
             else:
                 page.wait_for_timeout(500)
                 expect(page.locator(selector)).not_to_be_visible()

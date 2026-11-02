@@ -106,8 +106,28 @@ with tempfile.TemporaryDirectory(prefix='pnec-account-regression-') as temp:
                 c.getContext('2d').fillRect(0,0,20,20);return c.toDataURL('image/png').split(',')[1]; }""")
             photo = {'name': 'fixture.png', 'mimeType': 'image/png', 'buffer': base64.b64decode(png)}
             page.locator('#avatar-change-btn').click()
+            dialog = page.get_by_role('dialog', name='Change Profile Picture')
+            expect(dialog).to_be_visible()
+            expect(dialog).to_have_attribute('aria-modal', 'true')
+            expect(page.locator('#avatar-drop-zone')).to_be_focused()
+            page.keyboard.press('Shift+Tab')
+            expect(page.locator('#avatar-modal-cancel')).to_be_focused()
+            page.keyboard.press('Tab')
+            expect(page.locator('#avatar-drop-zone')).to_be_focused()
+            # Native modal inertness blocks attempts to move focus into the page.
+            page.locator('#profile-save-btn').evaluate('(el) => el.focus()')
+            assert page.evaluate("document.activeElement.closest('dialog') !== null")
+            page.keyboard.press('Escape')
+            expect(dialog).not_to_be_visible()
+            expect(page.locator('#avatar-change-btn')).to_be_focused()
+            page.locator('#avatar-change-btn').click()
             page.locator('#avatar-file-input').set_input_files(photo)
             expect(page.locator('#avatar-modal-save')).to_be_enabled()
+            page.locator('#avatar-modal-save').focus()
+            page.keyboard.press('Tab')
+            expect(page.locator('#avatar-drop-zone')).to_be_focused()
+            page.keyboard.press('Shift+Tab')
+            expect(page.locator('#avatar-modal-save')).to_be_focused()
             page.locator('#avatar-file-input').set_input_files({'name':'broken.png','mimeType':'image/png','buffer':b'not an image'})
             expect(page.locator('#avatar-error')).to_contain_text('could not be read')
             expect(page.locator('#avatar-modal-save')).to_be_disabled()
@@ -135,6 +155,24 @@ with tempfile.TemporaryDirectory(prefix='pnec-account-regression-') as temp:
             with app.app_context():
                 assert User.query.filter_by(email=email).first().avatar_url.startswith('data:image/jpeg;base64,')
             checks.append('Avatar validation, decode failure, oversize rejection, cancel and persistence')
+            # High-entropy 400px input previously exceeded MySQL TEXT after resize.
+            noisy = page.evaluate("""() => {const c=document.createElement('canvas');c.width=c.height=400;
+                const ctx=c.getContext('2d'), img=ctx.createImageData(400,400);
+                let state=17;for(let i=0;i<img.data.length;i+=4){for(let j=0;j<3;j++){
+                  state=(Math.imul(state,1664525)+1013904223)>>>0;img.data[i+j]=state>>>24;}
+                  img.data[i+3]=255;}ctx.putImageData(img,0,0);return c.toDataURL('image/png').split(',')[1];}""")
+            page.locator('#avatar-change-btn').click()
+            page.locator('#avatar-file-input').set_input_files({'name':'noise.png','mimeType':'image/png','buffer':base64.b64decode(noisy)})
+            expect(page.locator('#avatar-modal-save')).to_be_enabled()
+            assert page.locator('#avatar-preview-img').get_attribute('src').__len__() <= 50000
+            page.locator('#avatar-modal-save').click()
+            expect(page.locator('#avatar-change-btn')).to_be_focused()
+            page.locator('#profile-save-btn').click()
+            expect(page.locator('#profile-success')).to_be_visible()
+            with app.app_context():
+                saved_photo = User.query.filter_by(email=email).first().avatar_url
+                assert len(saved_photo.encode('ascii')) <= 60000
+            checks.append('Modal semantics, focus containment, Escape/restoration; noisy photo fits MySQL TEXT')
 
             for width in [320, 390, 768, 1280]:
                 page.set_viewport_size({'width':width,'height':900})

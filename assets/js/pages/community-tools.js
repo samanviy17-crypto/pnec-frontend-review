@@ -49,10 +49,10 @@
   };
   const numberData = (data, keys) => {keys.forEach(k => {data[k] = data[k] === '' ? null : Number(data[k]);}); return data;};
   let user = null, neighborhoods = [];
-  const managing = () => user && ['coordinator', 'staff', 'admin'].includes(user.role);
+  const managing = () => user && (['staff', 'admin'].includes(user.role) || (user.role === 'coordinator' && user.assigned_neighborhood_id != null));
   const staff = () => user && ['staff', 'admin'].includes(user.role);
-  const neighborhoodField = (node, optional = false) => field(node, 'neighborhood_id', 'Neighborhood', 'select', {
-    required: !optional, value: user?.neighborhood_id || '', choices: neighborhoods.map(n => [n.id, n.name])
+  const neighborhoodField = (node, optional = false, assignment = false) => field(node, 'neighborhood_id', 'Neighborhood', 'select', {
+    required: !optional, value: (assignment && user?.role === 'coordinator' ? user.assigned_neighborhood_id : user?.neighborhood_id) || '', choices: neighborhoods.filter(n => !assignment || user?.role !== 'coordinator' || n.id === user.assigned_neighborhood_id).map(n => [n.id, n.name])
   });
   const neighborhoodName = id => neighborhoods.find(n => n.id === id)?.name || 'Citywide';
   const loginNote = parent => el('p', 'Sign in using the site account menu to save and manage your information.', parent);
@@ -98,7 +98,7 @@
         el('p', `${new Date(t.starts_at).toLocaleString()} · ${neighborhoodName(t.neighborhood_id)} · ${t.claimed_count}/${t.capacity} slots claimed${t.closed ? ' · Closed' : ''}`, card);
         if (user && t.signed_up) button(card, 'Cancel my signup', async () => {await api(`/volunteer/tasks/${t.id}/signup`, 'DELETE'); await refresh();});
         else if (user && !t.closed && t.claimed_count < t.capacity && new Date(t.starts_at) > new Date()) button(card, 'Claim a slot', async () => {await api(`/volunteer/tasks/${t.id}/signup`, 'POST', {}); await refresh();});
-        if (managing() && (user.role !== 'coordinator' || user.neighborhood_id === t.neighborhood_id)) {
+        if (managing() && (user.role !== 'coordinator' || user.assigned_neighborhood_id === t.neighborhood_id)) {
           el('p', 'Volunteers: ' + (t.volunteers || []).map(v => `${v.name} (${v.email})`).join(', '), card);
           button(card, t.closed ? 'Reopen shift' : 'Close shift', async () => {await api(`/volunteer/tasks/${t.id}`, 'PATCH', {closed:!t.closed}); await refresh();});
         }
@@ -113,7 +113,7 @@
       });
       field(f, 'title', 'Task or shift title', 'text', {max:200});
       field(f, 'description', 'Details and meeting location', 'textarea', {max:2000, required:false});
-      neighborhoodField(f, user.role !== 'coordinator');
+      neighborhoodField(f, user.role !== 'coordinator', true);
       field(f, 'starts_at', 'Start date and time (your local time)', 'datetime-local');
       field(f, 'capacity', 'Available slots', 'number', {limit:1000}); f.finish();
     }
@@ -269,7 +269,7 @@
   async function coordination(parent) {
     if (!managing()) {const node = section(parent, 'Neighborhood coordination'); loginNote(node); return;}
     const node = section(parent, 'Neighborhood coordination');
-    el('p', user.role === 'coordinator' ? `Reports for ${neighborhoodName(user.neighborhood_id)}.` : 'Reports across all neighborhoods.', node);
+    el('p', user.role === 'coordinator' ? `Reports for ${neighborhoodName(user.assigned_neighborhood_id)}.` : 'Reports across all neighborhoods.', node);
     await checkins(node); await hazards(node);
     if (staff()) {
       const feedback = section(node, 'FAQ answers needing review');

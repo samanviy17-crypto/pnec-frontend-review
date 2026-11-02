@@ -51,6 +51,7 @@ with tempfile.TemporaryDirectory(prefix='pnec-profile-test-') as directory:
     with app.app_context():
         db.session.add(Event(title='Profile browser test event', description='Isolated test event',
                              date=datetime.now() + timedelta(days=1), location='Test location'))
+        db.session.add(Event(title='Month boundary regression', date=datetime(2030, 11, 1, 2)))
         db.session.commit()
 
     def verify_database():
@@ -63,7 +64,7 @@ with tempfile.TemporaryDirectory(prefix='pnec-profile-test-') as directory:
     try:
         with sync_playwright() as play:
             browser = play.chromium.launch()
-            context = browser.new_context()
+            context = browser.new_context(timezone_id='America/Los_Angeles')
             context.route('**/*', lambda route: route.continue_() if route.request.url.startswith(PREVIEW_URL + '/') else route.abort())
             context.route('http://127.0.0.1:8425/**', lambda route: route.continue_(
                 url=route.request.url.replace(':8425', ':' + str(server.server_port), 1)))
@@ -140,6 +141,10 @@ with tempfile.TemporaryDirectory(prefix='pnec-profile-test-') as directory:
                 assert page.evaluate('fetchCurrentUser()')['email'] == updated_email
                 if link['label'] == 'Calendar':
                     expect(page.locator('#pnec-calendar .calendar-grid')).to_be_visible()
+                    october = page.evaluate('fetchEventsForMonth(10, 2030)')
+                    assert any(e['title'] == 'Month boundary regression' for e in october)
+                    november = page.evaluate('fetchEventsForMonth(11, 2030)')
+                    assert not any(e['title'] == 'Month boundary regression' for e in november)
                     page.locator('#view-list-btn').click()
                     expect(page.locator('#events-list-container')).to_contain_text('Profile browser test event')
                 if link['label'] == 'Risk Watch':

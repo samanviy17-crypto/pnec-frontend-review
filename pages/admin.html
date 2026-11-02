@@ -624,6 +624,12 @@ function admRenderEvents(events) {
   `).join('');
 }
 
+function eventLocalInputValue(instant) {
+  const d = new Date(instant);
+  const pad = value => String(value).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 function admOpenEventModal(existingId) {
   document.getElementById('event-modal-title').textContent = existingId ? 'Edit Event' : 'New Event';
   document.getElementById('event-modal-id').value      = existingId || '';
@@ -637,7 +643,7 @@ function admOpenEventModal(existingId) {
     const ev = admEventsCache.find(x => x.id === existingId);
     if (ev) {
       document.getElementById('event-title').value       = ev.title;
-      document.getElementById('event-date').value        = ev.date ? ev.date.slice(0,16) : '';
+      document.getElementById('event-date').value        = ev.date ? eventLocalInputValue(ev.date) : '';
       document.getElementById('event-location').value    = ev.location || '';
       document.getElementById('event-description').value = ev.description || '';
       document.getElementById('event-image').value       = ev.image_url || '';

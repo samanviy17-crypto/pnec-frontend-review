@@ -28,7 +28,8 @@ function fetchEvents() {
  * 3. Return events array
  */
 function fetchEventsForMonth(month, year) {
-  return fetch(`${API_BASE}/api/events/calendar?month=${month}&year=${year}`, { credentials: 'include' })
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return fetch(`${API_BASE}/api/events/calendar?month=${month}&year=${year}&timezone=${encodeURIComponent(timezone)}`, { credentials: 'include' })
     .then(validateResponse)
     .then(response => response.json())
     .then(data => data.events || []);

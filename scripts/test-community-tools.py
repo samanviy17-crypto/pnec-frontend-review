@@ -42,6 +42,8 @@ with app.app_context():
         user = User(email=name+'@example.test', display_name=name, role=role,
                     password_hash='unused', neighborhood_id=nid)
         user.generate_token(); db.session.add(user); db.session.flush()
+        if role == 'coordinator':
+            app.config['COORDINATOR_ASSIGNMENTS'] = {str(user.id): nid}
         accounts[name] = {'token':user.auth_token, 'user':user.to_dict()}
     db.session.commit()
 
