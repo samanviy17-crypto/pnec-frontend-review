@@ -88,6 +88,7 @@ with sync_playwright() as play:
         prepare=page.locator('#pnec-site-header button[aria-controls="pnec-menu-1"]')
         prepare.click()
         assert prepare.get_attribute('aria-expanded')=='true'
+        assert page.locator('.site-nav').evaluate('(e)=>e.scrollWidth <= e.clientWidth'), (width, 'menu overflow')
         page.keyboard.press('Escape')
         assert prepare.get_attribute('aria-expanded')=='false'
         assert prepare.evaluate('(e)=>e===document.activeElement')

@@ -150,7 +150,7 @@ body.pnec-site .pnec-eyebrow { font-size: $text-sm; font-weight: 700; text-trans
     .site-nav { display: none; position: absolute; top: 80px; right: $spacing-lg; left: $spacing-lg; background: #fff; border: 1px solid #dfe8ec; border-radius: $radius-md; padding: $spacing-md; max-height: calc(100dvh - 100px); overflow-y: auto; box-shadow: $shadow-md; }
     .site-nav.is-open { display: block; }
     .trigger { display: block; }
-    .page-link { display: flex; justify-content: space-between; width: 100%; }
+    .site-nav .page-link { display: flex; justify-content: space-between; width: 100%; margin-left: 0; }
     .pnec-dropdown { position: static; box-shadow: none; min-width: 0; max-width: none; margin: $spacing-xxs 0; }
     .pnec-account { margin-top: $spacing-sm; }
   }
