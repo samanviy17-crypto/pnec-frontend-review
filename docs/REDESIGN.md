@@ -148,3 +148,5 @@ including all six responsive widths and the interaction/account checks described
 above. Screenshots and machine-readable results are in /tmp/pnec-evidence.
 
 Vendored source changes are limited to trailing-whitespace normalization; mixin behavior is unchanged.
+
+The expanded mobile menu is checked for internal overflow. The helper panel is also opened and closed at all six widths; its toolbar stays below the fixed header.

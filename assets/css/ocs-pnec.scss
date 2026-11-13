@@ -253,3 +253,16 @@ body.pnec-site .calendar-weekdays, body.pnec-site .calendar-days { @include base
 body.pnec-site .calendar-day { min-height: 44px; padding: 8px; background: #fff; border: 1px solid #dfe8ec; border-radius: 6px; }
 body.pnec-site .calendar-day.selected, body.pnec-site .calendar-day.today { border-color: #087c82; background: #e4f4f4; }
 body.pnec-site .calendar-weekday { text-align: center; font-weight: 700; }
+// Keep the helper's own toolbar and close control below the stationary header.
+body.pnec-site .pnec-bot-panel { max-height: calc(100dvh - 104px); }
+body.pnec-site .pnec-bot-panel.is-modal { top: 92px; max-height: calc(100dvh - 104px); }
+@media (max-width: 720px) {
+  body.pnec-site .pnec-bot-panel,
+  body.pnec-site .pnec-bot-panel.is-expanded,
+  body.pnec-site .pnec-bot-panel.is-modal {
+    top: 92px;
+    bottom: 8px;
+    height: auto;
+    max-height: calc(100dvh - 100px);
+  }
+}

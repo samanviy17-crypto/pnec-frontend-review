@@ -120,6 +120,19 @@ with sync_playwright() as play:
         page.get_by_role('button',name='Account',exact=True).click()
         assert page.get_by_role('link',name='My Profile',exact=True).is_visible()
         assert not page.locator('#nav-admin-link').is_visible()
+        page.keyboard.press('Escape')
+        page.locator('#pnec-bot-fab').click()
+        page.locator('#pnec-bot-panel').wait_for(state='visible')
+        page.wait_for_timeout(300)
+        assert page.locator('#pnec-bot-panel').bounding_box()['y'] >= 80, (width, 'helper overlaps header')
+        for mode in ['expand', 'modal']:
+            if not page.locator('#pnec-bot-'+mode).is_visible():
+                continue  # Compact toolbar intentionally omits some mode controls.
+            page.locator('#pnec-bot-'+mode).click()
+            page.wait_for_timeout(300)
+            assert page.locator('#pnec-bot-panel').bounding_box()['y'] >= 80, (width, mode, 'helper overlaps header')
+        page.locator('#pnec-bot-close').click()
+        assert not page.locator('#pnec-bot-panel').is_visible()
         assert not errors,(width,errors)
         report.append({'width':width,'routes':len(routes),'header':reference,'columns':columns,'errors':errors,'passed':True})
         context.close()
