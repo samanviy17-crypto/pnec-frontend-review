@@ -33,3 +33,11 @@ defaults:
     values:
       layout: "pnec-base"
       use_poway_live_styles: true
+      minima:
+nav_pages:
+    - index.md
+    - pages/preparedness-resources.html
+    - pages/community-events-and-activities.html
+    - pages/programs-and-services.html
+    - pages/about.html
+    - pages/register.html

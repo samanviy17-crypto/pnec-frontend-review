@@ -21,6 +21,9 @@
 #
 # Order matters — the file order is the render order.
 
+- title: Home
+  url: /
+
 - title: Prepare
   url: /pages/preparedness-resources.html
 
@@ -32,3 +35,6 @@
 
 - title: About
   url: /pages/about.html
+
+- title: Login
+  url: /pages/register.html#login
