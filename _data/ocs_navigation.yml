@@ -1,0 +1,27 @@
+- title: Prepare
+  links:
+    - {title: Preparedness Checklist, url: /pages/checklist.html}
+    - {title: Preparedness Quiz, url: '/pages/checklist.html#preparedness-quiz'}
+    - {title: Household Planning, url: /pages/checklist.html}
+    - {title: Emergency Kit Guide, url: /pages/kit.html}
+    - {title: Find Your PNEC Role, url: /role-quiz/}
+- title: Community
+  links:
+    - {title: Volunteer Shifts, url: /pages/volunteer.html}
+    - {title: Community Events, url: /pages/community-events-and-activities.html}
+    - {title: Report a Hazard, url: '/pages/checklist.html#hazard-reporting'}
+    - {title: Find Your Neighborhood, url: /pages/find-your-neighborhood.html}
+    - {title: Community Gallery, url: /pages/gallery.html}
+    - {title: News and Updates, url: /pages/blog.html}
+    - {title: Support PNEC, url: /donation-form/}
+- title: Resources
+  links:
+    - {title: Preparedness Resources, url: /pages/preparedness-resources.html}
+    - {title: Programs and Services, url: /pages/programs-and-services.html}
+    - {title: Poway Risk Context, url: '/pages/preparedness-resources.html#poway-risk-context'}
+    - {title: Past Events and Articles, url: /pages/events-archive.html}
+    - {title: Security and Privacy, url: /pages/security.html}
+- title: About
+  links:
+    - {title: About PNEC, url: /pages/about.html}
+    - {title: Contact, url: /pages/contact.html}

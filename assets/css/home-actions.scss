@@ -1,0 +1,78 @@
+---
+---
+@import "vendor/ocs/variables";
+@import "vendor/ocs/grid";
+@import "vendor/ocs/buttons";
+
+// Scoped extension of OCS: reference palette, icon/text composition, and no lift.
+.pnec-actions {
+  --panel: #fff;
+  --panel-mid: #f5fbfb;
+  --ui-border: #e7edf1;
+  --pref-text-color: #10213a;
+  --pref-accent-color: #087c82;
+  --pref-bg-color: #fff;
+  --pref-font-family: inherit;
+  --pref-font-size: 1rem;
+  background: #f7f9fb;
+  padding: $spacing-lg $spacing-xl;
+  font-family: Arial, sans-serif;
+
+  &__grid {
+    @include base-grid(4, $spacing-lg);
+    grid-auto-rows: 1fr;
+    max-width: 1440px;
+    margin: 0 auto;
+    align-items: stretch;
+    @media (max-width: $breakpoint-tablet) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (max-width: 540px) { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  a.pnec-action {
+    @include base-button;
+    @include grid-card-cell;
+    @include responsive-padding($spacing-xl);
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    column-gap: $spacing-lg;
+    row-gap: $spacing-xxs;
+    min-height: 168px;
+    min-width: 0;
+    box-sizing: border-box;
+    border-radius: $radius-xl;
+    box-shadow: 0 3px 12px rgba(16, 33, 58, .07);
+    text-decoration: none;
+    transition: background-color $transition-base, border-color $transition-base, box-shadow $transition-base;
+
+    h2 {
+      @include responsive-text($text-xxl, 1);
+      color: var(--pref-text-color);
+      font-weight: 700;
+      line-height: 1.2;
+      margin: 0 0 $spacing-xs;
+    }
+    p {
+      @include responsive-text($text-lg, 1);
+      color: #526071;
+      line-height: 1.45;
+      margin: 0;
+    }
+    &:hover, &:focus-visible {
+      transform: none;
+      border-color: var(--pref-accent-color);
+      box-shadow: 0 4px 14px rgba(8, 124, 130, .14);
+      text-decoration: none;
+    }
+    &:focus-visible { outline: 3px solid var(--pref-accent-color); outline-offset: 3px; }
+  }
+  .pnec-action__icon { width: 44px; height: 44px; color: var(--pref-accent-color); }
+  .pnec-action__arrow {
+    grid-column: 2;
+    justify-self: end;
+    align-self: end;
+    color: var(--pref-accent-color);
+    font-size: 26px;
+    line-height: 1;
+  }
+  @media (max-width: 540px) { padding: $spacing-lg; }
+}

@@ -1,8 +1,39 @@
 ---
 layout: pnec-base
-title: "Poway NEC & FSC"
-description: "Neighbors Helping Neighbors"
-body_class: "home wp-singular page-template page-template-elementor_header_footer page page-id-22 wp-theme-jupiterx no-js ctct-jupiterx elementor-default elementor-template-full-width elementor-kit-771 elementor-page elementor-page-22 jupiterx-header-overlapped jupiterx-header-overlapped-tablet jupiterx-header-overlapped-mobile"
-body_attributes: 'itemscope="itemscope" itemtype="http://schema.org/WebPage"'
-use_poway_source_clone: true
+title: "Prepared neighbors. A stronger Poway."
+description: "Practical emergency preparedness resources and local participation for Poway residents."
+body_class: pnec-home
 ---
+<section class="pnec-home-hero" aria-labelledby="home-title">
+  <div class="pnec-container">
+    <p class="pnec-eyebrow">Poway Neighborhood Emergency Corps</p>
+    <h1 id="home-title">A Safer, More Prepared<br>Poway Community</h1>
+    <p>Neighbors helping neighbors through preparedness, response, and recovery.</p>
+    <div class="pnec-button-row">
+      <a class="ocs-button primary" href="{{ '/pages/checklist.html' | relative_url }}">Get Prepared <span aria-hidden="true">→</span></a>
+      <a class="ocs-button light" href="{{ '/pages/volunteer.html' | relative_url }}">Volunteer with Us</a>
+    </div>
+  </div>
+</section>
+{% include home-action-cards.html %}
+<div class="pnec-container pnec-home-details">
+  <section class="ocs-card pnec-about-preview">
+    <p class="pnec-eyebrow">Neighbors helping neighbors</p>
+    <h2>About PNEC</h2>
+    <p>PNEC is a volunteer, community-based organization that promotes emergency preparedness, response, and recovery for the Poway community.</p>
+    <a class="ocs-button primary" href="{{ '/pages/about.html' | relative_url }}">Learn More <span aria-hidden="true">→</span></a>
+  </section>
+  <section class="ocs-card pnec-tip">
+    <span class="pnec-tip-icon" aria-hidden="true">☼</span>
+    <div><h2>Weekly Tip</h2><p>Review your emergency supply kit with your household. Keep water, non-perishable food, a flashlight, and a first aid kit ready.</p><a href="{{ '/pages/kit.html' | relative_url }}">Review the emergency kit guide →</a></div>
+  </section>
+</div>
+<section class="pnec-container pnec-home-resources" aria-labelledby="resources-title">
+  <h2 id="resources-title">Stay connected. Stay prepared.</h2>
+  <div class="pnec-resource-grid">
+    <a class="ocs-card" href="{{ '/pages/community-events-and-activities.html' | relative_url }}"><h3>Community Events</h3><p>Find current PNEC activities and participation information.</p><span aria-hidden="true">→</span></a>
+    <a class="ocs-card" href="{{ '/pages/preparedness-resources.html' | relative_url }}"><h3>Emergency Resources</h3><p>Explore household planning guides and local safety information.</p><span aria-hidden="true">→</span></a>
+    <a class="ocs-card" href="{{ '/pages/find-your-neighborhood.html' | relative_url }}"><h3>Your Neighborhood</h3><p>Find neighborhood information and connect with local resources.</p><span aria-hidden="true">→</span></a>
+  </div>
+  <p class="pnec-account-note">Saving household plans, quiz results, volunteer signups, and hazard reports requires an account.</p>
+</section>

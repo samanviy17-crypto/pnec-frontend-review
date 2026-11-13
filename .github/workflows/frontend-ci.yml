@@ -53,10 +53,18 @@ jobs:
 
       - name: Validate Jekyll build
         run: |
-          bundle exec jekyll build --destination "$RUNNER_TEMP/pnec-site"
+          bundle exec jekyll build --config _config.yml,_config.pages.yml --destination "$RUNNER_TEMP/pnec-site"
           test -s "$RUNNER_TEMP/pnec-site/index.html"
           test -s "$RUNNER_TEMP/pnec-site/assets/css/main.css"
+          python3 scripts/check-pages-paths.py --site "$RUNNER_TEMP/pnec-site"
 
       # The cross-repository browser release suite is a separate check and has
       # documented baseline failures (README.md, Known review limitations).
       # This workflow validates standalone frontend tests/build; it never deploys.
+
+      - name: Install browser verification tools
+        run: |
+          python3 -m pip install playwright==1.65.1
+          python3 -m playwright install --with-deps chromium
+      - name: Verify stationary navigation and responsive cards
+        run: bash scripts/check-redesign-browser.sh "$RUNNER_TEMP/pnec-site" "$RUNNER_TEMP/navigation-evidence"

@@ -1,0 +1,23 @@
+// Exact selector excerpt from OCS open-coding/navbar.scss (same source revision
+// as README.md). Imported inside #pnec-site-header to isolate PNEC.
+// The glass material, direct messages, and course toasts are intentionally omitted.
+.site-nav {
+  background-color: transparent;
+}
+.site-nav .page-link {
+  line-height: 1.5;
+  padding: 5px 10px;
+  margin-left: 20px;
+}
+.site-title {
+  color: var(--pref-text-color) !important;
+}
+.site-nav .page-link:not(:last-child) {
+  margin-right: 0;
+}
+.site-title,
+.site-title:visited,
+.site-nav,
+.page-link {
+  font-weight: bolder;
+}

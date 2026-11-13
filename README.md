@@ -56,3 +56,7 @@ invented negative margin: it continues to fail when external theme CSS is blocke
 Available deployment/App metadata is insufficient to certify first-push isolation;
 account owners must confirm that new private review repositories are not
 implicitly enrolled in account-wide deployment integrations.
+
+## OCS redesign
+
+See [the redesign source, route inventory and validation notes](docs/REDESIGN.md).

@@ -120,10 +120,7 @@ class HelperBot {
       this.emergency.attach(this);
     }
 
-    // Smart auto-open: only if first-ever visit OR returning after >7 days
-    // and not previously dismissed in the last 24h. Phase 3 risk-aware
-    // logic can later upgrade this to "open when red-flag warning."
-    this._maybeAutoOpen(prefs);
+    // Open the helper only on explicit action so it never covers primary page controls.
 
     // Phase 3: register the service worker for offline cache.
     // Best-effort — most browsers, swallow failures silently.
@@ -821,8 +818,8 @@ class HelperBot {
       return;
     }
     // Phase 1 fallbacks — bot just navigates / asks
-    if (name === 'alerts')   window.open('/pages/preparedness-resources.html#local-risk', '_blank');
-    if (name === 'evac')     window.open('/pages/find-your-neighborhood.html', '_blank');
+    if (name === 'alerts')   window.open((window.PNEC_SITE_BASE || '') + '/pages/preparedness-resources.html#poway-risk-context', '_blank');
+    if (name === 'evac')     window.open((window.PNEC_SITE_BASE || '') + '/pages/find-your-neighborhood.html', '_blank');
     if (name === 'kit')      this._sendQuick('Help me check on my emergency kit status.');
   }
 

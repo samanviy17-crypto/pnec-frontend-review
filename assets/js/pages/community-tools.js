@@ -73,6 +73,8 @@
 
   async function quiz(parent) {
     const node = section(parent, 'Preparedness assessment');
+    node.id = 'preparedness-quiz';
+    if (location.hash === '#preparedness-quiz') node.scrollIntoView({block: 'center'});
     const {questions} = await api('/preparedness/quiz');
     const result = status(node);
     if (!user) return loginNote(node);
@@ -281,11 +283,6 @@
 
   async function init() {
     const roots = [...document.querySelectorAll('[data-community-tools]')];
-    const main = document.querySelector('main');
-    if (main && !document.querySelector('.community-links')) {
-      const nav = document.createElement('nav'); nav.className = 'community-links'; nav.setAttribute('aria-label','Preparedness tools');
-      [['/pages/checklist.html','My preparedness & check-in'],['/pages/volunteer.html','Volunteer shifts'],['/donation-form/','Supply drives'],['/pages/preparedness-resources.html','Weekly tips & languages'],['/pages/dashboard.html','Coordinator reports']].forEach(([href,title]) => {const a = el('a', title, nav); a.href = (window.PNEC_SITE_BASE || '') + href;}); main.prepend(nav);
-    }
     if (!roots.length) return;
     try { user = await fetchCurrentUser(); neighborhoods = await fetchNeighborhoodsForSelect(); } catch (_) { /* individual tools show errors */ }
     const builders = {household, quiz, tasks, checkins, hazards, drives, weekly, feedback, language, coordination, 'tips-admin':tipsAdmin};

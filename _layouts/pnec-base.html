@@ -19,9 +19,7 @@
   <link rel="icon" type="image/x-icon" href="{{ '/favicon.ico' | relative_url }}">
 
   <!-- Main Stylesheet -->
-  {% unless page.use_poway_source_clone %}
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
-  {% endunless %}
   <!-- v3.20: chatbot CSS is below-the-fold (floating button + collapsed panel)
        and rendered after DOMContentLoaded. Load it without blocking first paint. -->
   <link rel="preload" href="{{ '/assets/css/chatbot.css' | relative_url }}" as="style"
@@ -96,20 +94,7 @@
     })();
   </script>
 
-  {% if page.use_poway_source_clone %}
-  {% include poway-live-head.html %}
-  {% elsif page.use_poway_live_styles %}
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/all.min.css?ver=3.35.7">
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/jupiterx/compiler/jupiterx/b517470.css?ver=4.9.2">
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/jupiterx/compiler/jupiterx-elements-dynamic-styles/41d6799.css?ver=4.9.2">
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/elementor/css/custom-frontend.min.css?ver=1773234694">
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/elementor/css/custom-pro-widget-nav-menu.min.css?ver=1773234694">
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/plugins/jupiterx-core/includes/extensions/raven/assets/css/frontend.min.css?ver=6.9.1">
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/elementor/css/post-771.css?ver=1773234694">
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/elementor/css/post-22.css?ver=1773234695">
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/elementor/css/post-6.css?ver=1773234695">
-  <link rel="stylesheet" href="https://powaynec.com/wp-content/uploads/elementor/google-fonts/css/roboto.css?ver=1742222182">
-  {% endif %}
+
 
   <!-- Leaflet (loaded only on map page) -->
   {% if page.use_leaflet %}
@@ -127,70 +112,25 @@
     setTimeout(function () { document.body && document.body.classList.add('cms-hydrated'); }, 800);
   </script>
 <link rel="stylesheet" href="{{ "/assets/css/review-fallback.css" | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/home-actions.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/ocs-pnec.css' | relative_url }}">
 </head>
-<body{% if page.use_poway_source_clone %} data-cms-page="home"{% endif %}{% if page.body_class or page.use_poway_live_styles %} class="{% if page.use_poway_live_styles and page.use_poway_source_clone != true %}home wp-singular page-template page-template-elementor_header_footer page page-id-22 wp-theme-jupiterx no-js ctct-jupiterx elementor-default elementor-template-full-width elementor-kit-771 elementor-page elementor-page-22 {% endif %}{{ page.body_class }}"{% endif %}{% if page.body_attributes %} {{ page.body_attributes }}{% endif %}>
-
-  {% include poway-alert-banner.html %}
-
-  {%- comment -%}
-    v3.23: skip the chatbot on admin pages — admins don't need it and
-    it loads 366 lines of widget markup + 4000+ lines of JS modules.
-    Detected by either `skip_chatbot: true` in front matter OR a
-    body_class containing "admin-".
-  {%- endcomment -%}
-  {%- assign _skip_chatbot = false -%}
-  {%- if page.skip_chatbot -%}{%- assign _skip_chatbot = true -%}{%- endif -%}
-  {%- if page.body_class and page.body_class contains 'admin-' -%}{%- assign _skip_chatbot = true -%}{%- endif -%}
-
-  {% if page.use_poway_source_clone %}
-  {% include poway-live-body.html %}
-  {% unless page.use_poway_embed %}
-  {% unless _skip_chatbot %}{% include chatbot/chatbot-widget.html %}{% endunless %}
-  {% include pnec-page-scripts.html %}
-  {% endunless %}
-  {% else %}
-
-  {% unless page.use_poway_embed %}
-  {% if page.use_poway_live_styles %}
-  {% include poway-header.html %}
-  {% else %}
-  {% include nav/navbar.html %}
-  {% endif %}
-  <!-- CMS-driven header section group -->
-  <div data-cms-section-host="_header" id="cms-header-host"></div>
-  {% endunless %}
-
-  <main id="jupiterx-main" class="jupiterx-main pnec-page-shell" style="{% if page.use_poway_embed %}margin:0;padding:0;{% endif %}">
-    {{ content }}
-  </main>
-
-  {% unless page.use_poway_embed %}
-  <!-- CMS-driven footer section group -->
-  <div data-cms-section-host="_footer" id="cms-footer-host"></div>
-  {% if page.use_poway_live_styles %}
-  {% include poway-auth-footer.html %}
-  {% endif %}
-  <!-- FAQ Chatbot Widget — skipped on admin pages (see _skip_chatbot above) -->
-  {% unless _skip_chatbot %}{% include chatbot/chatbot-widget.html %}{% endunless %}
-  {% endunless %}
-
-  {% unless page.use_poway_embed %}
-  <!-- Core scripts (shared block — see _includes/pnec-page-scripts.html) -->
-  {% include pnec-page-scripts.html %}
-
-  {% if page.use_leaflet %}
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/WLs=" crossorigin=""></script>
-  <script src="{{ '/assets/js/api/neighborhood-api.js' | relative_url }}"></script>
-  <script src="{{ '/assets/js/ui/map-ui.js' | relative_url }}"></script>
-  <script src="{{ '/assets/js/pages/neighborhood-map.js' | relative_url }}"></script>
-  {% endif %}
-
-  {% if page.page_scripts %}
-  {% assign _pnec_script_root = 'src="' | append: site.baseurl | append: '/assets/' %}
-  {{ page.page_scripts | replace: 'src="/assets/', _pnec_script_root }}
-  {% endif %}
-  {% endunless %}
-  {% endif %}
+<body class="pnec-site {{ page.body_class }}"{% if page.body_attributes %} {{ page.body_attributes }}{% endif %} data-cms-page="{{ page.cms_slug | default: page.name | remove: '.html' | replace: 'index', 'home' }}">
+{% unless page.use_poway_embed %}{% include ocs-header.html %}{% endunless %}
+{% include poway-alert-banner.html %}
+<div data-cms-section-host="_header" id="cms-header-host"></div>
+<main id="jupiterx-main" class="jupiterx-main pnec-page-shell" tabindex="-1">
+{{ content }}
+</main>
+{% unless page.use_poway_embed %}
+<div data-cms-section-host="_footer" id="cms-footer-host"></div>
+{% include ocs-footer.html %}
+{% unless page.skip_chatbot or page.body_class contains 'admin-' %}{% include chatbot/chatbot-widget.html %}{% endunless %}
+{% include pnec-page-scripts.html %}
+<script src="{{ '/assets/js/pages/ocs-navigation.js' | relative_url }}" defer></script>
+{% endunless %}
+{% if page.page_script_paths %}{% for path in page.page_script_paths %}<script src="{{ path | relative_url }}"></script>{% endfor %}{% elsif page.page_script_path %}<script src="{{ page.page_script_path | relative_url }}"></script>{% endif %}
+{% if page.page_scripts %}{% assign _pnec_script_root = 'src="' | append: site.baseurl | append: '/assets/' %}{{ page.page_scripts | replace: 'src="/assets/', _pnec_script_root }}{% endif %}
+{% if page.use_leaflet %}<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/WLs=" crossorigin=""></script><script src="{{ '/assets/js/api/neighborhood-api.js' | relative_url }}"></script><script src="{{ '/assets/js/ui/map-ui.js' | relative_url }}"></script><script src="{{ '/assets/js/pages/neighborhood-map.js' | relative_url }}"></script>{% endif %}
 </body>
 </html>

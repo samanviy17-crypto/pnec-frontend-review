@@ -1,0 +1,44 @@
+<!-- Adapted from OCS themes/minima/header.html; disclosure extension documented in docs/REDESIGN.md. -->
+<header id="pnec-site-header" class="site-header" data-cms-no-reveal>
+  <a class="pnec-skip" href="#jupiterx-main">Skip to content</a>
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="{{ '/' | relative_url }}" aria-label="PNEC home">
+      <img src="{{ '/assets/images/poway-nec-logo-white.png' | relative_url }}" width="150" height="60" alt="">
+      <span><strong>PNEC</strong><small>Poway Neighborhood<br>Emergency Corps</small></span>
+    </a>
+    <button class="nav-trigger" type="button" aria-expanded="false" aria-controls="pnec-navigation" aria-label="Open navigation">☰</button>
+    <nav id="pnec-navigation" class="site-nav" aria-label="Main navigation">
+      <div class="trigger">
+        <a class="page-link" href="{{ '/' | relative_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}>Home</a>
+        {% capture mapped_urls %}{% for category in site.data.ocs_navigation %}{% for destination in category.links %}|{{ destination.url }}|{% endfor %}{% endfor %}{% endcapture %}
+        {% for group in site.data.ocs_navigation %}
+        {% assign group_active = false %}{% for item in group.links %}{% assign item_path = item.url | split: '#' | first %}{% if page.url == item_path %}{% assign group_active = true %}{% endif %}{% endfor %}
+        <div class="pnec-disclosure">
+          <button type="button" class="page-link{% if group_active %} active{% endif %}" aria-expanded="false" aria-controls="pnec-menu-{{ forloop.index }}">{{ group.title }} <span aria-hidden="true">⌄</span></button>
+          <ul id="pnec-menu-{{ forloop.index }}" class="pnec-dropdown" hidden>
+            {% for item in group.links %}<li><a href="{{ item.url | relative_url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.title }}</a></li>{% endfor %}
+            {% if group.title == 'Resources' %}{% for item in site.data.pnec_nav %}{% capture nav_url %}|{{ item.url }}|{% endcapture %}{% unless mapped_urls contains nav_url %}
+            <li><a href="{% if item.external %}{{ item.url }}{% else %}{{ item.url | relative_url }}{% endif %}"{% if item.external %} target="_blank" rel="noopener"{% endif %}>{{ item.title | escape }}</a></li>
+            {% endunless %}{% endfor %}{% endif %}
+          </ul>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="pnec-account">
+        <a id="navbar-login-item" class="ocs-button" href="{{ '/pages/register.html' | relative_url }}">Log In / Sign Up</a>
+        <div id="navbar-auth-logged-in" class="pnec-disclosure" style="display:none">
+          <button type="button" class="ocs-button" aria-expanded="false" aria-controls="pnec-account-menu">Account <span aria-hidden="true">⌄</span></button>
+          <ul id="pnec-account-menu" class="pnec-dropdown" hidden>
+            <li><a href="{{ '/pages/profile.html' | relative_url }}">My Profile</a></li>
+            <li id="nav-media-link" style="display:none"><a href="{{ '/pages/upload.html' | relative_url }}">Upload Media</a></li>
+            <li id="nav-events-link" style="display:none"><a href="{{ '/pages/manage-events.html' | relative_url }}">Manage Events</a></li>
+            <li id="nav-dashboard-link" style="display:none"><a href="{{ '/pages/dashboard.html' | relative_url }}">Staff Dashboard</a></li>
+            <li id="nav-admin-link" style="display:none"><a href="{{ '/pages/admin.html' | relative_url }}">Admin Dashboard</a></li>
+            <li id="nav-editor-link" style="display:none"><a href="{{ '/pages/admin-editor.html' | relative_url }}">Theme Editor</a></li>
+            <li><button id="navbar-logout-btn" type="button">Sign Out</button></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>

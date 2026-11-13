@@ -1,0 +1,255 @@
+---
+---
+@import "vendor/ocs/variables";
+@import "vendor/ocs/grid";
+@import "vendor/ocs/buttons";
+@import "vendor/ocs/container";
+
+body.pnec-site {
+  --panel: #fff;
+  --panel-mid: #f0f8f8;
+  --ui-border: #dfe8ec;
+  --pref-text-color: #10213a;
+  --pref-accent-color: #087c82;
+  --pref-bg-color: #fff;
+  --pref-font-family: Arial, sans-serif;
+  --pref-font-size: 16px;
+  margin: 0;
+  padding: 80px 0 0;
+  background: #f7f9fb;
+  color: #10213a;
+  font: 16px/1.5 Arial, sans-serif;
+}
+html { scrollbar-gutter: stable; scroll-padding-top: 100px; }
+body.pnec-site *, body.pnec-site *::before, body.pnec-site *::after { box-sizing: border-box; }
+body.pnec-site img { max-width: 100%; height: auto; }
+body.pnec-site [hidden] { display: none !important; }
+body.pnec-site a { color: #066b76; }
+body.pnec-site :focus-visible { outline: 3px solid #087c82; outline-offset: 3px; }
+body.pnec-site h1, body.pnec-site h2, body.pnec-site h3 { color: #10213a; line-height: 1.2; }
+body.pnec-site p { margin: 0 0 $spacing-md; }
+body.pnec-site h1 { font-size: clamp(28px, 3vw, 42px); margin: 0 0 $spacing-lg; }
+body.pnec-site h2 { font-size: 28px; margin: 0 0 $spacing-sm; }
+body.pnec-site h3 { font-size: $text-xxl; margin: 0 0 $spacing-xs; }
+.pnec-container, body.pnec-site .pnec-page-shell { max-width: 1440px; margin: 0 auto; padding: $spacing-xl; }
+body.pnec-home .pnec-page-shell { max-width: none; padding: 0; }
+body.pnec-site .ocs-button {
+  @include text-button;
+  height: auto;
+  min-height: 44px;
+  padding: $spacing-xs $spacing-lg;
+  font-size: $text-lg;
+  font-weight: 700;
+  text-decoration: none;
+  gap: $spacing-sm;
+  &:hover, &:focus { transform: none; }
+  &.primary { background: #087c82; color: #fff; border-color: #087c82; }
+  &.light { background: transparent; color: #fff; border-color: #fff; }
+}
+body.pnec-site .ocs-card {
+  @include grid-card-cell;
+  border-radius: $radius-xl;
+  box-shadow: 0 3px 12px rgba(16,33,58,.06);
+  &:hover, &:focus-visible { transform: none; box-shadow: 0 4px 14px rgba(8,124,130,.12); }
+}
+body.pnec-site .pnec-eyebrow { font-size: $text-sm; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #087c82; margin-bottom: $spacing-sm; }
+.pnec-button-row { @include inline-container(flex, $spacing-md); flex-wrap: wrap; }
+
+// OCS/Minima header structure: site-header > wrapper > site-title + site-nav.
+// PNEC extension: fixed dimensions, data-driven disclosures, separate account slot.
+#pnec-site-header.site-header {
+  @import "vendor/ocs/navigation";
+  position: fixed;
+  inset: 0 0 auto;
+  height: 80px;
+  z-index: 100000;
+  background: #fff;
+  border: 0;
+  border-bottom: 1px solid #dfe8ec;
+  box-shadow: 0 1px 5px rgba(16,33,58,.04);
+  font: 16px/1.5 Arial, sans-serif;
+  transform: none;
+  .wrapper {
+    @include inline-container(flex, $spacing-lg);
+    max-width: 1440px;
+    height: 100%;
+    padding: 0 $spacing-xl;
+    margin: 0 auto;
+    position: relative;
+  }
+  .site-title {
+    @include inline-container(flex, $spacing-xs);
+    flex: 0 0 320px;
+    float: none;
+    margin: 0;
+    line-height: 1.2;
+    color: #10213a;
+    text-decoration: none;
+    img { width: 54px; height: 44px; object-fit: contain; }
+    span { display: flex; align-items: center; gap: $spacing-sm; }
+    strong { font-size: 30px; border-bottom: 3px solid #087c82; }
+    small { font-size: 12px; font-weight: 700; }
+  }
+  .site-nav { @include inline-container(flex, $spacing-lg); flex: 1; justify-content: space-between; min-width: 0; float: none; background: transparent; line-height: 1.5; }
+  .trigger { @include inline-container(flex, $spacing-xxs); }
+  .page-link, .ocs-button {
+    @include text-button;
+    height: 44px;
+    margin: 0;
+    padding: $spacing-xs $spacing-sm;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #10213a;
+    font: 700 15px/1.5 Arial, sans-serif;
+    white-space: nowrap;
+    text-decoration: none;
+    &:hover { transform: none; opacity: 1; background: #f0f8f8; }
+    &[aria-current], &.active { color: #066b76; box-shadow: inset 0 -3px #087c82; }
+    &:focus-visible { outline: 3px solid #087c82; outline-offset: 2px; }
+  }
+  .ocs-button { border: 1px solid #087c82; color: #066b76; min-width: 144px; }
+  .pnec-account { flex: 0 0 144px; }
+  .pnec-disclosure { position: relative; }
+  .pnec-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 240px;
+    max-width: calc(100vw - 40px);
+    padding: $spacing-xxs;
+    margin: 0;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #dfe8ec;
+    border-radius: $radius-md;
+    box-shadow: 0 8px 24px rgba(16,33,58,.14);
+    li { margin: 0; padding: 0; list-style: none; }
+    a, button {
+      display: block;
+      width: 100%;
+      min-height: 44px;
+      padding: $spacing-xs $spacing-sm;
+      border: 0;
+      background: transparent;
+      text-align: left;
+      font: 400 15px/1.5 Arial, sans-serif;
+      color: #10213a;
+      border-radius: $radius-xs;
+      text-decoration: none;
+      &:hover, &[aria-current] { background: #edf7f7; color: #066b76; }
+    }
+  }
+  .pnec-account .pnec-dropdown { left: auto; right: 0; }
+  .nav-trigger { display: none; }
+  .pnec-skip { position: absolute; left: $spacing-lg; top: -100px; background: #fff; padding: $spacing-sm; z-index: 1; &:focus { top: $spacing-xs; } }
+}
+@media (max-width: 1050px) {
+  #pnec-site-header.site-header {
+    .site-title { flex: 1; }
+    .nav-trigger { @include text-button; transform: none; font-size: 24px; width: 44px; height: 44px; }
+    .site-nav { display: none; position: absolute; top: 80px; right: $spacing-lg; left: $spacing-lg; background: #fff; border: 1px solid #dfe8ec; border-radius: $radius-md; padding: $spacing-md; max-height: calc(100dvh - 100px); overflow-y: auto; box-shadow: $shadow-md; }
+    .site-nav.is-open { display: block; }
+    .trigger { display: block; }
+    .page-link { display: flex; justify-content: space-between; width: 100%; }
+    .pnec-dropdown { position: static; box-shadow: none; min-width: 0; max-width: none; margin: $spacing-xxs 0; }
+    .pnec-account { margin-top: $spacing-sm; }
+  }
+}
+@media (max-width: 540px) {
+  #pnec-site-header.site-header .wrapper { padding: 0 $spacing-lg; gap: $spacing-xs; }
+  #pnec-site-header.site-header .site-title { gap: $spacing-xxs; img { width: 40px; } strong { font-size: 25px; } small { font-size: 10px; } span { gap: $spacing-xxs; } }
+}
+body.pnec-site .pnec-home-hero {
+  background: linear-gradient(90deg, rgba(13,34,57,.93), rgba(13,34,57,.55) 65%, rgba(13,34,57,.1)), url("../images/Poway_Image.webp") center 55% / cover;
+  color: #fff;
+  .pnec-container { padding-top: 48px; padding-bottom: 44px; }
+  h1 { color: #fff; font-size: clamp(32px,4vw,54px); max-width: 900px; margin-bottom: $spacing-lg; }
+  p:not(.pnec-eyebrow) { font-size: 20px; max-width: 670px; margin-bottom: $spacing-xl; }
+  .pnec-eyebrow { color: #fff; }
+}
+body.pnec-site .pnec-home-details { @include base-grid(2,$spacing-xl); padding-top: $spacing-xxs; padding-bottom: $spacing-lg; }
+body.pnec-site .pnec-about-preview { background: linear-gradient(125deg,#e4f4f4,#d7ebeb); padding: $spacing-xl; }
+body.pnec-site .pnec-tip { @include inline-container(flex,$spacing-lg); align-items: flex-start; padding: $spacing-xl; .pnec-tip-icon { color: #087c82; font-size: 44px; line-height: 1; } }
+.pnec-resource-grid { @include base-grid(3,$spacing-lg); a { text-decoration: none; } p { color: #526071; } }
+.pnec-account-note { margin-top: $spacing-md !important; font-size: $text-md; color: #526071; }
+.pnec-page-heading { @include main-container($spacing-xl); border-bottom: 1px solid #dfe8ec; padding-bottom: $spacing-lg; }
+.pnec-footer { @include inline-container(flex,$spacing-xl); flex-wrap: wrap; justify-content: space-between; padding: $spacing-xl; border-top: 1px solid #dfe8ec; background: #fff; font-size: $text-md; p { margin: 0 !important; } nav { @include inline-container(flex,$spacing-lg); } }
+// Existing feature controls remain intact; shared OCS layout contains them.
+body.pnec-site .community-links { display: none; } // Consolidated into the shared Prepare/Community menus.
+body.pnec-site .community-tools { max-width: none; margin: 0 0 $spacing-xl; }
+body.pnec-site .community-tools > section, body.pnec-site .card {
+  @include grid-card-cell;
+  @include main-container($spacing-lg);
+  &:hover { transform: none; background: #fff; box-shadow: none; border-color: #dfe8ec; }
+}
+body.pnec-site .community-tools form { max-width: 760px; }
+body.pnec-site .community-tools input, body.pnec-site .community-tools textarea, body.pnec-site .community-tools select { max-width: 100%; }
+body.pnec-site .community-tools button { @include text-button; height: auto; min-height: 44px; &:hover { transform: none; } }
+// Original editorial markup retained; replace page-builder spacing/layout with OCS.
+body.pnec-site .pnec-legacy-content {
+  .elementor-top-section { @include main-container($spacing-xl); }
+  .elementor-container { @include inline-container(flex,$spacing-xl); align-items: flex-start; flex-wrap: wrap; width: 100%; }
+  .elementor-column { min-width: 0; flex: 1 1 280px; }
+  .elementor-col-100 { flex-basis: 100%; }
+  .elementor-widget { margin-bottom: $spacing-md; }
+  .elementor-widget-spacer, .elementor-widget-divider, .elementor-background-overlay { display: none; }
+  .elementor-widget-text-editor { max-width: 80ch; }
+  h1,h2,h3,p,span { text-shadow: none; }
+  .elementor-heading-title { color: #10213a; }
+  img { border-radius: $radius-lg; max-height: 420px; object-fit: contain; }
+  iframe { width: 100%; border: 0; }
+  .elementor-button, .elementor-flip-box__button { @include text-button; height: auto; &:hover { transform: none; } }
+  .elementor-flip-box {
+    @include grid-card-cell;
+    &:hover { transform: none; }
+    .elementor-flip-box__back { margin-top: $spacing-sm; }
+    img { max-height: 80px; }
+  }
+  .elementor-flip-box__front .elementor-flip-box__layer__title { font-size: $text-xl; }
+  .elementor-counter { @include grid-card-cell; text-align: center; }
+  .elementor-counter-number-wrapper { font-size: 32px; font-weight: 700; color: #087c82; }
+  ul { padding-left: $spacing-lg; }
+}
+// Page identity comes from content: mission story, service columns, resource library,
+// calendar, interactive map, and task/household forms.
+body.page-about .pnec-legacy-content .elementor-widget-text-editor { border-left: 3px solid #b5dada; padding-left: $spacing-lg; }
+body.page-programs-and-services .pnec-legacy-content .elementor-column { @include grid-card-cell; &:hover { transform: none; } }
+body.page-preparedness-resources .pnec-legacy-content .elementor-flip-box { border-top: 3px solid #087c82; }
+body.page-contact .pnec-legacy-content { max-width: 1000px; }
+body.pnec-site .pnec-page-shell { min-height: calc(100vh - 240px); }
+body.pnec-site .pnec-page-shell > div, body.pnec-site .pnec-page-shell > section { min-width: 0; }
+body.pnec-site .pnec-page-shell .checklist-page, body.pnec-site .pnec-page-shell .vol-hero, body.pnec-site .pnec-page-shell .vol-form-shell { margin-top: $spacing-lg; margin-bottom: $spacing-lg; }
+@media (max-width: 768px) {
+  body.pnec-site .pnec-container, body.pnec-site .pnec-page-shell { padding: $spacing-lg; }
+  body.pnec-home .pnec-page-shell { padding: 0; }
+  body.pnec-site .pnec-home-details, .pnec-resource-grid { grid-template-columns: minmax(0,1fr); }
+  body.pnec-site .pnec-home-hero .pnec-container { padding-top: $spacing-xl; padding-bottom: $spacing-xl; }
+  body.pnec-site .pnec-legacy-content .elementor-container { gap: $spacing-lg; }
+}
+@media (prefers-reduced-motion: reduce) { body.pnec-site * { scroll-behavior: auto; } }
+#pnec-site-header.site-header .site-title img { width: 130px; height: 60px; filter: brightness(0) saturate(100%) invert(30%) sepia(48%) saturate(1262%) hue-rotate(145deg) brightness(91%) contrast(99%); }
+#pnec-site-header.site-header .site-title { flex-basis: 340px; }
+#pnec-site-header.site-header .site-title small { display: none; }
+#pnec-site-header #navbar-login-item { list-style: none; }
+body.pnec-site .pnec-home-hero p { color: #fff; }
+body.pnec-site .pnec-footer strong { color: #10213a; }
+@media (max-width: 1050px) { #pnec-site-header.site-header .site-title { flex-basis: auto; } }
+@media (max-width: 540px) { #pnec-site-header.site-header .site-title img { width: 100px; height: 54px; } }
+
+body.pnec-site .checklist-page { padding: 20px 0 30px; }
+body.pnec-site .pnec-legacy-content .jupiterx-main-content > .container { max-width: none; padding: 0; }
+body.pnec-site .pnec-legacy-content .elementor-column:empty { display: none; }
+
+// Compact the existing feature pages without changing their form behavior.
+body.pnec-site .vol-hero { padding: 32px 20px; background: #e4f4f4; color: #10213a; }
+body.pnec-site .vol-hero p, body.pnec-site .vol-hero h1 { color: #10213a; }
+body.pnec-site .vol-roles, body.pnec-site .vol-why { padding-top: 24px; padding-bottom: 24px; }
+body.pnec-site .vol-form-shell { padding-top: 24px; padding-bottom: 24px; }
+body.pnec-site .vol-role-card, body.pnec-site .vol-why-card { border-radius: 12px; border-color: #dfe8ec; box-shadow: 0 3px 12px rgba(16,33,58,.06); }
+body.pnec-site .vol-role-card:hover, body.pnec-site .vol-why-card:hover { transform: none; }
+body.pnec-site .community-tools a { overflow-wrap: anywhere; }
+body.pnec-site .calendar-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+body.pnec-site .calendar-weekdays, body.pnec-site .calendar-days { @include base-grid(7, 4px); }
+body.pnec-site .calendar-day { min-height: 44px; padding: 8px; background: #fff; border: 1px solid #dfe8ec; border-radius: 6px; }
+body.pnec-site .calendar-day.selected, body.pnec-site .calendar-day.today { border-color: #087c82; background: #e4f4f4; }
+body.pnec-site .calendar-weekday { text-align: center; font-weight: 700; }
