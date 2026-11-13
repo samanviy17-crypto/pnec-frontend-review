@@ -22,6 +22,9 @@ Actions variable `PNEC_REVIEW_API_URL` to its actual HTTPS root URL. Only a
 `pnec-backend-review[-suffix].onrender.com` destination is accepted. Re-run the
 Pages workflow. The build refuses an API that fails public review health, readiness
 or exact Pages-origin CORS. Never configure a production API here.
+The temporary API override uses a `.yml` extension supported by Jekyll 3.
+After rendering, the build also checks that the expected API URL is embedded
+in the generated pages, so an ignored configuration cannot silently deploy.
 
 The shared runtime include supplies the same API root to the frontend clients.
 No browser secret is needed. For Render Free, use synthetic data only: storage

@@ -31,10 +31,23 @@ if api:
         if json.load(response).get('status') != 'ready':
             raise SystemExit('Review API schema is not ready.')
 with tempfile.TemporaryDirectory(prefix='pnec-pages-') as temporary:
-    override = Path(temporary) / 'api.json'
+    # Jekyll 3 selects its config parser by extension and ignores .json files.
+    # JSON content is valid YAML, so use a supported extension for this override.
+    override = Path(temporary) / 'api.yml'
     override.write_text(json.dumps({'api_base_url': api or 'https://api.pnec-review.invalid'}))
     config = ','.join(str(p) for p in (root / '_config.yml', root / '_config.pages.yml', override))
     subprocess.run(['bundle', 'exec', 'jekyll', 'build', '--source', str(root),
                     '--destination', str(destination), '--config', config], cwd=temporary,
                    env={**os.environ, 'BUNDLE_GEMFILE': str(root / 'Gemfile')}, check=True)
+expected_api = api or 'https://api.pnec-review.invalid'
+runtime_pattern = r'window\.PNEC_API_BASE\s*=\s*("(?:[^"\\]|\\.)*")\s*;'
+checked = 0
+for page in destination.rglob('*.html'):
+    for value in re.findall(runtime_pattern, page.read_text(encoding='utf-8')):
+        if json.loads(value) != expected_api:
+            raise SystemExit(f'Incorrect API URL embedded in {page.relative_to(destination)}.')
+        checked += 1
+if not checked or not re.search(runtime_pattern, (destination / 'index.html').read_text(encoding='utf-8')):
+    raise SystemExit('Missing frontend runtime API configuration.')
+print(f'PASS: expected API URL embedded in {checked} rendered pages')
 print('PASS: GitHub Pages project-site build')
