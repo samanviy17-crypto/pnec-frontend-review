@@ -21,18 +21,14 @@
 #
 # Order matters — the file order is the render order.
 
+- title: Prepare
+  url: /pages/preparedness-resources.html
+
+- title: Community
+  url: /pages/community-events-and-activities.html
+
+- title: Resources
+  url: /pages/programs-and-services.html
+
 - title: About
   url: /pages/about.html
-  match: /about
-
-- title: Programs and Services
-  url: /pages/programs-and-services.html
-  match: /programs-and-services
-
-- title: Preparedness & Help
-  url: /pages/preparedness-resources.html
-  match: /preparedness-resources,/poway-statistics-and-information
-
-- title: Community Events
-  url: /pages/community-events-and-activities.html
-  match: /community-events-and-activities
