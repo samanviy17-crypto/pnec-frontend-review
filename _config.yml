@@ -1,13 +1,14 @@
-title: "PNEC — isolated source review"
+title: "PNEC — Poway Neighborhood Emergency Corps"
 description: "Poway Neighborhood Emergency Corps review snapshot"
-url: "https://pnec-review.invalid"
-baseurl: ""
-api_base_url: "http://127.0.0.1:8425"
+url: "http://localhost:4000" # Change to your actual production domain when deploying (e.g., https://yourdomain.com)
+baseurl: "" # Keep empty if hosted at root, or add your subfolder name if hosted on GitHub Pages subpath (e.g., "/repository-name")
 encoding: utf-8
 theme: minima
+
 plugins:
   - jekyll-include-cache
   - jekyll-seo-tag
+
 exclude:
   - scripts/
   - README.md
@@ -24,20 +25,29 @@ exclude:
   - package.json
   - assets/js/chatbot/*.test.mjs
   - assets/js/cms/*.test.mjs
+
 sass:
   sass_dir: _sass
   style: compressed
+
 defaults:
   - scope:
-      path: "pages"
+      path: ""
     values:
       layout: "pnec-base"
       use_poway_live_styles: true
-      minima:
-nav_pages:
-    - index.md
-    - pages/preparedness-resources.html
-    - pages/community-events-and-activities.html
-    - pages/programs-and-services.html
-    - pages/about.html
-    - pages/register.html
+
+# Cleaned up navigation definition for Jekyll loops
+nav_items:
+  - title: Home
+    url: /
+  - title: Prepare
+    url: /pages/preparedness-resources.html
+  - title: Community
+    url: /pages/community-events-and-activities.html
+  - title: Resources
+    url: /pages/programs-and-services.html
+  - title: About
+    url: /pages/about.html
+  - title: Login
+    url: /login/
