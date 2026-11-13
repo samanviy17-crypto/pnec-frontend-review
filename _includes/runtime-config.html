@@ -1,0 +1,8 @@
+<script>
+window.PNEC_SITE_BASE = {{ site.baseurl | default: "" | jsonify }};
+window.PNEC_API_BASE = {{ site.api_base_url | default: "https://api.pnec-review.invalid" | jsonify }};
+window.PNEC_REVIEW_PREVIEW = {{ site.review_preview | default: false | jsonify }};
+</script>
+{% if site.review_preview %}
+<script src="{{ '/assets/js/review-status.js' | relative_url }}" defer></script>
+{% endif %}

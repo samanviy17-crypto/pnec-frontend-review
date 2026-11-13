@@ -10,7 +10,7 @@
     const host = window.location.hostname;
     return (host === 'localhost' || host === '127.0.0.1')
       ? 'http://127.0.0.1:8425'
-      : 'https://api.pnec-review.invalid';
+      : (window.PNEC_API_BASE || 'https://api.pnec-review.invalid');
   }
 
   function _get(path) {

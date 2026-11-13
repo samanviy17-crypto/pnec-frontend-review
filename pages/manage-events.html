@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
         statusEl.style.display = 'flex';
         statusEl.textContent = 'Event created! Redirecting to calendar…';
         document.getElementById('event-form').reset();
-        setTimeout(function() { window.location.href = '/pages/community-events-and-activities.html'; }, 1500);
+        setTimeout(function() { window.location.href = (window.PNEC_SITE_BASE || '') + '/pages/community-events-and-activities.html'; }, 1500);
       })
       .catch(function() {
         statusEl.className = 'alert alert-error';

@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
         statusEl.className = 'alert alert-success';
         statusEl.style.display = 'flex';
         statusEl.textContent = 'Uploaded successfully! Redirecting to gallery…';
-        setTimeout(function() { window.location.href = '/pages/gallery.html'; }, 1500);
+        setTimeout(function() { window.location.href = (window.PNEC_SITE_BASE || '') + '/pages/gallery.html'; }, 1500);
       })
       .catch(function(err) {
         statusEl.className = 'alert alert-error';

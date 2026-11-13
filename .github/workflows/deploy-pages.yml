@@ -1,0 +1,59 @@
+name: Deploy Frontend Review (GitHub Pages)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+      - run: npm test
+      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1
+        with:
+          ruby-version: '3.3'
+          bundler: '4.0.19'
+      - name: Install Jekyll dependencies
+        run: |
+          bundle add kramdown-parser-gfm --version 1.1.0 --skip-install
+          bundle lock --add-platform x86_64-linux
+          bundle install
+          bundle check
+      - name: Build and check project paths
+        env:
+          PNEC_REVIEW_API_URL: ${{ vars.PNEC_REVIEW_API_URL }}
+        run: |
+          python3 scripts/build-pages.py --destination "$RUNNER_TEMP/pnec-pages"
+          python3 scripts/check-pages-paths.py --site "$RUNNER_TEMP/pnec-pages"
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
+        with:
+          path: ${{ runner.temp }}/pnec-pages
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy project site
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5

@@ -31,7 +31,7 @@
     var host = window.location.hostname;
     var apiBase = (host === 'localhost' || host === '127.0.0.1')
       ? 'http://127.0.0.1:8425'
-      : 'https://api.pnec-review.invalid';
+      : (window.PNEC_API_BASE || 'https://api.pnec-review.invalid');
     window.PNEC_CHATBOT_CONFIG = {
       apiBase: apiBase,
       provider: 'gemini',

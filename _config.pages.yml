@@ -1,0 +1,5 @@
+# GitHub project-site settings; do not reuse production domains or credentials.
+url: "https://samanviy17-crypto.github.io"
+baseurl: "/pnec-frontend-review"
+api_base_url: "https://api.pnec-review.invalid"
+review_preview: true

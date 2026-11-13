@@ -10,6 +10,7 @@ plugins:
   - jekyll-seo-tag
 exclude:
   - scripts/
+  - REVIEW_DEPLOYMENT.md
   - README.md
   - SOURCE-NOTES.md
   - SECURITY.md

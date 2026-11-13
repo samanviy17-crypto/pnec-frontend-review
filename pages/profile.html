@@ -336,7 +336,7 @@ document.addEventListener('DOMContentLoaded', function() {
         inactiveBtn.disabled = true;
         inactiveBtn.textContent = 'Marking inactive...';
 
-        var apiBase = (typeof API_BASE !== 'undefined' ? API_BASE : 'https://api.pnec-review.invalid');
+        var apiBase = (typeof API_BASE !== 'undefined' ? API_BASE : (window.PNEC_API_BASE || 'https://api.pnec-review.invalid'));
         var token = localStorage.getItem('pnec_token') || sessionStorage.getItem('pnec_token');
         var headers = { 'Content-Type': 'application/json' };
         if (token) headers['Authorization'] = 'Bearer ' + token;
@@ -432,7 +432,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (neighborhoodsCache.length) return Promise.resolve(neighborhoodsCache);
     if (typeof fetchNeighborhoodsForSelect === 'function') return fetchNeighborhoodsForSelect();
 
-    var apiBase = (typeof API_BASE !== 'undefined' ? API_BASE : 'https://api.pnec-review.invalid');
+    var apiBase = (typeof API_BASE !== 'undefined' ? API_BASE : (window.PNEC_API_BASE || 'https://api.pnec-review.invalid'));
     return fetch(apiBase + '/api/neighborhoods', { credentials: 'include' })
       .then(function(response) { return response.json(); })
       .then(function(data) { return data.neighborhoods || []; });

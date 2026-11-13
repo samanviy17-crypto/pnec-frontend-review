@@ -2,7 +2,7 @@
 <html lang="en-US">
 <head>
   <meta charset="UTF-8" />
-  <script>window.PNEC_SITE_BASE = {{ site.baseurl | default: "" | jsonify }};</script>
+  {% include runtime-config.html %}
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{% if page.title %}{{ page.title }} &#8211; {% endif %}Poway NEC &amp; FSC</title>
   <meta name="robots" content="max-image-preview:large" />

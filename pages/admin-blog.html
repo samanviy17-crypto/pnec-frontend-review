@@ -139,7 +139,7 @@ function pnecAdminToken() {
   var API_BASE = (window.PNEC_API_BASE || (
     (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
       ? 'http://127.0.0.1:8425'
-      : 'https://api.pnec-review.invalid'
+      : (window.PNEC_API_BASE || 'https://api.pnec-review.invalid')
   ));
 
   // State
@@ -339,7 +339,7 @@ function pnecAdminToken() {
         var p = res.j.post;
         currentId = p.id;
         currentData = p;
-        toast('Saved! Post is <strong>' + (p.published ? 'live on the site' : 'a draft') + '</strong>. <a href="/pages/blog-post.html?slug=' + encodeURIComponent(p.slug) + '" target="_blank">View →</a>', { ms: 7000 });
+        toast('Saved! Post is <strong>' + (p.published ? 'live on the site' : 'a draft') + '</strong>. <a href="{{ "/pages/blog-post.html" | relative_url }}?slug=' + encodeURIComponent(p.slug) + '" target="_blank">View →</a>', { ms: 7000 });
         $('ab-preview').disabled = false;
         loadPosts();
         setStatus(p.published ? 'published' : 'draft', p.published ? 'Live' : 'Draft');

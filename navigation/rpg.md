@@ -4,6 +4,10 @@ title: "Emergency Preparedness RPG"
 permalink: /rpg/latest/
 use_poway_live_styles: true
 ---
+{% if site.review_preview %}
+<section class="container"><h1>Preparedness RPG unavailable</h1><p>The game engine is not included in this review snapshot. Use the preparedness quiz and resources instead.</p><a href="{{ "/role-quiz/" | relative_url }}">Return to the quiz</a></section>
+{% else %}
+
 
 <style>
 /* ── Embedded mode (iframe / ?embed=1) ────────────────────────────────────── */
@@ -986,3 +990,5 @@ document.addEventListener('webkitfullscreenchange', _onFsChange);
         }
     });
 </script>
+
+{% endif %}

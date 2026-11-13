@@ -9,7 +9,7 @@ permalink: /pages/community-events-and-activities.html
 </style>
 {% capture pnec_calendar_styles %}@import "variables"; #pnec-community-calendar { margin-top: 160px; scroll-margin-top: 240px; button { scroll-margin-top: 240px; } @import "pages"; }{% endcapture %}
 <style>{{ pnec_calendar_styles | scssify }}</style>
-<script>window.PNEC_SITE_BASE = {{ site.baseurl | default: "" | jsonify }};</script>
+{% include runtime-config.html %}
 <title>Community Events and Activities &#8211; Poway NEC &amp; FSC</title>
 <!-- PNEC SEO meta v3 -->
 <meta name="description" content="Upcoming PNEC events, drills, training sessions, and the annual Emergency & Safety Fair. RSVP and bring a neighbor — preparedness is a team sport.">
@@ -208,7 +208,7 @@ img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
 <script type="text/javascript" src="https://powaynec.com/wp-content/themes/jupiterx/lib/admin/assets/lib/webfont/webfont.min.js?ver=1.6.26" id="jupiterx-webfont-js"></script>
 <script type="text/javascript" id="jupiterx-webfont-js-after">
 /* <![CDATA[ */
-WebFont.load({
+if (window.WebFont) WebFont.load({
 				google: {
 					families: ['Roboto:100,200,300,400,500,600,700,800,900,100italic,200italic,300italic,400italic,500italic,600italic,700italic,800italic,900italic','Amatic SC:100,200,300,400,500,600,700,800,900,100italic,200italic,300italic,400italic,500italic,600italic,700italic,800italic,900italic']
 				}
@@ -796,7 +796,7 @@ var elementorFrontendConfig = {"environmentMode":{"edit":false,"wpPreview":false
 <script type="text/javascript" src="https://powaynec.com/wp-includes/js/dist/i18n.min.js?ver=c26c3dc7bed366793375" id="wp-i18n-js"></script>
 <script type="text/javascript" id="wp-i18n-js-after">
 /* <![CDATA[ */
-wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
+if (window.wp && window.wp.i18n) wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
 //# sourceURL=wp-i18n-js-after
 /* ]]> */
 </script>
