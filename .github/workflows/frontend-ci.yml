@@ -1,0 +1,62 @@
+name: Frontend CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-build:
+    name: Offline tests and Jekyll build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+
+      # package.json has no dependencies or lockfile; npm install is unnecessary.
+      - name: Run offline JavaScript tests
+        run: npm test
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1
+        with:
+          ruby-version: '3.3'
+          bundler: '4.0.19'
+
+      - name: Install Jekyll dependencies
+        run: |
+          # Jekyll 3 + the locked Kramdown 2 need an explicit GFM parser.
+          # Supply it only in this disposable CI checkout; preserve source pins.
+          bundle add kramdown-parser-gfm --version 1.1.0 --skip-install
+          # The committed lockfile currently lists only arm64-darwin.
+          # Add the runner platform locally without committing a lockfile change.
+          bundle lock --add-platform x86_64-linux
+          bundle install
+          bundle check
+
+      - name: Validate Jekyll build
+        run: |
+          bundle exec jekyll build --destination "$RUNNER_TEMP/pnec-site"
+          test -s "$RUNNER_TEMP/pnec-site/index.html"
+          test -s "$RUNNER_TEMP/pnec-site/assets/css/main.css"
+
+      # The cross-repository browser release suite is a separate check and has
+      # documented baseline failures (README.md, Known review limitations).
+      # This workflow validates standalone frontend tests/build; it never deploys.
