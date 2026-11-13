@@ -1069,7 +1069,7 @@ const DEFAULT_STRINGS = {
   'error.timeout':           "I'm taking longer than expected to reach my brain. Could you try again?",
   'error.network':           "I can't reach the PNEC server right now. Check your connection and retry?",
   'error.empty':             "I got an empty response. Could you rephrase your question?",
-  'error.config':            "Helper Bot is offline right now — a PNEC volunteer has been notified. Please use the contact form for now.",
+  'error.config':            "AI chat is unavailable because no chat provider is configured. You can still browse the site's preparedness resources.",
   'error.generic':           "Something went wrong. Could you try again, or use the contact form for now?",
 };
 
