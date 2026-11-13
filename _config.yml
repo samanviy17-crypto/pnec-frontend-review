@@ -25,6 +25,7 @@ exclude:
   - package.json
   - assets/js/chatbot/*.test.mjs
   - assets/js/cms/*.test.mjs
+  - assets/js/review-status.test.mjs
 sass:
   sass_dir: _sass
   style: compressed
