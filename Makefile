@@ -1,4 +1,4 @@
-HOST ?= localhost
+HOST ?= 127.0.0.1
 PORT ?= 4500
 LOG_FILE = /tmp/jekyll$(PORT).log
 PYTHON := venv/bin/python3
@@ -6,7 +6,7 @@ PYTHON := venv/bin/python3
 SHELL = /bin/bash -c
 .SHELLFLAGS = -e
 
-NOTEBOOK_FILES := $(shell find _notebooks -name '*.ipynb')
+NOTEBOOK_FILES := $(shell if [ -d _notebooks ]; then find _notebooks -name '*.ipynb'; fi)
 DESTINATION_DIRECTORY = _posts
 MARKDOWN_FILES := $(patsubst _notebooks/%.ipynb,$(DESTINATION_DIRECTORY)/%_IPYNB_2_.md,$(NOTEBOOK_FILES))
 
@@ -80,13 +80,8 @@ define run_projects
 	done
 endef
 
-default: serve-current
-	@touch /tmp/.notebook_watch_marker
-	@make watch-rebuild &
-	@make watch-notebooks &
-	@make watch-projects &
-	@make watch-files &
-	@echo "Server running in background on http://localhost:$(PORT)"
+default: stop jekyll-serve
+	@echo "Local site available at http://127.0.0.1:$(PORT)"
 	@echo "  View logs: tail -f $(LOG_FILE)"
 	@echo "  Stop: make stop"
 
