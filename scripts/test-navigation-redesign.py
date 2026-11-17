@@ -98,7 +98,11 @@ with sync_playwright() as play:
         page.keyboard.press('Escape')
         prepare.press('Space')
         assert prepare.get_attribute('aria-expanded')=='true'
-        page.locator('.pnec-drawer-backdrop').click(position={'x':width-5,'y':700}) if width<=1050 else page.mouse.click(width-5,850)
+        if width<=1050:
+            backdrop=page.locator('.pnec-drawer-backdrop')
+            backdrop.click(position={'x':backdrop.bounding_box()['width']-12,'y':700})
+        else:
+            page.mouse.click(width-24,850)
         assert prepare.get_attribute('aria-expanded')=='false'
         if width<=1050:
             assert mobile.get_attribute('aria-expanded')=='false'

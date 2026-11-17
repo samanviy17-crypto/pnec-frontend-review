@@ -75,6 +75,7 @@ landscape context, not staged volunteer or current-incident imagery.
 ## Review evidence and preview
 
 [Route inventory and interaction audit](MORTENSON-ROUTES.md).
+[Complete changed-file list](MORTENSON-CHANGED-FILES.md).
 Screenshots use empty mocked API reads, no fabricated resident data or notices:
 
 - [Desktop homepage](mortenson-evidence/home-1280.png)
@@ -174,3 +175,7 @@ Manual screen-reader review, individual content-owner signoff and exact fire-tre
 comparison remain pending. The legacy RPG limitations in RPG-LIMITATIONS.md are
 unchanged. No new backend appearance fields were added. Official emergency
 notices remain unconfigured until a real source is reviewed by the PNEC owners.
+
+CI portability correction: backdrop dismissal tests use the measured element
+width so the click avoids the non-overlay Linux scrollbar gutter. The same
+visible dismissal behavior remains covered on macOS and Linux.
