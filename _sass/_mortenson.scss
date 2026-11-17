@@ -120,3 +120,39 @@ body.pnec-site p { color: inherit; }
 body.pnec-site h1, body.pnec-site h2, body.pnec-site h3, body.pnec-site h4, body.pnec-site h5,
 body.pnec-site input, body.pnec-site textarea, body.pnec-site select, body.pnec-site button { font-family: var(--pnec-font); }
 html[data-appearance-resolved="dark"] #pnec-site-header.site-header .site-title img { filter: brightness(0) saturate(100%) invert(90%); }
+// Existing feature layouts opt into personal dark tokens without changing behavior.
+html[data-appearance-resolved="dark"] body.pnec-site {
+  .kit-progress, .checklist-category, .checklist-cat-header, .checklist-item,
+  .auth-form-stack, .auth-tabs, .vol-form-card, .vol-form-shell, .vol-role,
+  .community-tools, .profile-edit-section, .profile-status-section,
+  .profile-signout-section, .avatar-modal, .pnec-nmap-panel, .pnec-nmap-search,
+  .pnec-nmap-legend, .pnec-nmap-footer {
+    background: var(--pnec-surface); color: var(--pnec-text); border-color: var(--pnec-line);
+  }
+  .kit-item-name, .kit-item-why, .kit-progress-label, .checklist-cat-name,
+  .checklist-item-label, .checklist-item-qty, .form-field label, .auth-field label,
+  .auth-tagline, .auth-switch-row, .auth-help-foot, .vol-form label,
+  .vol-section-head p, .vol-role ul.role-meta li strong, .pnec-nmap-sub,
+  .pnec-nmap-search-label, .pnec-nmap-panel-tips, .profile-name,
+  .profile-bio-display { color: var(--pnec-text); }
+  .kit-item.checked .kit-item-name, .checklist-cat-count, .checklist-cat-chevron,
+  .checklist-item-note, .checklist-item-label.checked, .form-field small,
+  .vol-form label .opt, .profile-email { color: var(--pnec-muted); }
+  .kit-item:hover, .checklist-item:hover, .checklist-cat-header:hover { background: var(--pnec-bg); }
+  .auth-tab { color: var(--pnec-text); }
+  .auth-tab.is-active { background: #087c82; color: #fff; }
+  .btn-outline, .btn-ghost, .vol-role-pick { color: var(--pnec-accent); border-color: var(--pnec-line); }
+  .vol-eyebrow { color: var(--pnec-accent); background: var(--pnec-bg); }
+  .vol-section-head p[style], .raven-heading-title[style*="color"] { color: var(--pnec-text) !important; }
+  input::placeholder, textarea::placeholder { color: var(--pnec-muted); opacity: 1; }
+}
+html[data-appearance-resolved="dark"] body.pnec-site {
+  .vol-role p.role-blurb, .vol-role ul.role-meta li, .vol-final-cta p,
+  .auth-eyebrow, .auth-checkbox, .auth-field label { color: var(--pnec-text); }
+  .auth-field input:focus + label, .auth-field input:not(:placeholder-shown) + label,
+  .auth-field select + label { background: var(--pnec-surface); color: var(--pnec-accent); }
+  .pnec-nmap-panel-tips li, .pnec-nmap-foot, .pnec-nmap-suggestions { background: var(--pnec-surface); color: var(--pnec-text); }
+  .community-error { color: #ffb4ab; }
+  #dashboard-access-gate p, #dashboard-access-gate strong { color: var(--pnec-text) !important; }
+}
+html[data-appearance-resolved="dark"] body.pnec-site .pnec-nmap-foot strong { color: var(--pnec-text); }

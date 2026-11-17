@@ -77,8 +77,8 @@
     else closeMobile(true);
   });
   document.addEventListener('click', event => { if (!header.contains(event.target) && event.target !== backdrop) closeMobile(); });
-  header.addEventListener('focusout', () => {
-    requestAnimationFrame(() => { if (!header.contains(document.activeElement) && !nav.classList.contains('is-open')) closeAll(); });
+  header.addEventListener('focusout', event => {
+    if (!header.contains(event.relatedTarget) && !nav.classList.contains('is-open')) closeAll();
   });
   narrow.addEventListener('change', () => closeMobile(true));
 })();

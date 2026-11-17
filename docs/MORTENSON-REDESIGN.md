@@ -179,3 +179,9 @@ notices remain unconfigured until a real source is reviewed by the PNEC owners.
 CI portability correction: backdrop dismissal tests use the measured element
 width so the click avoids the non-overlay Linux scrollbar gutter. The same
 visible dismissal behavior remains covered on macOS and Linux.
+
+Additional dark-mode visual review covered kit, checklist, volunteer, login,
+profile access gate, events, resources, About and neighborhood screens. Legacy
+kit labels, floating labels and fixed light form/map surfaces now consume
+personal theme tokens. Targeted kit/login/volunteer checks guard the corrected
+text and surface combinations; this is not a full WCAG certification.

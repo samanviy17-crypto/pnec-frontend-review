@@ -33,6 +33,7 @@ Feature branch relative to the main baseline `ce47527`.
 - `docs/mortenson-evidence/settings-dark-1280.png`
 - `docs/mortenson-evidence/settings-dark-390.png`
 - `index.html`
+- `pages/about.html`
 - `pages/admin.html`
 - `pages/kit.html`
 - `pages/preparedness-resources.html`

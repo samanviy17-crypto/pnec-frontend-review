@@ -97,6 +97,7 @@ with sync_playwright() as play:
         page.screenshot(path=str(args.output_dir/f'settings-dark-{width}.png'), full_page=True)
         page.goto(base+'pages/kit.html', wait_until='networkidle')
         assert page.locator('html').get_attribute('data-appearance-font')=='serif'
+        assert page.locator('.kit-item-name').first.evaluate('(e)=>getComputedStyle(e).color') == 'rgb(237, 245, 251)'
         search=page.locator('#pnec-kit-filter')
         search.fill('water')
         assert 'matching' in page.locator('#kit-filter-status').inner_text()
@@ -117,6 +118,10 @@ with sync_playwright() as play:
         page.locator('#pnec-resource-filter').fill('')
         page.locator('summary').first.press('Enter')
         assert page.locator('details').first.get_attribute('open') is not None
+        page.goto(base+'pages/register.html',wait_until='networkidle')
+        assert page.locator('.auth-form-stack').evaluate('(e)=>getComputedStyle(e).backgroundColor') == 'rgb(23, 38, 56)'
+        page.goto(base+'pages/volunteer.html',wait_until='networkidle')
+        assert page.locator('.vol-form-card').evaluate('(e)=>getComputedStyle(e).backgroundColor') == 'rgb(23, 38, 56)'
         page.goto(base+'pages/settings.html',wait_until='networkidle')
         page.get_by_role('button',name='Reset to defaults').click()
         assert page.locator('[name="theme"]').input_value()=='system'
