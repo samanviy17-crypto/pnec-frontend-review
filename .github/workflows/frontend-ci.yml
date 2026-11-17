@@ -66,5 +66,13 @@ jobs:
         run: |
           python3 -m pip install playwright==1.65.1
           python3 -m playwright install --with-deps chromium
-      - name: Verify stationary navigation and responsive cards
+      - name: Verify sidebar, carousel, preferences and responsive routes
         run: bash scripts/check-redesign-browser.sh "$RUNNER_TEMP/pnec-site" "$RUNNER_TEMP/navigation-evidence"
+
+      - name: Upload browser review evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: mortenson-navigation-evidence
+          path: ${{ runner.temp }}/navigation-evidence
+          if-no-files-found: ignore

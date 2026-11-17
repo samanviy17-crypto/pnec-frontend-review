@@ -1,3 +1,8 @@
+# Current November 16 feature work
+
+See [the Mortenson branch implementation and review guide](MORTENSON-REDESIGN.md).
+The historical horizontal-header baseline and its verification follow below.
+
 # PNEC OCS redesign
 
 ## Source and scope

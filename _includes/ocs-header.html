@@ -24,6 +24,7 @@
         </div>
         {% endfor %}
       </div>
+      <a class="page-link pnec-settings-link"{% if page.url == "/pages/settings.html" %} aria-current="page"{% endif %} href="{{ "/pages/settings.html" | relative_url }}">Appearance &amp; Settings</a>
       <div class="pnec-account">
         <a id="navbar-login-item" class="ocs-button" href="{{ '/pages/register.html' | relative_url }}">Log In / Sign Up</a>
         <div id="navbar-auth-logged-in" class="pnec-disclosure" style="display:none">
@@ -42,3 +43,4 @@
     </nav>
   </div>
 </header>
+<button class="pnec-drawer-backdrop" type="button" tabindex="-1" aria-label="Close navigation" hidden></button>

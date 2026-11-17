@@ -4,17 +4,7 @@ title: "Prepared neighbors. A stronger Poway."
 description: "Practical emergency preparedness resources and local participation for Poway residents."
 body_class: pnec-home
 ---
-<section class="pnec-home-hero" aria-labelledby="home-title">
-  <div class="pnec-container">
-    <p class="pnec-eyebrow">Poway Neighborhood Emergency Corps</p>
-    <h1 id="home-title">A Safer, More Prepared<br>Poway Community</h1>
-    <p>Neighbors helping neighbors through preparedness, response, and recovery.</p>
-    <div class="pnec-button-row">
-      <a class="ocs-button primary" href="{{ '/pages/checklist.html' | relative_url }}">Get Prepared <span aria-hidden="true">→</span></a>
-      <a class="ocs-button light" href="{{ '/pages/volunteer.html' | relative_url }}">Volunteer with Us</a>
-    </div>
-  </div>
-</section>
+{% include home-carousel.html %}
 {% include home-action-cards.html %}
 <div class="pnec-container pnec-home-details">
   <section class="ocs-card pnec-about-preview">
@@ -23,9 +13,10 @@ body_class: pnec-home
     <p>PNEC is a volunteer, community-based organization that promotes emergency preparedness, response, and recovery for the Poway community.</p>
     <a class="ocs-button primary" href="{{ '/pages/about.html' | relative_url }}">Learn More <span aria-hidden="true">→</span></a>
   </section>
-  <section class="ocs-card pnec-tip">
-    <span class="pnec-tip-icon" aria-hidden="true">☼</span>
-    <div><h2>Weekly Tip</h2><p>Review your emergency supply kit with your household. Keep water, non-perishable food, a flashlight, and a first aid kit ready.</p><a href="{{ '/pages/kit.html' | relative_url }}">Review the emergency kit guide →</a></div>
+  <section class="ocs-card">
+    <p class="pnec-eyebrow">Choose your next step</p><h2>Preparedness starts here</h2>
+    <p>Build your kit, make a household plan, or find your neighborhood.</p>
+    <a href="{{ '/pages/checklist.html' | relative_url }}">Open your preparedness tools →</a>
   </section>
 </div>
 <section class="pnec-container pnec-home-resources" aria-labelledby="resources-title">

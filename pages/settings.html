@@ -1,0 +1,17 @@
+---
+layout: pnec-base
+title: Appearance & Settings
+description: Personalize how PNEC looks on this browser.
+body_class: page-settings
+---
+<header class="pnec-page-heading"><p class="pnec-eyebrow">Your PNEC</p><h1>Appearance &amp; Settings</h1><p>These preferences affect this browser only. They do not change the community website or your account data.</p></header>
+<form id="pnec-appearance-form" class="ocs-card pnec-settings-form">
+  <label for="appearance-theme">Theme</label><select id="appearance-theme" name="theme"><option value="system">Use system setting</option><option value="light">Light</option><option value="dark">Dark</option></select>
+  <label for="appearance-background">Background</label><select id="appearance-background" name="background"><option value="plain">Plain</option><option value="soft">Soft teal</option><option value="grid">Subtle grid</option></select>
+  <label for="appearance-font">Font</label><select id="appearance-font" name="font"><option value="sans">Sans serif</option><option value="serif">Serif</option><option value="mono">Monospace</option></select>
+  <label for="appearance-size">Text size</label><select id="appearance-size" name="size"><option value="standard">Standard</option><option value="large">Large</option><option value="extra">Extra large</option></select>
+  <label><input type="checkbox" name="spacing"> More space between lines</label>
+  <label><input type="checkbox" name="motion"> Reduce motion</label>
+  <button class="ocs-button" type="reset">Reset to defaults</button>
+  <p id="appearance-status" role="status"></p>
+</form>

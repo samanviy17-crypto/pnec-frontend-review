@@ -3,6 +3,10 @@ layout: pnec-base
 title: "Preparedness & Help"
 body_class: "pnec-content-page page-preparedness-resources"
 ---
+{% include preparedness-task-panel.html %}
+<label class="pnec-resource-search" for="pnec-resource-filter">Find a resource<input id="pnec-resource-filter" type="search" placeholder="Search resource names and descriptions" aria-describedby="resource-filter-status"></label>
+<p id="resource-filter-status" role="status"></p>
+
 <div class="pnec-page-heading"><p class="pnec-eyebrow">Poway Neighborhood Emergency Corps</p><h1>Preparedness &amp; Help</h1></div>
 <div class="pnec-legacy-content">
 {% include community-tools.html features="language weekly feedback" %}

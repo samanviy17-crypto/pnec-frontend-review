@@ -55,7 +55,8 @@ with sync_playwright() as play:
             assert response.status == 200, (width,route,response.status)
             page.wait_for_timeout(250)
             geometry=page.locator('#pnec-site-header').evaluate('(e)=>({x:e.getBoundingClientRect().x,y:e.getBoundingClientRect().y,width:e.getBoundingClientRect().width,height:e.getBoundingClientRect().height})')
-            assert geometry['y']==0 and geometry['height']==80,(width,route,geometry)
+            assert geometry['y']==0 and geometry['height']==(900 if width > 1050 else 80),(width,route,geometry)
+            if width > 1050: assert geometry['width'] == 264, (width,route,geometry)
             if reference is None: reference=geometry
             assert geometry==reference,(width,route,'header shifted',reference,geometry)
             assert page.locator('nav[aria-label="Main navigation"]').count()==1
@@ -97,7 +98,7 @@ with sync_playwright() as play:
         page.keyboard.press('Escape')
         prepare.press('Space')
         assert prepare.get_attribute('aria-expanded')=='true'
-        page.mouse.click(width-5,850)
+        page.locator('.pnec-drawer-backdrop').click(position={'x':width-5,'y':700}) if width<=1050 else page.mouse.click(width-5,850)
         assert prepare.get_attribute('aria-expanded')=='false'
         if width<=1050:
             assert mobile.get_attribute('aria-expanded')=='false'
@@ -121,6 +122,7 @@ with sync_playwright() as play:
         assert page.get_by_role('link',name='My Profile',exact=True).is_visible()
         assert not page.locator('#nav-admin-link').is_visible()
         page.keyboard.press('Escape')
+        if width<=1050: page.keyboard.press('Escape')
         page.locator('#pnec-bot-fab').click()
         page.locator('#pnec-bot-panel').wait_for(state='visible')
         page.wait_for_timeout(300)
