@@ -61,6 +61,10 @@ with sync_playwright() as play:
         page.locator('[data-theme="ocean"]').click()
         page.select_option('[name="font"]','serif');page.select_option('[name="size"]','extra')
         page.select_option('[name="button"]','pill');page.check('[name="spacing"]');page.check('[name="motion"]')
+        for font in ['sans','serif','mono']:
+            page.select_option('[name="font"]',font)
+            assert page.locator('.ocs__prefs-swatch-name').evaluate_all('(els)=>els.every(e=>e.scrollWidth<=e.clientWidth)'),(width,font,'large theme label overflow')
+        page.select_option('[name="font"]','serif')
         open_page(page,'pages/kit.html')
         assert page.locator('html').get_attribute('data-appearance-preset')=='ocean'
         assert page.locator('html').get_attribute('data-appearance-font')=='serif'

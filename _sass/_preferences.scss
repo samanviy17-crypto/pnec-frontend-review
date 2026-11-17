@@ -44,7 +44,7 @@ body.pnec-site {
   .pnec-mini-content { @include base-grid(1, $spacing-xxs); flex: 1; padding: $spacing-sm; font: 700 24px/1 system-ui, sans-serif; }
   .ocs__prefs-swatch-bar { width: 55%; height: 8px; border-radius: $radius-xxs; background: var(--sample-accent); }
   .pnec-mini-line { width: 80%; height: 3px; background: var(--sample-text); }
-  .ocs__prefs-swatch-name { display: block; padding: $spacing-sm 0; font: 700 1em/1.4 var(--pnec-font); }
+  .ocs__prefs-swatch-name { display: block; overflow-wrap: anywhere; padding: $spacing-sm 0; font: 700 1em/1.4 var(--pnec-font); }
   .pnec-theme-selected { display: none; position: absolute; right: $spacing-sm; bottom: $spacing-sm; color: var(--pnec-accent); font-weight: 700; }
   .ocs__prefs-swatch[aria-pressed="true"] .pnec-theme-selected { display: inline; }
   .pnec-customize-layout { @include base-grid(2, $spacing-xl); grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: start; }
