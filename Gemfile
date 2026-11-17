@@ -7,5 +7,5 @@ gem "jekyll-include-cache", "0.3.1"
 gem "kramdown-parser-gfm"
 gem "webrick", "1.9.2"
 gem "csv"
-gem "base64"
-gem "bigdecimal"
+
+gem "kramdown-parser-gfm", "~> 1.1"
