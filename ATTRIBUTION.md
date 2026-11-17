@@ -32,3 +32,12 @@ Existing image files remain untouched.
 
 The current fixed hero rotates these three distinct real Poway photographs.
 The preceding two-photo implementation record and original assets are preserved.
+
+## OCS navigation and preferences adaptation
+
+The five-category shell and theme picker adapt Open Coding Society's dashboard,
+its `ThemeRenderer.swatch` sample/bar/name pattern, preset palette family and
+live-preview contrast math. The existing vendored OCS toolkit and Apache-2.0
+license remain in `_sass/vendor/ocs/`. PNEC adjusts palette contrast, adds Sunset,
+and retains its own API/account/storage contracts. Source URLs and inspected
+revision are recorded in [the follow-up audit](docs/NAVIGATION-PREFERENCES.md).

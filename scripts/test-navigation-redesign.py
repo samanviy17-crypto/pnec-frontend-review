@@ -7,7 +7,7 @@ synthetic cached resident; this does not claim backend authentication validation
 import argparse
 import json
 from pathlib import Path
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, urljoin
 from playwright.sync_api import sync_playwright
 
 parser = argparse.ArgumentParser(description=__doc__)
@@ -45,119 +45,112 @@ def close_home_welcome(page):
     if close.is_visible():
         close.click()
 
+def open_mobile(page, width):
+    if width <= 1050 and page.locator('.nav-trigger').get_attribute('aria-expanded') != 'true':
+        page.locator('.nav-trigger').click()
+
 with sync_playwright() as play:
     browser = play.chromium.launch()
     for width, columns in [(1440,4),(1280,4),(1024,2),(768,2),(390,1),(320,1)]:
         context = browser.new_context(viewport={'width':width,'height':900}, has_touch=width<=1050)
         if not args.live:
             context.route('**/*', lambda r: r.continue_() if r.request.url.startswith(base)
-                          else mock_api(r) if '/api/' in r.request.url
-                          else r.abort())
-        page = context.new_page()
-        errors=[]
-        page.on('pageerror', lambda error: errors.append(str(error)))
-        reference=None
+                          else mock_api(r) if '/api/' in r.request.url else r.abort())
+        page=context.new_page(); errors=[]
+        page.on('pageerror',lambda error:errors.append(str(error)))
+        reference=None; link_reference=None
         for route in routes:
             print('Checking',width,route or 'home',flush=True)
-            response=page.goto(base+route,wait_until='domcontentloaded')
-            close_home_welcome(page)
-            assert response.status == 200, (width,route,response.status)
-            page.wait_for_timeout(250)
-            geometry=page.locator('#pnec-site-header').evaluate('(e)=>({x:e.getBoundingClientRect().x,y:e.getBoundingClientRect().y,width:e.getBoundingClientRect().width,height:e.getBoundingClientRect().height})')
-            assert geometry['y']==0 and geometry['height']==(900 if width > 1050 else 80),(width,route,geometry)
-            if width > 1050: assert geometry['width'] == 264, (width,route,geometry)
-            if reference is None: reference=geometry
-            assert geometry==reference,(width,route,'header shifted',reference,geometry)
-            assert page.locator('nav[aria-label="Main navigation"]').count()==1
-            overflow=page.evaluate('document.documentElement.scrollWidth > innerWidth')
-            assert not overflow,(width,route,'horizontal overflow',page.evaluate('document.documentElement.scrollWidth'))
+            response=page.goto(base+route,wait_until='domcontentloaded');close_home_welcome(page)
+            assert response.status==200,(width,route,response.status)
+            page.wait_for_timeout(120)
+            header=page.locator('#pnec-site-header')
+            geometry=header.bounding_box()
+            assert geometry['y']==0 and geometry['height']==80,(width,route,geometry)
+            if reference is None:reference=geometry
+            assert geometry==reference,(width,route,'top bar shifted')
+            primary=page.locator('.pnec-primary > a')
+            assert primary.all_text_contents()==['Home','Prepare','Resources','Community','Profile']
+            assert page.locator('[data-context]:not([hidden])').count()==1
+            assert not page.evaluate('document.documentElement.scrollWidth>innerWidth'),(width,route,'overflow')
+            if width>1050:
+                positions=primary.evaluate_all('(els)=>els.map(e=>{const b=e.getBoundingClientRect();return [b.x,b.y,b.width,b.height]})')
+                if link_reference is None:link_reference=positions
+                assert positions==link_reference,(width,route,'primary links shifted')
+                sidebar=page.locator('.pnec-context').bounding_box()
+                assert sidebar['y']==80 and sidebar['x']==0 and sidebar['width']==264
             if not route:
-                cards=page.locator('.pnec-action')
-                assert cards.count()==4
-                boxes=[cards.nth(i).bounding_box() for i in range(4)]
-                assert len({round(b['y']) for b in boxes}) == 4//columns,(width,boxes)
-                assert len({round(b['height']) for b in boxes})==1,(width,'unequal heights',boxes)
-                for i in range(4):
-                    card=cards.nth(i); card.scroll_into_view_if_needed()
-                    # Compare document coordinates: Playwright may scroll a below-fold
-                    # target again to keep it clear of the fixed helper launcher.
-                    def card_box():
-                        return card.evaluate('(e)=>{const b=e.getBoundingClientRect(); return [b.x+scrollX,b.y+scrollY,b.width,b.height].map(v=>Math.round(v*100)/100)}')
-                    before=card_box()
-                    card.hover(); assert card_box()==before
-                    card.focus(); assert card_box()==before
-                    assert page.request.get(card.get_attribute('href').split('#')[0] if card.get_attribute('href').startswith('http') else base.split('/pnec-frontend-review/')[0]+card.get_attribute('href').split('#')[0]).status==200
-                page.evaluate('document.activeElement.blur(); window.scrollTo(0,0)')
-                page.mouse.move(0,0)
-                page.screenshot(path=str(args.output_dir/f'home-{width}.png'),full_page=True)
-            # Compare navigation link positions after every actual page load.
-            if width > 1050:
-                positions=page.locator('#pnec-site-header .trigger > .page-link, #pnec-site-header .trigger > .pnec-disclosure > .page-link').evaluate_all('(els)=>els.map(e=>({x:e.getBoundingClientRect().x,y:e.getBoundingClientRect().y,width:e.getBoundingClientRect().width,height:e.getBoundingClientRect().height}))')
-                if not route: link_reference=positions
-                assert positions==link_reference,(width,route,'links shifted')
-        # Exercise mouse/touch-style click, keyboard, Escape, and outside dismissal.
-        page.goto(base,wait_until='domcontentloaded')
-        close_home_welcome(page)
+                cards=page.locator('.pnec-action');assert cards.count()==4
+                boxes=[card.bounding_box() for card in cards.all()]
+                assert len({round(b['y']) for b in boxes})==4//columns
+                assert len({round(b['height']) for b in boxes})==1
+                for card in cards.all():
+                    card.scroll_into_view_if_needed()
+                    def box():return card.evaluate('(e)=>{const b=e.getBoundingClientRect();return [b.x+scrollX,b.y+scrollY,b.width,b.height].map(v=>Math.round(v*100)/100)}')
+                    before=box();card.hover();assert box()==before;card.focus();assert box()==before
+                    assert page.request.get(urljoin(base,card.get_attribute('href').split('#')[0])).status==200
+            assert not errors,(width,route,errors)
+        # Every primary category follows its existing landing route and shows only its sidebar.
+        for category in ['home','prepare','resources','community','profile']:
+            open_mobile(page,width)
+            page.locator(f'[data-category-link="{category}"]').click()
+            page.wait_for_load_state('load');close_home_welcome(page)
+            assert page.locator('#pnec-site-header').get_attribute('data-category')==category
+            assert page.locator(f'[data-context="{category}"]').get_attribute('hidden') is None
+            assert page.locator('[data-context]:not([hidden])').count()==1
+            open_mobile(page,width)
+            assert page.locator(f'[data-category-link="{category}"]').get_attribute('aria-current')=='true'
+            assert page.locator('.site-nav').evaluate('(e)=>e.scrollWidth<=e.clientWidth')
+            if width<=1050:page.keyboard.press('Escape')
+        # Profile sidebar is public; signed-out accounts receive an explicit login prompt.
+        assert page.locator('.pnec-profile-welcome h1').inner_text()=='Your PNEC dashboard'
+        open_mobile(page,width)
+        assert page.locator('[data-context="profile"] nav a').all_text_contents()==['Dashboard','Preferences','Account Settings']
+        home=page.locator('[data-category-link="home"]');home.focus();home.press('ArrowRight')
+        assert page.locator('[data-category-link="prepare"]').evaluate('(e)=>e===document.activeElement')
+        page.keyboard.press('End');assert page.locator('[data-category-link="profile"]').evaluate('(e)=>e===document.activeElement')
         if width<=1050:
-            mobile=page.locator('.nav-trigger'); mobile.tap()
-            assert mobile.get_attribute('aria-expanded')=='true'
-        prepare=page.locator('#pnec-site-header button[aria-controls="pnec-menu-1"]')
-        prepare.click()
-        assert prepare.get_attribute('aria-expanded')=='true'
-        assert page.locator('.site-nav').evaluate('(e)=>e.scrollWidth <= e.clientWidth'), (width, 'menu overflow')
-        page.keyboard.press('Escape')
-        assert prepare.get_attribute('aria-expanded')=='false'
-        assert prepare.evaluate('(e)=>e===document.activeElement')
-        prepare.press('ArrowDown')
-        assert page.get_by_role('link',name='Preparedness Checklist',exact=True).evaluate('(e)=>e===document.activeElement')
-        page.keyboard.press('Escape')
-        prepare.press('Space')
-        assert prepare.get_attribute('aria-expanded')=='true'
-        if width<=1050:
-            backdrop=page.locator('.pnec-drawer-backdrop')
-            backdrop.click(position={'x':backdrop.bounding_box()['width']-12,'y':700})
-        else:
-            page.mouse.click(width-24,850)
-        assert prepare.get_attribute('aria-expanded')=='false'
-        if width<=1050:
-            assert mobile.get_attribute('aria-expanded')=='false'
-            mobile.click(); page.keyboard.press('Escape')
-            assert mobile.evaluate('(e)=>e===document.activeElement')
-            mobile.click()
-        # Actual link transition through menu, rather than only URL visits.
-        page.get_by_role('button',name='About',exact=True).click()
-        page.get_by_role('link',name='About PNEC',exact=True).click()
-        page.wait_for_url('**/pages/about.html')
-        assert page.locator('#pnec-site-header').bounding_box()['y']==0
-        page.screenshot(path=str(args.output_dir/f'about-{width}.png'),full_page=True)
-        # Signed-in display must fit the same reserved account slot.
-        page.evaluate("localStorage.setItem('pnec_user',JSON.stringify({display_name:'Synthetic Resident',email:'synthetic@example.test',role:'resident'}))")
-        page.reload(wait_until='domcontentloaded')
-        close_home_welcome(page)
-        page.wait_for_timeout(250)
-        if width<=1050: page.locator('.nav-trigger').click()
-        assert page.get_by_role('button',name='Account',exact=True).is_visible()
-        assert not page.locator('#navbar-login-item').is_visible()
-        page.get_by_role('button',name='Account',exact=True).click()
-        assert page.get_by_role('link',name='My Profile',exact=True).is_visible()
-        assert not page.locator('#nav-admin-link').is_visible()
-        page.keyboard.press('Escape')
-        if width<=1050: page.keyboard.press('Escape')
-        page.locator('#pnec-bot-fab').click()
-        page.locator('#pnec-bot-panel').wait_for(state='visible')
-        page.wait_for_timeout(300)
-        assert page.locator('#pnec-bot-panel').bounding_box()['y'] >= 80, (width, 'helper overlaps header')
-        for mode in ['expand', 'modal']:
-            if not page.locator('#pnec-bot-'+mode).is_visible():
-                continue  # Compact toolbar intentionally omits some mode controls.
-            page.locator('#pnec-bot-'+mode).click()
-            page.wait_for_timeout(300)
-            assert page.locator('#pnec-bot-panel').bounding_box()['y'] >= 80, (width, mode, 'helper overlaps header')
-        page.locator('#pnec-bot-close').click()
-        assert not page.locator('#pnec-bot-panel').is_visible()
-        assert not errors,(width,errors)
-        report.append({'width':width,'routes':len(routes),'header':reference,'columns':columns,'errors':errors,'passed':True})
+            assert page.locator('main').evaluate('(e)=>e.inert')
+            focusable=page.locator('#pnec-site-header').locator('a,button,summary').evaluate_all('(els)=>els.filter(e=>e.getClientRects().length && !e.disabled).map(e=>e.id)')
+            page.keyboard.press('Escape')
+            assert page.locator('.nav-trigger').evaluate('(e)=>e===document.activeElement')
+            assert not page.locator('main').evaluate('(e)=>e.inert')
+            open_mobile(page,width)
+            backdrop=page.locator('.pnec-drawer-backdrop');backdrop.click(position={'x':backdrop.bounding_box()['width']-8,'y':650})
+            assert page.locator('.nav-trigger').get_attribute('aria-expanded')=='false'
+        # Existing helper interaction and mode checks remain independent of navigation.
+        page.locator('#pnec-bot-fab').click();page.locator('#pnec-bot-panel').wait_for(state='visible')
+        assert page.locator('#pnec-bot-panel').bounding_box()['y']>=80
+        for mode in ['expand','modal']:
+            control=page.locator('#pnec-bot-'+mode)
+            if control.is_visible():control.click();page.wait_for_timeout(300);assert page.locator('#pnec-bot-panel').bounding_box()['y']>=80
+        page.locator('#pnec-bot-close').click();assert page.locator('#pnec-bot-panel').is_hidden()
+        # Check every contextual internal destination without production requests.
+        for link in page.locator('[data-context-link]').all():
+            assert page.request.get(urljoin(base,link.get_attribute('href').split('#')[0])).status==200
+        assert not errors,errors
+        report.append({'width':width,'routes':len(routes),'categories':5,'header':reference,'columns':columns,'errors':errors,'passed':True})
+        context.close()
+    # Existing role-aware IDs use the existing auth worker, not a new permission model.
+    for role in ['resident','coordinator','staff','admin']:
+        context=browser.new_context()
+        user={'id':999,'display_name':'Synthetic navigation fixture','email':'fixture@example.test','role':role}
+        def role_api(route):
+            if route.request.url.startswith(base):route.continue_()
+            elif urlsplit(route.request.url).path.endswith('/auth/me'):route.fulfill(status=200,content_type='application/json',body=json.dumps({'user':user}))
+            else:mock_api(route)
+        context.route('**/*',role_api)
+        page=context.new_page();page.goto(base+'pages/profile.html',wait_until='networkidle')
+        assert page.locator('.profile-name').inner_text().startswith(user['display_name'])
+        assert page.locator('#account-settings').count()==1
+        page.locator('#navbar-auth-logged-in > details > summary').click()
+        assert page.locator('#nav-media-link').is_visible()==(role!='resident')
+        assert page.locator('#nav-dashboard-link').is_visible()==(role in ['staff','admin'])
+        assert page.locator('#nav-admin-link').is_visible()==(role=='admin')
+        if role=='admin':
+            page.locator('#nav-admin-link summary').click();assert page.get_by_role('link',name='Admin Dashboard',exact=True).is_visible()
+            page.keyboard.press('Escape');assert not page.locator('#nav-admin-link details').evaluate('(e)=>e.open')
         context.close()
     browser.close()
 (args.output_dir/'results.json').write_text(json.dumps(report,indent=2))
-print(json.dumps(report,indent=2))
+print(f'PASS: {len(routes)*len(report)} route/viewport checks, five categories/contextual links, keyboard/drawer, four roles and helper modes.')

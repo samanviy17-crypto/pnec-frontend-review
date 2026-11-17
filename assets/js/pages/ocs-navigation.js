@@ -6,13 +6,33 @@
   const nav = header.querySelector('.site-nav');
   const backdrop = document.querySelector('.pnec-drawer-backdrop');
   const narrow = matchMedia('(max-width: 1050px)');
-  const toggles = [...header.querySelectorAll('[aria-controls]')].filter(button => button !== mobile);
-  let isolated = [];
-  function close(button) {
-    button.setAttribute('aria-expanded', 'false');
-    document.getElementById(button.getAttribute('aria-controls')).hidden = true;
+  const groups = [...header.querySelectorAll('[data-context]')];
+  const primary = [...header.querySelectorAll('[data-category-link]')];
+  function updateContext() {
+    const path = location.pathname;
+    const hash = location.hash;
+    let chosen = header.dataset.category;
+    const matches = [...header.querySelectorAll('[data-context-link]')].filter(link => {
+      const url = new URL(link.href);
+      return url.pathname === path && url.hash === hash;
+    });
+    if (matches.length) chosen = matches[0].closest('[data-context]').dataset.context;
+    groups.forEach(group => {group.hidden = group.dataset.context !== chosen;});
+    primary.forEach(link => {
+      if (link.dataset.categoryLink === chosen) link.setAttribute('aria-current','true');
+      else link.removeAttribute('aria-current');
+    });
+    header.querySelectorAll('[data-context-link]').forEach(link => {
+      const url = new URL(link.href);
+      if (url.pathname === path && url.hash === hash) link.setAttribute('aria-current','page');
+      else link.removeAttribute('aria-current');
+    });
+    header.dataset.category = chosen;
   }
-  function closeAll() { toggles.forEach(close); }
+  updateContext();
+  window.addEventListener('hashchange', updateContext);
+  let isolated = [];
+  function closeAll() {header.querySelectorAll('details[open]').forEach(node => {node.open = false;});}
   function closeMobile(restore = false) {
     const wasOpen = nav.classList.contains('is-open');
     mobile.setAttribute('aria-expanded', 'false');
@@ -36,7 +56,7 @@
       [...document.body.children].filter(node => node !== header && node !== backdrop && !['SCRIPT','STYLE','LINK'].includes(node.tagName)).forEach(node => {
         isolated.push([node, node.inert]); node.inert = true;
       });
-      nav.querySelector('a').focus();
+      primary.find(link => link.hasAttribute('aria-current')).focus();
     }
   });
   header.querySelector('.pnec-skip').addEventListener('click', () => closeMobile());
@@ -47,33 +67,24 @@
     if (url.origin === location.origin) closeMobile();
   });
   backdrop.addEventListener('click', () => closeMobile(true));
-  toggles.forEach(button => {
-    button.addEventListener('click', () => {
-      const opening = button.getAttribute('aria-expanded') !== 'true';
-      closeAll();
-      if (opening) {
-        button.setAttribute('aria-expanded', 'true');
-        document.getElementById(button.getAttribute('aria-controls')).hidden = false;
-      }
-    });
-    button.addEventListener('keydown', event => {
-      if (event.key === 'ArrowDown') {
-        event.preventDefault();
-        if (button.getAttribute('aria-expanded') !== 'true') button.click();
-        document.getElementById(button.getAttribute('aria-controls')).querySelector('a,button').focus();
-      }
-    });
+  header.querySelector('.pnec-primary').addEventListener('keydown', event => {
+    if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+    const index = primary.indexOf(document.activeElement);
+    if (index < 0) return;
+    event.preventDefault();
+    const next = event.key === 'Home' ? 0 : event.key === 'End' ? primary.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + primary.length) % primary.length;
+    primary[next].focus();
   });
   header.addEventListener('keydown', event => {
     if (event.key === 'Tab' && narrow.matches && nav.classList.contains('is-open')) {
-      const focusable = [...header.querySelectorAll('a,button,select,input')].filter(node => node.getClientRects().length && !node.disabled && node.tabIndex >= 0);
+      const focusable = [...header.querySelectorAll('a,button,select,input,summary')].filter(node => node.getClientRects().length && !node.disabled && node.tabIndex >= 0);
       const first = focusable[0], last = focusable[focusable.length - 1];
       if (event.shiftKey && document.activeElement === first) {event.preventDefault(); last.focus();}
       else if (!event.shiftKey && document.activeElement === last) {event.preventDefault(); first.focus();}
     }
     if (event.key !== 'Escape') return;
-    const open = toggles.find(button => button.getAttribute('aria-expanded') === 'true');
-    if (open) { close(open); open.focus(); }
+    const open = [...header.querySelectorAll('details[open]')].pop();
+    if (open) { open.open = false; open.querySelector('summary').focus(); }
     else closeMobile(true);
   });
   document.addEventListener('click', event => { if (!header.contains(event.target) && event.target !== backdrop) closeMobile(); });

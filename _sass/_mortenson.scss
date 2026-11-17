@@ -17,7 +17,7 @@ html[data-appearance-size="large"] { --pnec-size: 19px; }
 html[data-appearance-size="extra"] { --pnec-size: 22px; }
 html[data-appearance-spacing="true"] { --pnec-leading: 1.9; }
 body.pnec-site {
-  padding: 0 0 0 264px;
+  padding: 80px 0 0 264px;
   background: var(--pnec-bg); color: var(--pnec-text);
   font-family: var(--pnec-font); font-size: var(--pnec-size); line-height: var(--pnec-leading);
   --panel: var(--pnec-surface); --panel-mid: var(--pnec-bg); --ui-border: var(--pnec-line);
@@ -43,25 +43,6 @@ body.pnec-site {
   .pnec-legacy-content .elementor-heading-title { color: var(--pnec-text); }
 }
 html[data-appearance-background="grid"] body.pnec-site { background-image: linear-gradient(rgba(100,140,160,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(100,140,160,.12) 1px,transparent 1px); background-size: 36px 36px; }
-#pnec-site-header.site-header {
-  width: 264px; height: 100dvh; inset: 0 auto 0 0;
-  background: var(--pnec-surface); border: 0; border-right: 1px solid var(--pnec-line);
-  font-family: var(--pnec-font);
-  .wrapper { display: flex; flex-direction: column; align-items: stretch; gap: 24px; padding: 24px 16px; overflow-y: auto; }
-  .site-title { flex: 0 0 auto; gap: $spacing-xxs; color: var(--pnec-text); img { width: 125px; } strong { font-size: 28px; } }
-  .site-nav { display: flex; flex-direction: column; align-items: stretch; gap: 16px; flex: 0 0 auto; }
-  .trigger { display: block; }
-  .page-link, .ocs-button { display: flex; align-items: center; justify-content: space-between; width: 100%; height: auto; min-height: 44px; white-space: normal; font-family: var(--pnec-font); font-size: .95em; color: var(--pnec-text); text-align: left; border-radius: $radius-sm; }
-  .page-link:hover, .page-link.active, .page-link[aria-current] { color: var(--pnec-accent); background: var(--pnec-bg); box-shadow: inset 3px 0 var(--pnec-accent); }
-  .page-link span { transition: transform .15s; }
-  .page-link[aria-expanded="true"] span { transform: rotate(180deg); }
-  .pnec-account { flex: 0 0 auto; border-top: 1px solid var(--pnec-line); padding-top: 16px; }
-  .pnec-dropdown, .pnec-account .pnec-dropdown { position: static; min-width: 0; max-width: none; padding: 4px 0 4px $spacing-xs; background: var(--pnec-surface); border: 0; border-left: 2px solid var(--pnec-line); border-radius: 0; box-shadow: none; margin: 4px 0 $spacing-sm; }
-  .pnec-dropdown a, .pnec-dropdown button { font-family: var(--pnec-font); font-size: .92em; color: var(--pnec-text); white-space: normal; }
-  .pnec-dropdown a:hover, .pnec-dropdown a[aria-current] { color: var(--pnec-accent); background: var(--pnec-bg); }
-  .pnec-skip { position: fixed; &:focus { top: 4px; } }
-}
-.pnec-drawer-backdrop { display: none; }
 // Hero presentation lives in its own partial; only photo classes change at runtime.
 @import "redesign-hero";
 .pnec-settings-form { display: grid !important; gap: $spacing-sm; max-width: 680px; padding: 24px; select { width: 100%; min-height: 44px; } }
@@ -75,27 +56,9 @@ body.pnec-site .pnec-alert-danger { border-color: #c43c39; }
 .pnec-alert-copy { flex: 1; }
 body.pnec-site .pnec-alert-dismiss { position: static; background: transparent; color: var(--pnec-text); border: 1px solid var(--pnec-line); min-height: 44px; min-width: 44px; }
 .pnec-alert-meta { display: block; font-size: .85em; }
-@media (max-width: 1050px) {
-  body.pnec-site { padding: 80px 0 0; }
-  body.pnec-drawer-open { overflow: hidden; }
-  #pnec-site-header.site-header {
-    width: 100%; height: 80px; border-bottom: 1px solid var(--pnec-line);
-    .wrapper { flex-direction: row; align-items: center; justify-content: space-between; padding: 0 $spacing-lg; overflow: visible; }
-    .site-title { flex: 1; }
-    .nav-trigger { display: block; background: var(--pnec-surface); color: var(--pnec-text); }
-    .site-nav { display: none; position: fixed; top: 80px; bottom: 0; left: 0; right: auto; width: min(320px,100%); max-height: none; border: 0; border-radius: 0; padding: 16px; overflow-y: auto; background: var(--pnec-surface); }
-    .site-nav.is-open { display: flex; }
-  }
-  .pnec-drawer-backdrop:not([hidden]) { display: block; position: fixed; inset: 80px 0 0; z-index: 99999; border: 0; background: rgba(0,0,0,.5); }
-}
 html[data-appearance-motion="true"] *, html[data-appearance-motion="true"] *::before, html[data-appearance-motion="true"] *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 @media print { #pnec-site-header, .pnec-drawer-backdrop { display: none !important; } body.pnec-site { padding: 0; } }
-#pnec-site-header.site-header .site-nav .page-link:not(:first-child),
-#pnec-site-header.site-header .site-nav .page-link { margin: 0; }
-
-// Preserve a visible backdrop strip even on the narrowest supported phone.
-@media (max-width: 1050px) { #pnec-site-header.site-header .site-nav { width: min(320px,calc(100% - 24px)); } }
 body.pnec-site .ama-topbar { flex-wrap: wrap; }
 body.pnec-site .ama-topbar > div { min-width: 0; }
 body.pnec-site .ama-actions { max-width: 100%; }

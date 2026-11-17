@@ -89,7 +89,7 @@ with sync_playwright() as play:
             page.locator('.nav-trigger').click()
             assert page.locator('#pnec-site-header').get_attribute('aria-modal')=='true'
             assert page.locator('main').evaluate('(e)=>e.inert')
-            page.locator('#navbar-login-item').focus(); page.keyboard.press('Tab')
+            page.locator('[data-context="home"] a').last.focus(); page.keyboard.press('Tab')
             assert page.locator('#pnec-site-header').evaluate('(e)=>e.contains(document.activeElement)')
             page.keyboard.press('Escape')
             assert page.locator('.nav-trigger').evaluate('(e)=>e===document.activeElement')
@@ -135,8 +135,8 @@ with sync_playwright() as play:
         page.locator('#pnec-resource-filter').fill('no matching synthetic resource')
         assert page.locator('.elementor-widget-image-box:visible').count()==0
         page.locator('#pnec-resource-filter').fill('')
-        page.locator('summary').first.press('Enter')
-        assert page.locator('details').first.get_attribute('open') is not None
+        page.locator('main summary').first.press('Enter')
+        assert page.locator('main details').first.get_attribute('open') is not None
         page.goto(base+'pages/register.html',wait_until='networkidle')
         close_home_welcome(page)
         assert page.locator('.auth-form-stack').evaluate('(e)=>getComputedStyle(e).backgroundColor') == 'rgb(23, 38, 56)'

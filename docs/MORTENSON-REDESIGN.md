@@ -9,6 +9,14 @@ is authorized. Worktree: `../pnec-redesign-20261116`; branch:
 at `ce475278ba406ddb4fa39a93daafb6dd3b5f7af7`. The original main worktree was clean
 and remains untouched. No backend edits, migrations, API changes or credentials.
 
+## Current navigation and personalization follow-up
+
+The current implementation has five top categories with contextual sidebars,
+an authenticated Profile Dashboard and public OCS-style Preferences. See the
+[route inventory, reference-source audit, themes, language/audio coverage and validation](NAVIGATION-PREFERENCES.md).
+The implementation record below describes the preceding approved hero work;
+its fixed content, three photographs, published-tip API and action cards remain.
+
 ## Before and after
 
 - The fixed horizontal header becomes one fixed left sidebar on desktop, with
