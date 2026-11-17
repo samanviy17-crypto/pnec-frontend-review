@@ -8,7 +8,7 @@ Existing source author comments are retained. Snapshot selection, review isolati
 and validation are AI-assisted; this is not a claim of original student authorship.
 Third-party packages retain their own licenses and are referenced via manifests.
 
-## November 16 carousel photography
+## 11/13/26 Redesign photography
 
 - `assets/images/lake-poway-phil-konstantin.jpg`: Phil Konstantin, Lake Poway,
   December 10, 2012. [Original](https://commons.wikimedia.org/wiki/File:LakePowayByPhilKonstantin.JPG),
@@ -22,3 +22,13 @@ resized to 1600 pixels and recompressed as JPEG; CSS crops and darkens them.
 These photo derivatives retain their respective ShareAlike licenses. They are
 landscape context, not photographs of current emergencies or PNEC volunteers.
 Existing image files remain untouched.
+
+- `assets/images/old-poway-heritage-blkmtn.jpg`: BlkMtn, Heritage Museum in
+  Old Poway Park, May 16, 2026. [Original and author/license record](https://commons.wikimedia.org/wiki/File:Heritage_Museum,_operated_by_the_Poway_Historical_Society.jpg),
+  [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+  Downloaded from Wikimedia Commons, resized proportionally to 1600 × 1200 with
+  macOS sips, recompressed as JPEG, and cropped/darkened only for display.
+  This derivative retains CC BY-SA 4.0. No AI-generated imagery is used.
+
+The current fixed hero rotates these three distinct real Poway photographs.
+The preceding two-photo implementation record and original assets are preserved.

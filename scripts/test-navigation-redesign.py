@@ -37,6 +37,14 @@ def mock_api(route):
         route.fulfill(status=200,content_type='text/css',body=''); return
     route.fulfill(status=200,content_type='application/json',body=json.dumps(data))
 
+def close_home_welcome(page):
+    # Existing helper auto-opens specifically at / on window.load. Dismiss it
+    # explicitly for hero/navigation checks; helper interactions are tested below.
+    page.wait_for_load_state('load')
+    close = page.locator('#pnec-bot-close')
+    if close.is_visible():
+        close.click()
+
 with sync_playwright() as play:
     browser = play.chromium.launch()
     for width, columns in [(1440,4),(1280,4),(1024,2),(768,2),(390,1),(320,1)]:
@@ -52,6 +60,7 @@ with sync_playwright() as play:
         for route in routes:
             print('Checking',width,route or 'home',flush=True)
             response=page.goto(base+route,wait_until='domcontentloaded')
+            close_home_welcome(page)
             assert response.status == 200, (width,route,response.status)
             page.wait_for_timeout(250)
             geometry=page.locator('#pnec-site-header').evaluate('(e)=>({x:e.getBoundingClientRect().x,y:e.getBoundingClientRect().y,width:e.getBoundingClientRect().width,height:e.getBoundingClientRect().height})')
@@ -69,9 +78,14 @@ with sync_playwright() as play:
                 assert len({round(b['y']) for b in boxes}) == 4//columns,(width,boxes)
                 assert len({round(b['height']) for b in boxes})==1,(width,'unequal heights',boxes)
                 for i in range(4):
-                    card=cards.nth(i); card.scroll_into_view_if_needed(); before=card.bounding_box()
-                    card.hover(); assert card.bounding_box()==before
-                    card.focus(); assert card.bounding_box()==before
+                    card=cards.nth(i); card.scroll_into_view_if_needed()
+                    # Compare document coordinates: Playwright may scroll a below-fold
+                    # target again to keep it clear of the fixed helper launcher.
+                    def card_box():
+                        return card.evaluate('(e)=>{const b=e.getBoundingClientRect(); return [b.x+scrollX,b.y+scrollY,b.width,b.height].map(v=>Math.round(v*100)/100)}')
+                    before=card_box()
+                    card.hover(); assert card_box()==before
+                    card.focus(); assert card_box()==before
                     assert page.request.get(card.get_attribute('href').split('#')[0] if card.get_attribute('href').startswith('http') else base.split('/pnec-frontend-review/')[0]+card.get_attribute('href').split('#')[0]).status==200
                 page.evaluate('document.activeElement.blur(); window.scrollTo(0,0)')
                 page.mouse.move(0,0)
@@ -83,6 +97,7 @@ with sync_playwright() as play:
                 assert positions==link_reference,(width,route,'links shifted')
         # Exercise mouse/touch-style click, keyboard, Escape, and outside dismissal.
         page.goto(base,wait_until='domcontentloaded')
+        close_home_welcome(page)
         if width<=1050:
             mobile=page.locator('.nav-trigger'); mobile.tap()
             assert mobile.get_attribute('aria-expanded')=='true'
@@ -118,6 +133,7 @@ with sync_playwright() as play:
         # Signed-in display must fit the same reserved account slot.
         page.evaluate("localStorage.setItem('pnec_user',JSON.stringify({display_name:'Synthetic Resident',email:'synthetic@example.test',role:'resident'}))")
         page.reload(wait_until='domcontentloaded')
+        close_home_welcome(page)
         page.wait_for_timeout(250)
         if width<=1050: page.locator('.nav-trigger').click()
         assert page.get_by_role('button',name='Account',exact=True).is_visible()

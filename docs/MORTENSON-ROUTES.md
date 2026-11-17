@@ -1,4 +1,4 @@
-# Route review inventory — November 16, 2026
+# 11/13/26 Redesign — route review inventory
 
 Source baseline: `ce475278ba406ddb4fa39a93daafb6dd3b5f7af7`. Shared shell, tokens, notifications and appearance settings apply to every route below. Automated QA: Codex in this implementation session. The suggested teammate ownership remains in pages #5; individual owner review is pending.
 

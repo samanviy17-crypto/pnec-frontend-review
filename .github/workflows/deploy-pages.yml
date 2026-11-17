@@ -29,7 +29,6 @@ jobs:
           bundler: '4.0.19'
       - name: Install Jekyll dependencies
         run: |
-          bundle add kramdown-parser-gfm --version 1.1.0 --skip-install
           bundle lock --add-platform x86_64-linux
           bundle install
           bundle check

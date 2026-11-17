@@ -1,29 +1,23 @@
-<section class="pnec-carousel" role="region" aria-roledescription="carousel" aria-label="Preparedness highlights" tabindex="0">
-  <div class="pnec-slides">
-    <article class="pnec-slide" role="group" aria-roledescription="slide" aria-label="1 of 4: Emergency Preparedness">
-      <img src="{{ '/assets/images/lake-poway-phil-konstantin.jpg' | relative_url }}" alt="" fetchpriority="high" width="1440" height="700">
-      <div class="pnec-slide-copy"><p class="pnec-eyebrow">Poway Neighborhood Emergency Corps</p><h1>A safer, more<br>prepared Poway.</h1><p>Neighbors helping neighbors through preparedness, response, and recovery.</p><a class="ocs-button primary" href="{{ '/pages/checklist.html' | relative_url }}">Get Prepared →</a></div>
-    </article>
-    <article class="pnec-slide" role="group" aria-roledescription="slide" aria-label="2 of 4: Weekly Preparedness Tip" hidden>
-      <img src="{{ '/assets/images/lake-poway-byron-hetrick.jpg' | relative_url }}" alt="" width="1440" height="700">
-      <div class="pnec-slide-copy"><p class="pnec-eyebrow">Weekly Preparedness Tip</p><h2 id="weekly-tip-title">This week's preparedness tip</h2><div id="weekly-tip-content"><p>The current tip is loading.</p></div><p id="weekly-tip-source" class="pnec-slide-source"></p><a class="ocs-button primary" href="{{ '/pages/kit.html' | relative_url }}">Review your emergency kit →</a></div>
-    </article>
-    <article class="pnec-slide" role="group" aria-roledescription="slide" aria-label="3 of 4: Community Volunteering" hidden>
-      <img src="{{ '/assets/images/lake-poway-phil-konstantin.jpg' | relative_url }}" alt="" width="1440" height="700">
-      <div class="pnec-slide-copy"><p class="pnec-eyebrow">Community Volunteering</p><h2>Be there for<br>your neighbors.</h2><p>Explore existing volunteer roles and available community shifts.</p><a class="ocs-button primary" href="{{ '/pages/volunteer.html' | relative_url }}">Volunteer with Us →</a></div>
-    </article>
-    <article class="pnec-slide" role="group" aria-roledescription="slide" aria-label="4 of 4: Fire Safety" hidden>
-      <img src="{{ '/assets/images/lake-poway-phil-konstantin.jpg' | relative_url }}" alt="" width="1440" height="700">
-      <div class="pnec-slide-copy"><p class="pnec-eyebrow">Fire Safety</p><h2>Make time for<br>your wildfire plan.</h2><p>Find the existing wildfire action plan and home preparedness resources.</p><a class="ocs-button primary" href="{{ '/pages/preparedness-resources.html' | relative_url }}">Explore fire safety resources →</a></div>
-    </article>
+<section class="pnec-hero" aria-labelledby="home-hero-title">
+  <div class="pnec-hero-backgrounds" aria-hidden="true">
+    <img class="is-current" src="{{ '/assets/images/lake-poway-phil-konstantin.jpg' | relative_url }}" alt="" fetchpriority="high" width="1600" height="1067">
+    <img src="{{ '/assets/images/lake-poway-byron-hetrick.jpg' | relative_url }}" alt="" width="1600" height="1067">
+    <img src="{{ '/assets/images/old-poway-heritage-blkmtn.jpg' | relative_url }}" alt="" width="1600" height="1200">
   </div>
-  <div class="pnec-carousel-controls" hidden>
-    <button type="button" data-carousel="previous" aria-label="Previous slide">←</button>
-    <div class="pnec-carousel-dots" aria-label="Choose a slide">{% assign slide_names = 'Emergency Preparedness,Weekly Preparedness Tip,Community Volunteering,Fire Safety' | split: ',' %}{% for name in slide_names %}<button type="button" data-slide="{{ forloop.index0 }}" aria-label="Show {{ name }}"{% if forloop.first %} aria-current="true"{% endif %}>{{ forloop.index }}</button>{% endfor %}</div>
-    <button type="button" data-carousel="next" aria-label="Next slide">→</button>
-    <button type="button" data-carousel="pause">Pause rotation</button>
+  <div class="pnec-hero-copy">
+    <p class="pnec-eyebrow">Poway Neighborhood Emergency Corps</p>
+    <h1 id="home-hero-title">A safer, more<br>prepared Poway.</h1>
+    <p>Neighbors helping neighbors through preparedness, response, and recovery.</p>
+    <a class="ocs-button primary" href="{{ '/pages/checklist.html' | relative_url }}">Get Prepared →</a>
+    <section class="pnec-hero-tip" aria-labelledby="weekly-tip-heading">
+      <p class="pnec-eyebrow">Weekly Preparedness Tip</p>
+      <h2 id="weekly-tip-heading">This week's preparedness tip</h2>
+      <div id="weekly-tip-content" aria-live="polite"><p>The current tip is loading.</p></div>
+      <p id="weekly-tip-source" class="pnec-hero-source"></p>
+      <a href="{{ '/pages/kit.html' | relative_url }}">Review your emergency kit →</a>
+    </section>
+    <button class="pnec-hero-pause" type="button" hidden>Pause background photos</button>
   </div>
-  <p class="pnec-sr-only" data-carousel-status aria-live="polite" aria-atomic="true"></p>
-  <p class="pnec-photo-credit">Lake Poway photos: <a href="https://commons.wikimedia.org/wiki/File:LakePowayByPhilKonstantin.JPG">Phil Konstantin</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>) and <a href="https://commons.wikimedia.org/wiki/File:Lake_Poway.jpg">Byron Hetrick</a> (<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>). Resized and cropped for display.</p>
+  <p class="pnec-photo-credit">Poway photographs: <a href="https://commons.wikimedia.org/wiki/File:LakePowayByPhilKonstantin.JPG">Phil Konstantin</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>), <a href="https://commons.wikimedia.org/wiki/File:Lake_Poway.jpg">Byron Hetrick</a> (<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>), and <a href="https://commons.wikimedia.org/wiki/File:Heritage_Museum,_operated_by_the_Poway_Historical_Society.jpg">BlkMtn</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>). Resized and cropped for display.</p>
 </section>
 <script src="{{ '/assets/js/pages/home-carousel.js' | relative_url }}" defer></script>

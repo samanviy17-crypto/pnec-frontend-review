@@ -1,45 +1,32 @@
 (() => {
-  const carousel = document.querySelector('.pnec-carousel');
-  if (!carousel) return;
-  const slides = [...carousel.querySelectorAll('.pnec-slide')];
-  const dots = [...carousel.querySelectorAll('[data-slide]')];
-  const pause = carousel.querySelector('[data-carousel="pause"]');
+  const hero = document.querySelector('.pnec-hero');
+  if (!hero) return;
+  const photos = [...hero.querySelectorAll('.pnec-hero-backgrounds img')];
+  const pause = hero.querySelector('.pnec-hero-pause');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  let index = 0, paused = reduced.matches || document.documentElement.dataset.appearanceMotion === 'true', timer;
-  function stop() { clearInterval(timer); }
+  let index = 0, paused = false, timer;
   function start() {
-    stop();
+    clearInterval(timer);
     const motionOff = reduced.matches || document.documentElement.dataset.appearanceMotion === 'true';
-    pause.disabled = motionOff;
-    pause.textContent = motionOff ? 'Rotation off (reduced motion)' : paused ? 'Resume rotation' : 'Pause rotation';
-    if (!paused && !reduced.matches && document.documentElement.dataset.appearanceMotion !== 'true' && !document.hidden && !carousel.matches(':hover, :focus-within')) {
-      timer = setInterval(() => show(index + 1), 8000);
+    pause.hidden = motionOff;
+    pause.textContent = paused ? 'Resume background photos' : 'Pause background photos';
+    if (!paused && !motionOff && !document.hidden) {
+      timer = setInterval(() => {
+        if (reduced.matches || document.documentElement.dataset.appearanceMotion === 'true' || document.hidden) {
+          start();
+          return;
+        }
+        // Sequential cycling guarantees three distinct photos with no adjacent repeat.
+        photos[index].classList.remove('is-current');
+        index = (index + 1) % photos.length;
+        photos[index].classList.add('is-current');
+      }, 8000);
     }
   }
-  function show(next, announce = false) {
-    index = (next + slides.length) % slides.length;
-    slides.forEach((slide, i) => {slide.hidden = i !== index;});
-    dots.forEach((dot, i) => {if (i === index) dot.setAttribute('aria-current','true'); else dot.removeAttribute('aria-current');});
-    if (announce) carousel.querySelector('[data-carousel-status]').textContent = slides[index].getAttribute('aria-label');
-  }
-  function manual(next) { paused = true; show(next, true); start(); }
-  carousel.querySelector('.pnec-carousel-controls').hidden = false;
-  carousel.querySelector('[data-carousel="previous"]').addEventListener('click', () => manual(index - 1));
-  carousel.querySelector('[data-carousel="next"]').addEventListener('click', () => manual(index + 1));
-  dots.forEach((dot, i) => dot.addEventListener('click', () => manual(i)));
-  pause.addEventListener('click', () => {paused = !paused; start();});
-  carousel.addEventListener('keydown', event => {
-    if (!['ArrowLeft','ArrowRight'].includes(event.key)) return;
-    event.preventDefault(); manual(index + (event.key === 'ArrowRight' ? 1 : -1));
-  });
-  carousel.addEventListener('mouseenter', stop);
-  carousel.addEventListener('mouseleave', start);
-  carousel.addEventListener('focusin', stop);
-  carousel.addEventListener('focusout', () => requestAnimationFrame(start));
+  pause.addEventListener('click', () => { paused = !paused; start(); });
   document.addEventListener('visibilitychange', start);
-  function motionChanged() {if (reduced.matches || document.documentElement.dataset.appearanceMotion === 'true') paused = true; start();}
-  reduced.addEventListener('change', motionChanged);
-  window.addEventListener('pnec:appearance-changed', motionChanged);
+  reduced.addEventListener('change', start);
+  window.addEventListener('pnec:appearance-changed', start);
   start();
   // Reuse the published weekly-tip endpoint and content workflow, never a synthetic tip.
   const content = document.getElementById('weekly-tip-content');
@@ -50,10 +37,9 @@
     .then(data => {
       const tips = (Array.isArray(data.tips) ? data.tips : []).filter(tip => typeof tip.title === 'string' && typeof tip.body === 'string');
       if (!tips.length) throw new Error();
-      document.getElementById('weekly-tip-title').textContent = tips[0].title;
       content.replaceChildren();
-      tips.forEach((tip, i) => {
-        if (i) {const title = document.createElement('h3'); title.textContent = tip.title; content.append(title);}
+      tips.forEach((tip) => {
+        const title = document.createElement('h3'); title.textContent = tip.title; content.append(title);
         const body = document.createElement('p'); body.textContent = tip.body; content.append(body);
       });
       source.textContent = 'PNEC preparedness tips' + (data.week_start ? ' · Week of ' + data.week_start : '') + '. Educational guidance; not an emergency alert.';

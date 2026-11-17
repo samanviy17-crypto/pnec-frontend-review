@@ -35,10 +35,10 @@ body.pnec-site {
   .pnec-actions { --panel: var(--pnec-surface); --panel-mid: var(--pnec-bg); --ui-border: var(--pnec-line); --pref-text-color: var(--pnec-text); --pref-accent-color: var(--pnec-accent); background: transparent; font-family: inherit; }
   .pnec-action { background: var(--pnec-surface); }
   .pnec-footer strong, .pnec-eyebrow { color: var(--pnec-accent); }
-  .page-hero, .vol-hero { padding: 24px 20px; margin: 0 0 20px; background: var(--pnec-surface); color: var(--pnec-text); }
+  .page-hero, .vol-hero { padding: 24px $spacing-lg; margin: 0 0 $spacing-lg; background: var(--pnec-surface); color: var(--pnec-text); }
   .page-hero p, .vol-hero p, .vol-hero h1 { color: var(--pnec-text); }
   .pnec-page-shell { min-height: calc(100vh - 140px); }
-  .pnec-page-heading { padding: 0 0 20px; margin-bottom: 20px; }
+  .pnec-page-heading { padding: 0 0 $spacing-lg; margin-bottom: $spacing-lg; }
   input:not([type="checkbox"]):not([type="radio"]), textarea, select { background: var(--pnec-surface); color: var(--pnec-text); border: 1px solid var(--pnec-line); font-family: inherit; font-size: 1em; }
   .pnec-legacy-content .elementor-heading-title { color: var(--pnec-text); }
 }
@@ -48,35 +48,26 @@ html[data-appearance-background="grid"] body.pnec-site { background-image: linea
   background: var(--pnec-surface); border: 0; border-right: 1px solid var(--pnec-line);
   font-family: var(--pnec-font);
   .wrapper { display: flex; flex-direction: column; align-items: stretch; gap: 24px; padding: 24px 16px; overflow-y: auto; }
-  .site-title { flex: 0 0 auto; gap: 8px; color: var(--pnec-text); img { width: 125px; } strong { font-size: 28px; } }
+  .site-title { flex: 0 0 auto; gap: $spacing-xxs; color: var(--pnec-text); img { width: 125px; } strong { font-size: 28px; } }
   .site-nav { display: flex; flex-direction: column; align-items: stretch; gap: 16px; flex: 0 0 auto; }
   .trigger { display: block; }
-  .page-link, .ocs-button { display: flex; align-items: center; justify-content: space-between; width: 100%; height: auto; min-height: 44px; white-space: normal; font-family: var(--pnec-font); font-size: .95em; color: var(--pnec-text); text-align: left; border-radius: 8px; }
+  .page-link, .ocs-button { display: flex; align-items: center; justify-content: space-between; width: 100%; height: auto; min-height: 44px; white-space: normal; font-family: var(--pnec-font); font-size: .95em; color: var(--pnec-text); text-align: left; border-radius: $radius-sm; }
   .page-link:hover, .page-link.active, .page-link[aria-current] { color: var(--pnec-accent); background: var(--pnec-bg); box-shadow: inset 3px 0 var(--pnec-accent); }
   .page-link span { transition: transform .15s; }
   .page-link[aria-expanded="true"] span { transform: rotate(180deg); }
   .pnec-account { flex: 0 0 auto; border-top: 1px solid var(--pnec-line); padding-top: 16px; }
-  .pnec-dropdown, .pnec-account .pnec-dropdown { position: static; min-width: 0; max-width: none; padding: 4px 0 4px 10px; background: var(--pnec-surface); border: 0; border-left: 2px solid var(--pnec-line); border-radius: 0; box-shadow: none; margin: 4px 0 12px; }
+  .pnec-dropdown, .pnec-account .pnec-dropdown { position: static; min-width: 0; max-width: none; padding: 4px 0 4px $spacing-xs; background: var(--pnec-surface); border: 0; border-left: 2px solid var(--pnec-line); border-radius: 0; box-shadow: none; margin: 4px 0 $spacing-sm; }
   .pnec-dropdown a, .pnec-dropdown button { font-family: var(--pnec-font); font-size: .92em; color: var(--pnec-text); white-space: normal; }
   .pnec-dropdown a:hover, .pnec-dropdown a[aria-current] { color: var(--pnec-accent); background: var(--pnec-bg); }
   .pnec-skip { position: fixed; &:focus { top: 4px; } }
 }
 .pnec-drawer-backdrop { display: none; }
-.pnec-carousel { position: relative; background: #10213a; color: white; }
-.pnec-slide { position: relative; min-height: 420px; }
-.pnec-slide > img { position: absolute; width: 100%; height: 100% !important; object-fit: cover; opacity: .5; }
-.pnec-slide::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg,rgba(5,20,33,.85),rgba(5,20,33,.35)); pointer-events: none; }
-body.pnec-site .pnec-slide-copy { position: relative; z-index: 1; padding: 44px 40px 24px; max-width: 950px; h1,h2,h3,p,.pnec-eyebrow { color: #fff; } h1,h2 { font-size: clamp(30px,4vw,54px); margin-bottom: 16px; } p { max-width: 64ch; } }
-.pnec-slide-source { font-size: 14px !important; }
-.pnec-carousel-controls { position: relative; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding: 8px 40px 24px; }
-.pnec-carousel-controls button { background: #fff; color: #10213a; border: 2px solid #fff; border-radius: 8px; min-width: 44px; min-height: 44px; font: inherit; cursor: pointer; }
-.pnec-carousel-dots { display: flex; gap: 8px; }
-.pnec-carousel-dots [aria-current] { background: #087c82; color: #fff; }
-.pnec-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-.pnec-settings-form { display: grid !important; gap: 12px; max-width: 680px; padding: 24px; select { width: 100%; min-height: 44px; } }
+// Hero presentation lives in its own partial; only photo classes change at runtime.
+@import "redesign-hero";
+.pnec-settings-form { display: grid !important; gap: $spacing-sm; max-width: 680px; padding: 24px; select { width: 100%; min-height: 44px; } }
 .pnec-task-panel { @include grid-card-cell; padding: $spacing-lg; margin-bottom: $spacing-lg; background: var(--pnec-surface); color: var(--pnec-text); border-color: var(--pnec-line); summary { cursor: pointer; min-height: 44px; font-weight: 700; } }
-.pnec-task-links { display: flex; gap: 12px; flex-wrap: wrap; }
-.pnec-resource-search { display: block; max-width: 680px; margin-bottom: 20px; input { display: block; width: 100%; min-height: 44px; padding: 10px; } }
+.pnec-task-links { display: flex; gap: $spacing-sm; flex-wrap: wrap; }
+.pnec-resource-search { display: block; max-width: 680px; margin-bottom: $spacing-lg; input { display: block; width: 100%; min-height: 44px; padding: $spacing-xs; } }
 body.pnec-site #pnec-alert-banner { position: static; margin: 0; }
 body.pnec-site .pnec-alert { display: flex; align-items: start; gap: 16px; padding: 16px 24px; color: var(--pnec-text); background: var(--pnec-surface); border-bottom: 2px solid var(--pnec-accent); }
 body.pnec-site .pnec-alert-warning { border-color: #ac6500; }
@@ -89,7 +80,7 @@ body.pnec-site .pnec-alert-dismiss { position: static; background: transparent; 
   body.pnec-drawer-open { overflow: hidden; }
   #pnec-site-header.site-header {
     width: 100%; height: 80px; border-bottom: 1px solid var(--pnec-line);
-    .wrapper { flex-direction: row; align-items: center; justify-content: space-between; padding: 0 20px; overflow: visible; }
+    .wrapper { flex-direction: row; align-items: center; justify-content: space-between; padding: 0 $spacing-lg; overflow: visible; }
     .site-title { flex: 1; }
     .nav-trigger { display: block; background: var(--pnec-surface); color: var(--pnec-text); }
     .site-nav { display: none; position: fixed; top: 80px; bottom: 0; left: 0; right: auto; width: min(320px,100%); max-height: none; border: 0; border-radius: 0; padding: 16px; overflow-y: auto; background: var(--pnec-surface); }
@@ -97,18 +88,12 @@ body.pnec-site .pnec-alert-dismiss { position: static; background: transparent; 
   }
   .pnec-drawer-backdrop:not([hidden]) { display: block; position: fixed; inset: 80px 0 0; z-index: 99999; border: 0; background: rgba(0,0,0,.5); }
 }
-@media (max-width: 540px) {
-  body.pnec-site .pnec-slide-copy { padding: 28px 20px 20px; }
-  .pnec-carousel-controls { padding: 8px 20px 24px; gap: 6px; }
-  .pnec-carousel-dots { gap: 4px; }
-  .pnec-carousel-controls button { min-width: 36px; min-height: 44px; }
-}
 html[data-appearance-motion="true"] *, html[data-appearance-motion="true"] *::before, html[data-appearance-motion="true"] *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
-@media print { #pnec-site-header, .pnec-drawer-backdrop, .pnec-carousel-controls { display: none !important; } body.pnec-site { padding: 0; } }
+@media print { #pnec-site-header, .pnec-drawer-backdrop { display: none !important; } body.pnec-site { padding: 0; } }
 #pnec-site-header.site-header .site-nav .page-link:not(:first-child),
 #pnec-site-header.site-header .site-nav .page-link { margin: 0; }
-body.pnec-site .pnec-photo-credit { padding: 0 20px 12px; margin: 0; color: #fff; font-size: 12px; a { color: #c0f2f2; } }
+
 // Preserve a visible backdrop strip even on the narrowest supported phone.
 @media (max-width: 1050px) { #pnec-site-header.site-header .site-nav { width: min(320px,calc(100% - 24px)); } }
 body.pnec-site .ama-topbar { flex-wrap: wrap; }

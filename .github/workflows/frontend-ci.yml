@@ -42,9 +42,6 @@ jobs:
 
       - name: Install Jekyll dependencies
         run: |
-          # Jekyll 3 + the locked Kramdown 2 need an explicit GFM parser.
-          # Supply it only in this disposable CI checkout; preserve source pins.
-          bundle add kramdown-parser-gfm --version 1.1.0 --skip-install
           # The committed lockfile currently lists only arm64-darwin.
           # Add the runner platform locally without committing a lockfile change.
           bundle lock --add-platform x86_64-linux
@@ -66,13 +63,13 @@ jobs:
         run: |
           python3 -m pip install playwright==1.65.1
           python3 -m playwright install --with-deps chromium
-      - name: Verify sidebar, carousel, preferences and responsive routes
+      - name: Verify sidebar, hero, preferences and responsive routes
         run: bash scripts/check-redesign-browser.sh "$RUNNER_TEMP/pnec-site" "$RUNNER_TEMP/navigation-evidence"
 
       - name: Upload browser review evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: mortenson-navigation-evidence
+          name: 111326-redesign-evidence
           path: ${{ runner.temp }}/navigation-evidence
           if-no-files-found: ignore
