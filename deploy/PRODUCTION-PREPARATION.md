@@ -24,6 +24,12 @@ rendered runtime API/base/preview value, rejects review-path leaks, verifies loc
 assets/links, and excludes developer/test documentation from the product artifact.
 It does not read the review API variable or accept an arbitrary API override.
 
+The production artifact selects the public API hostname even when the artifact
+is served on loopback for inspection. Public requests use HTTPS on port 443.
+The backend's assigned Gunicorn/Compose/nginx upstream port 8630 stays behind
+nginx. The development and review builds retain their existing separate API
+behavior. Local native development defaults to port 8425 on the Mac.
+
 ## Local preparation / offline CI
 
 ```sh

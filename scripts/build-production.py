@@ -50,6 +50,8 @@ def main():
             if json.loads(value)!=API:raise SystemExit('Incorrect production API in '+str(file.relative_to(destination)))
             checked+=1
         if values:
+            if not re.search(r'^window\.PNEC_API_BASE\s*=\s*window\.PNEC_REMOTE_API_BASE;\s*$', text, re.MULTILINE):
+                raise SystemExit('Production runtime must use the public API regardless of the browser hostname.')
             canonical=re.findall(r'<link rel="canonical" href="([^"]+)"',text)
             if len(canonical)!=1 or not canonical[0].startswith(FRONTEND+'/'):raise SystemExit('Incorrect production canonical origin.')
             if not re.search(r'window\.PNEC_SITE_BASE\s*=\s*""\s*;',text):raise SystemExit('Incorrect production baseurl.')

@@ -11,6 +11,7 @@ p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('--site',type=Path,required=True);p.add_argument('--output-dir',type=Path,required=True)
 a=p.parse_args();site=a.site.resolve(strict=True);a.output_dir.mkdir(parents=True,exist_ok=True)
 ORIGIN='https://powaynec.opencodingsociety.com';API='https://powaynec-api.opencodingsociety.com'
+LOOPBACK='http://127.0.0.1'
 observed=[];missing=[];rows=[]
 with sync_playwright() as play:
     browser=play.chromium.launch()
@@ -32,7 +33,7 @@ with sync_playwright() as play:
                 if url.path.endswith('/theme.css'):
                     route.fulfill(status=200,body='',content_type='text/css',headers={'Access-Control-Allow-Origin':ORIGIN,'Access-Control-Allow-Credentials':'true'});return
                 route.fulfill(status=status,body=json.dumps(data),content_type='application/json',headers={'Access-Control-Allow-Origin':ORIGIN,'Access-Control-Allow-Credentials':'true'});return
-            if url.scheme+'://'+url.netloc==ORIGIN:
+            if url.scheme+'://'+url.netloc in (ORIGIN, LOOPBACK):
                 file=site/unquote(url.path).lstrip('/')
                 if file.is_dir():file/='index.html'
                 if file.is_file():route.fulfill(path=str(file),content_type=mimetypes.guess_type(str(file))[0] or 'application/octet-stream')
@@ -56,8 +57,13 @@ with sync_playwright() as play:
             else:assert page.locator('.pnec-context').count()==1
             rows.append({'path':path,'width':width,'passed':True})
         page.goto(ORIGIN+'/',wait_until='networkidle');page.locator('#navbar-login-item').click();page.wait_for_url(ORIGIN+'/pages/register.html#login');expect(page.locator('#login-form')).to_be_visible()
+        if width == 390:
+            for path in ('/', '/pages/blog.html'):
+                response = page.goto(LOOPBACK + path, wait_until='networkidle')
+                assert response.status == 200
+                assert page.evaluate('window.PNEC_API_BASE') == API
         assert not errors,errors;context.close()
     browser.close()
 assert observed and not missing,missing
 (a.output_dir/'production-artifact-results.json').write_text(json.dumps({'checks':rows,'api_paths':sorted(set(observed)),'missing_assets':missing,'policy':'anonymous API fixtures; all network local; no authentication/persistence claim','passed':True},indent=2)+'\n')
-print('PASS: 27 production-origin route/viewport checks, runtime/canonical/API/base paths, Login destination and local assets; fixture API only.')
+print('PASS: 27 production-origin route/viewport checks, loopback API selection, runtime/canonical/API/base paths, Login destination and local assets; fixture API only.')
