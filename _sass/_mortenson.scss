@@ -17,7 +17,6 @@ html[data-appearance-size="large"] { --pnec-size: 19px; }
 html[data-appearance-size="extra"] { --pnec-size: 22px; }
 html[data-appearance-spacing="true"] { --pnec-leading: 1.9; }
 body.pnec-site {
-  padding: 80px 0 0 264px;
   background: var(--pnec-bg); color: var(--pnec-text);
   font-family: var(--pnec-font); font-size: var(--pnec-size); line-height: var(--pnec-leading);
   --panel: var(--pnec-surface); --panel-mid: var(--pnec-bg); --ui-border: var(--pnec-line);

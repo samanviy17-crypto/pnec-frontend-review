@@ -31,7 +31,7 @@
   // Reuse the published weekly-tip endpoint and content workflow, never a synthetic tip.
   const content = document.getElementById('weekly-tip-content');
   const source = document.getElementById('weekly-tip-source');
-  const base = (location.hostname === 'localhost' || location.hostname === '127.0.0.1') ? 'http://127.0.0.1:8425' : window.PNEC_API_BASE;
+  const base = (location.hostname === 'localhost' || location.hostname === '127.0.0.1') ? (window.PNEC_API_BASE || `http://${location.hostname}:8425`) : window.PNEC_API_BASE;
   fetch(base + '/api/preparedness/weekly', {credentials:'omit', signal:AbortSignal.timeout(10000)})
     .then(response => {if (!response.ok) throw new Error(); return response.json();})
     .then(data => {

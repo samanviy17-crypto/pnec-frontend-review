@@ -1,0 +1,282 @@
+Release inputs: frontend=/Users/samanviyachareni/PNEC-Workspace/pnec-redesign-20261116; backend=/Users/samanviyachareni/PNEC-Workspace/pnec-backend-review; site=/private/var/folders/_g/p61_lz8s2935chrz1ck2lhk40000gp/T/pnec-frontend-release-6q9th8bg/site
+127.0.0.1 - - [17/Nov/2026 17:40:57] "GET /api/cms/page/checklist/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:57] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:57] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:40:57] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:57] "GET /api/overrides/checklist HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:57] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:57] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:57] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:57] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:57] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:57] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:57] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:57] "GET /api/preparedness/quiz HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:57] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:57] "GET /api/check-ins HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:57] "GET /api/hazards HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "PATCH /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "PATCH /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "POST /api/preparedness/quiz HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "PUT /api/check-ins HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "GET /api/check-ins HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "[35m[1mPOST /api/hazards HTTP/1.1[0m" 201 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "GET /api/hazards HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "GET /api/cms/page/checklist/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "GET /api/overrides/checklist HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "GET /api/preparedness/quiz HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "GET /api/check-ins HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:58] "GET /api/hazards HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:59] "GET /api/cms/page/checklist/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:59] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:59] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:59] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:40:59] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:59] "GET /api/overrides/checklist HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:59] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:59] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:59] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:59] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:59] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:59] "GET /api/preparedness/quiz HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:59] "GET /api/check-ins HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:40:59] "GET /api/hazards HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "PATCH /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/cms/page/checklist/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/overrides/checklist HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/preparedness/quiz HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/check-ins HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/hazards HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/cms/page/checklist/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/overrides/checklist HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "PATCH /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:00] "PATCH /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "PATCH /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/page/checklist/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/overrides/checklist HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/preparedness/quiz HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/check-ins HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/hazards HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/page/checklist/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/overrides/checklist HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/preparedness/quiz HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "PATCH /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/check-ins HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/hazards HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/page/dashboard/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/overrides/dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/check-ins HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/hazards HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "PATCH /api/hazards/1 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/hazards HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/page/volunteer/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/overrides/volunteer HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/volunteer/tasks HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "[35m[1mPOST /api/volunteer/tasks HTTP/1.1[0m" 201 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/volunteer/tasks HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/page/volunteer/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/overrides/volunteer HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/volunteer/tasks HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "POST /api/volunteer/tasks/1/signup HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/volunteer/tasks HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "[32mGET /api/cms/page/%2Fdonation-form%2F/seo HTTP/1.1[0m" 308 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:01] "GET /api/cms/page/donation-form/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/overrides/donate HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/supply-drives HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "[35m[1mPOST /api/supply-drives HTTP/1.1[0m" 201 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/supply-drives HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/supply-drives/1/pledges HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "[32mGET /api/cms/page/%2Fdonation-form%2F/seo HTTP/1.1[0m" 308 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/cms/page/donation-form/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/overrides/donate HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/supply-drives HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/supply-drives/1/pledges HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "[35m[1mPOST /api/supply-drives/1/pledges HTTP/1.1[0m" 201 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/supply-drives HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/supply-drives/1/pledges HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "[32mGET /api/cms/page/%2Fdonation-form%2F/seo HTTP/1.1[0m" 308 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/cms/page/donation-form/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/overrides/donate HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/supply-drives HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/supply-drives/1/pledges HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "PATCH /api/supply-pledges/1/receive HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/supply-drives HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/supply-drives/1/pledges HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/cms/page/preparedness-resources/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/overrides/preparedness-resources HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/risk HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/preparedness/weekly HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/preparedness/weekly HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/risk HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/cms/page/preparedness-resources/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/overrides/preparedness-resources HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/risk HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/preparedness/weekly HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/preparedness/weekly HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:02] "GET /api/risk HTTP/1.1" 200 -
+Traceback (most recent call last):
+  File "/Users/samanviyachareni/PNEC-Workspace/pnec-redesign-20261116/scripts/test-community-tools.py", line 223, in <module>
+    expect(resident.locator('.community-tools')).to_contain_text('Flood preparedness this week')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/pnec-preview-check-8766-venv/lib/python3.14/site-packages/playwright/sync_api/_generated.py", line 14994, in to_contain_text
+    self._sync(
+    ~~~~~~~~~~^
+        self._impl_obj.to_contain_text(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+        )
+        ^
+    )
+    ^
+  File "/private/tmp/pnec-preview-check-8766-venv/lib/python3.14/site-packages/playwright/_impl/_sync_base.py", line 124, in _sync
+    return task.result()
+           ~~~~~~~~~~~^^
+  File "/private/tmp/pnec-preview-check-8766-venv/lib/python3.14/site-packages/playwright/_impl/assertions.py", line 306, in to_contain_text
+    await self._expect_impl(
+    ...<9 lines>...
+    )
+  File "/private/tmp/pnec-preview-check-8766-venv/lib/python3.14/site-packages/playwright/_impl/assertions.py", line 122, in _expect_impl
+    _record_soft_or_raise(
+    ~~~~~~~~~~~~~~~~~~~~~^
+        AssertionError(
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        self._is_soft,
+        ^^^^^^^^^^^^^^
+    )
+    ^
+  File "/private/tmp/pnec-preview-check-8766-venv/lib/python3.14/site-packages/playwright/_impl/_assertions.py", line 50, in _record_soft_or_raise
+    raise error
+AssertionError: Locator expected to contain text 'Flood preparedness this week'
+Actual value: None
+Error: strict mode violation: locator(".community-tools") resolved to 2 elements:
+    1) <section class="community-tools" aria-label="Community preparedness tools" data-community-tools="language weekly feedback">…</section> aka locator("div").filter(has_text="Preparedness information /").get_by_label("Community preparedness tools")
+    2) <section class="community-tools" data-community-tools="weekly language" aria-label="Community preparedness tools">…</section> aka get_by_role("region", name="Community preparedness tools").nth(1)
+ 
+Call log:
+  - Expect "to_contain_text" locator(".community-tools") with timeout 5000ms
+  - waiting for locator(".community-tools")
+

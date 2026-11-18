@@ -71,14 +71,21 @@ with sync_playwright() as play:
             assert geometry==reference,(width,route,'top bar shifted')
             primary=page.locator('.pnec-primary > a')
             assert primary.all_text_contents()==['Home','Prepare','Resources','Community','Profile']
-            assert page.locator('[data-context]:not([hidden])').count()==1
+            category=header.get_attribute('data-category')
+            assert page.locator('[data-context]:not([hidden])').count()==(0 if category=='home' else 1)
+            assert page.locator('#navbar-login-item').is_visible()
+            assert page.locator('#navbar-login-item').get_attribute('href').endswith('/pages/register.html#login')
             assert not page.evaluate('document.documentElement.scrollWidth>innerWidth'),(width,route,'overflow')
             if width>1050:
                 positions=primary.evaluate_all('(els)=>els.map(e=>{const b=e.getBoundingClientRect();return [b.x,b.y,b.width,b.height]})')
                 if link_reference is None:link_reference=positions
                 assert positions==link_reference,(width,route,'primary links shifted')
-                sidebar=page.locator('.pnec-context').bounding_box()
-                assert sidebar['y']==80 and sidebar['x']==0 and sidebar['width']==264
+                if category=='home':
+                    assert page.locator('.pnec-context').count()==0
+                    assert page.locator('body').evaluate('(e)=>getComputedStyle(e).paddingLeft')=='0px'
+                else:
+                    sidebar=page.locator('.pnec-context').bounding_box()
+                    assert sidebar['y']==80 and sidebar['x']==0 and sidebar['width']==264
             if not route:
                 cards=page.locator('.pnec-action');assert cards.count()==4
                 boxes=[card.bounding_box() for card in cards.all()]
@@ -96,8 +103,14 @@ with sync_playwright() as play:
             page.locator(f'[data-category-link="{category}"]').click()
             page.wait_for_load_state('load');close_home_welcome(page)
             assert page.locator('#pnec-site-header').get_attribute('data-category')==category
-            assert page.locator(f'[data-context="{category}"]').get_attribute('hidden') is None
-            assert page.locator('[data-context]:not([hidden])').count()==1
+            if category=='home':
+                assert page.locator('.pnec-context').count()==0
+            else:
+                assert page.locator(f'[data-context="{category}"]').get_attribute('hidden') is None
+            category=header.get_attribute('data-category')
+            assert page.locator('[data-context]:not([hidden])').count()==(0 if category=='home' else 1)
+            assert page.locator('#navbar-login-item').is_visible()
+            assert page.locator('#navbar-login-item').get_attribute('href').endswith('/pages/register.html#login')
             open_mobile(page,width)
             assert page.locator(f'[data-category-link="{category}"]').get_attribute('aria-current')=='true'
             assert page.locator('.site-nav').evaluate('(e)=>e.scrollWidth<=e.clientWidth')

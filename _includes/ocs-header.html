@@ -1,10 +1,5 @@
 <!-- Two-level adaptation of OCS top navigation and contextual dashboard navigation. -->
-{% assign active_category = 'resources' %}
-{% for group in site.data.ocs_navigation %}{% for item in group.links %}{% assign item_path = item.url | split: '#' | first %}{% if page.url == item_path %}{% assign active_category = group.id %}{% endif %}{% endfor %}{% endfor %}
-{% if page.url == '/pages/blog-post.html' %}{% assign active_category = 'community' %}{% endif %}
-{% if page.url == '/pages/onboarding.html' %}{% assign active_category = 'profile' %}{% endif %}
-{% if page.url == '/pages/checklist.html' %}{% assign active_category = 'prepare' %}{% endif %}
-{% if page.url contains '/pages/admin' or page.url == '/pages/dashboard.html' or page.url == '/pages/upload.html' or page.url == '/pages/manage-events.html' or page.url contains 'password' or page.url == '/pages/register.html' %}{% assign active_category = 'profile' %}{% endif %}
+{% capture active_category %}{% include navigation-category.html %}{% endcapture %}{% assign active_category = active_category | strip %}
 <header id="pnec-site-header" class="site-header" data-cms-no-reveal data-category="{{ active_category }}">
   <a class="pnec-skip" href="#jupiterx-main">Skip to content</a>
   <div class="wrapper">
@@ -14,7 +9,7 @@
       <nav class="pnec-primary" aria-label="Main navigation">
         {% for group in site.data.ocs_navigation %}<a class="page-link" data-category-link="{{ group.id }}" data-i18n="{{ group.title }}" href="{{ group.url | relative_url }}"{% if active_category == group.id %} aria-current="true"{% endif %}>{{ group.title }}</a>{% endfor %}
       </nav>
-      <aside class="pnec-context" aria-label="Section navigation">
+      {% unless active_category == 'home' %}<aside class="pnec-context" aria-label="Section navigation">
         {% capture mapped_urls %}{% for category in site.data.ocs_navigation %}{% for destination in category.links %}|{{ destination.url }}|{% endfor %}{% endfor %}{% endcapture %}
         {% for group in site.data.ocs_navigation %}
         <section class="pnec-context-group" data-context="{{ group.id }}"{% unless active_category == group.id %} hidden{% endunless %} aria-labelledby="context-{{ group.id }}">
@@ -23,11 +18,15 @@
             {% for item in group.links %}<li><a data-context-link href="{{ item.url | relative_url }}" data-i18n="{{ item.title }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.title }}</a></li>{% endfor %}
           </ul></nav>
           {% if group.id == 'resources' %}{% capture extra_resources %}{% for item in site.data.pnec_nav %}{% capture nav_url %}|{{ item.url }}|{% endcapture %}{% unless mapped_urls contains nav_url %}<li><a href="{% if item.external %}{{ item.url }}{% else %}{{ item.url | relative_url }}{% endif %}"{% if item.external %} target="_blank" rel="noopener"{% endif %}>{{ item.title | escape }}</a></li>{% endunless %}{% endfor %}{% endcapture %}{% assign extra_resources = extra_resources | strip %}{% if extra_resources != '' %}<details class="pnec-extra-resources"><summary>More resources</summary><ul>{{ extra_resources }}</ul></details>{% endif %}{% endif %}
-          {% if group.id == 'profile' %}
-          <div class="pnec-account">
-            <a id="navbar-login-item" class="ocs-button" href="{{ '/pages/register.html' | relative_url }}" data-i18n="Log In / Sign Up">Log In / Sign Up</a>
+
+        </section>{% endfor %}
+{% include reading-controls.html %}
+      </aside>{% endunless %}
+    </div>
+          <div class="pnec-top-account">
+            <a id="navbar-login-item" class="ocs-button" href="{{ '/pages/register.html#login' | relative_url }}" data-i18n="Login">Login</a>
             <div id="navbar-auth-logged-in" style="display:none">
-              <details><summary data-i18n="Account tools">Account tools</summary><ul>
+              <details id="pnec-account-dropdown"><summary data-i18n="Account">Account</summary><ul>
                 <li><a href="{{ '/pages/profile.html' | relative_url }}">My Profile</a></li>
                 <li id="nav-media-link" style="display:none"><a href="{{ '/pages/upload.html' | relative_url }}">Upload Media</a></li>
                 <li id="nav-events-link" style="display:none"><a href="{{ '/pages/manage-events.html' | relative_url }}">Manage Events</a></li>
@@ -46,18 +45,7 @@
                 <li><button id="navbar-logout-btn" type="button">Sign Out</button></li>
               </ul></details>
             </div>
-          </div>{% endif %}
-        </section>{% endfor %}
-        <div class="pnec-reading-tools" aria-label="Listen to this page" hidden>
-          <h2 data-i18n="Listen">Listen</h2><p>Read the page, or select text and choose Read selected text.</p>
-          <button type="button" data-speech="page" data-i18n="Read page">Read page</button>
-          <button type="button" data-speech="read" data-i18n="Read selected text">Read selected text</button>
-          <button type="button" data-speech="pause" data-i18n="Pause speech">Pause speech</button>
-          <button type="button" data-speech="stop" data-i18n="Stop speech">Stop speech</button>
-          <p class="pnec-speech-status" role="status"></p>
-        </div>
-      </aside>
-    </div>
+          </div>
   </div>
 </header>
 <button class="pnec-drawer-backdrop" type="button" tabindex="-1" aria-label="Close navigation" hidden></button>

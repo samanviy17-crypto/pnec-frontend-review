@@ -19,7 +19,7 @@ async function pnecJsonRequest(url, options = {}, timeoutMs = 15000) {
     if (!response.ok) {
       const type = classifyHttpError(response.status);
       const detail = data && (data.detail || data.message || data.error);
-      const error = new Error(response.status === 401 ? getErrorMessage(type) :
+      const error = new Error(response.status >= 500 || response.status === 404 ? getErrorMessage(type) : [401,403].includes(response.status) ? (detail === 'CSRF_REJECTED' ? 'This request was blocked by the origin/CSRF security check. Use the approved local preview origin; do not disable CSRF.' : getErrorMessage(type)) :
         (typeof detail === 'string' ? detail : getErrorMessage(type)));
       error.status = response.status; error.type = type;
       throw error;

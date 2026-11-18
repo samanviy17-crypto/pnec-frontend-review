@@ -1,0 +1,962 @@
+[
+  {
+    "route": "404.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "donation-form/index.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "index.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/about.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-blog.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-chatbot-analytics.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-editor.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-map-align.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-map-hotspots.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-nav.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-security.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-volunteer.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/blog-post.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/blog.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/checklist.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/community-events-and-activities.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/contact.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/dashboard.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/events-archive.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/find-your-neighborhood.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/fire-safety.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/forgot-password.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/gallery.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/kit.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/manage-events.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/onboarding.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/poway-statistics-and-information.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/preparedness-resources.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/privacy.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/profile.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/programs-and-services.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/register.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/reset-password.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/security.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/settings.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/upload.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/volunteer.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "role-quiz/index.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "rpg/latest/index.html",
+    "width": 320,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "404.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "donation-form/index.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "index.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/about.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-blog.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-chatbot-analytics.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-editor.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-map-align.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-map-hotspots.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-nav.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-security.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-volunteer.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/blog-post.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/blog.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/checklist.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/community-events-and-activities.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/contact.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/dashboard.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/events-archive.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/find-your-neighborhood.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/fire-safety.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/forgot-password.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/gallery.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/kit.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/manage-events.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/onboarding.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/poway-statistics-and-information.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/preparedness-resources.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/privacy.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/profile.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/programs-and-services.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/register.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/reset-password.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/security.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/settings.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/upload.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/volunteer.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "role-quiz/index.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "rpg/latest/index.html",
+    "width": 390,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "404.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "donation-form/index.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "index.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/about.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-blog.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-chatbot-analytics.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-editor.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-map-align.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-map-hotspots.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-nav.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-security.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-volunteer.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/blog-post.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/blog.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/checklist.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/community-events-and-activities.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/contact.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/dashboard.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/events-archive.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/find-your-neighborhood.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/fire-safety.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/forgot-password.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/gallery.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/kit.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/manage-events.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/onboarding.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/poway-statistics-and-information.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/preparedness-resources.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/privacy.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/profile.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/programs-and-services.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/register.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/reset-password.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/security.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/settings.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/upload.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/volunteer.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "role-quiz/index.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "rpg/latest/index.html",
+    "width": 768,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "404.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "donation-form/index.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "index.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/about.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-blog.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-chatbot-analytics.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-editor.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-map-align.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-map-hotspots.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-nav.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-security.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin-volunteer.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/admin.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/blog-post.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/blog.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/checklist.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/community-events-and-activities.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/contact.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/dashboard.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/events-archive.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/find-your-neighborhood.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/fire-safety.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/forgot-password.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/gallery.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/kit.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/manage-events.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/onboarding.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/poway-statistics-and-information.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/preparedness-resources.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/privacy.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/profile.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/programs-and-services.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/register.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/reset-password.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/security.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/settings.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/upload.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "pages/volunteer.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "role-quiz/index.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  },
+  {
+    "route": "rpg/latest/index.html",
+    "width": 1280,
+    "state": "anonymous/offline fixtures",
+    "passed": true
+  }
+]

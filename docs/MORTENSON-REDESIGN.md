@@ -9,6 +9,14 @@ is authorized. Worktree: `../pnec-redesign-20261116`; branch:
 at `ce475278ba406ddb4fa39a93daafb6dd3b5f7af7`. The original main worktree was clean
 and remains untouched. No backend edits, migrations, API changes or credentials.
 
+## Latest review: Login, conditional sidebars, fire guidance and local integration
+
+The latest round adds a far-right Login/account menu, removes the Home sidebar,
+adds a sourced Fire Safety tree guide/diagram, and connects the 8766 preview to a
+separate disposable local backend on 8426. See the [complete feature audit,
+local setup, legal sources and test distinctions](LOCAL-LOGIN-FIRE-REVIEW.md).
+The prior implementation record and evidence below are preserved.
+
 ## Current navigation and personalization follow-up
 
 The current implementation has five top categories with contextual sidebars,

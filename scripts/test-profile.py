@@ -65,7 +65,7 @@ with tempfile.TemporaryDirectory(prefix='pnec-profile-test-') as directory:
             browser = play.chromium.launch()
             context = browser.new_context()
             context.route('**/*', lambda route: route.continue_() if route.request.url.startswith(PREVIEW_URL + '/') else route.abort())
-            context.route('http://127.0.0.1:8425/**', lambda route: route.continue_(
+            context.route('http://{localhost,127.0.0.1}:8425/**', lambda route: route.continue_(
                 url=route.request.url.replace(':8425', ':' + str(server.server_port), 1)))
             page = context.new_page()
             messages = []

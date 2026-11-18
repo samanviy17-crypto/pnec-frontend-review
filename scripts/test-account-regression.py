@@ -50,7 +50,7 @@ with tempfile.TemporaryDirectory(prefix='pnec-account-regression-') as temp:
             browser = play.chromium.launch()
             context = browser.new_context()
             context.route('**/*', lambda r: r.continue_() if r.request.url.startswith(PREVIEW_URL + '/') else r.abort())
-            context.route('http://127.0.0.1:8425/**', lambda r: r.continue_(
+            context.route('http://{localhost,127.0.0.1}:8425/**', lambda r: r.continue_(
                 url=r.request.url.replace(':8425', ':' + str(server.server_port), 1)))
             page = context.new_page()
             # The form must handle submission while startup session requests wait.

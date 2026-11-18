@@ -89,7 +89,7 @@ with sync_playwright() as play:
             page.locator('.nav-trigger').click()
             assert page.locator('#pnec-site-header').get_attribute('aria-modal')=='true'
             assert page.locator('main').evaluate('(e)=>e.inert')
-            page.locator('[data-context="home"] a').last.focus(); page.keyboard.press('Tab')
+            page.locator('[data-category-link="profile"]').focus(); page.keyboard.press('Tab')
             assert page.locator('#pnec-site-header').evaluate('(e)=>e.contains(document.activeElement)')
             page.keyboard.press('Escape')
             assert page.locator('.nav-trigger').evaluate('(e)=>e===document.activeElement')

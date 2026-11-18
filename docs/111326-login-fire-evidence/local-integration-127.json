@@ -1,0 +1,13 @@
+{
+  "frontend": "http://127.0.0.1:8766/",
+  "backend": "http://127.0.0.1:8426",
+  "synthetic_data_only": true,
+  "transport": "actual loopback HTTP; no API/identity mocks",
+  "unauthenticated": "four explicit login prompts; protected data 401; quiz questions public",
+  "login": "actual PNEC UI POST; account menu replaces Login; HttpOnly SameSite=Lax development cookie",
+  "four_features": "household PATCH, quiz POST, check-in PUT and hazard POST persisted; reload and SQLite verified",
+  "security": "cookie auth works; unapproved Origin 403; missing session CSRF token 403; correct CSRF 200; invalid bearer 401 despite cookie; resident moderation 403",
+  "logout_and_mobile": "actual logout invalidates session; mobile Login visible and Prepare drawer works",
+  "page_errors": [],
+  "passed": true
+}

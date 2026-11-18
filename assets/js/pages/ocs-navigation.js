@@ -16,7 +16,7 @@
       const url = new URL(link.href);
       return url.pathname === path && url.hash === hash;
     });
-    if (matches.length) chosen = matches[0].closest('[data-context]').dataset.context;
+    if (matches.length) chosen = (matches.find(link => link.closest('[data-context]').dataset.context === chosen) || matches[0]).closest('[data-context]').dataset.context;
     groups.forEach(group => {group.hidden = group.dataset.context !== chosen;});
     primary.forEach(link => {
       if (link.dataset.categoryLink === chosen) link.setAttribute('aria-current','true');
@@ -28,6 +28,7 @@
       else link.removeAttribute('aria-current');
     });
     header.dataset.category = chosen;
+    document.body.classList.toggle('pnec-has-sidebar',chosen !== 'home');
   }
   updateContext();
   window.addEventListener('hashchange', updateContext);
@@ -60,7 +61,7 @@
     }
   });
   header.querySelector('.pnec-skip').addEventListener('click', () => closeMobile());
-  nav.addEventListener('click', event => {
+  header.addEventListener('click', event => {
     const link = event.target.closest('a[href]');
     if (!link) return;
     const url = new URL(link.href, location.href);

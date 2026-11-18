@@ -30,34 +30,28 @@ function markDuplicateNavHidden() {
  * 4. Cache user in localStorage for other pages to read
  */
 function loadAuthState() {
-  const cachedUser = readCachedNavbarUser();
-
-  if (cachedUser) {
-    renderNavbarLoggedIn(cachedUser);
-    if (typeof renderPowayAuthHeader === 'function') renderPowayAuthHeader(cachedUser);
-  }
-
-  fetchCurrentUser()
+  // Cached identity is not authentication. Confirm the current backend session
+  // before exposing account/role controls, especially after switching local APIs.
+  renderNavbarLoggedOut();
+  fetchCurrentUser({strict:true})
     .then(user => {
       if (user) {
         localStorage.setItem('pnec_user', JSON.stringify(user));
         sessionStorage.removeItem('pnec_user');
         renderNavbarLoggedIn(user);
         if (typeof renderPowayAuthHeader === 'function') renderPowayAuthHeader(user);
-      } else if (!cachedUser) {
-        // Only show logged-out state if there's also no cached user.
-        // If there IS a cached user but the server returned null (e.g. session
-        // cookie expired), keep showing the logged-in navbar — explicit logout
-        // is the only action that should clear the cache and flip to logged-out.
+      } else {
+        for (const storage of [localStorage,sessionStorage]) {
+          storage.removeItem('pnec_user'); storage.removeItem('pnec_token');
+        }
         renderNavbarLoggedOut();
         if (typeof renderPowayAuthHeader === 'function') renderPowayAuthHeader(null);
       }
     })
     .catch(() => {
-      if (!cachedUser) {
-        renderNavbarLoggedOut();
-        if (typeof renderPowayAuthHeader === 'function') renderPowayAuthHeader(null);
-      }
+      // Preserve credentials for a retry, but do not claim an unverified session.
+      renderNavbarLoggedOut();
+      if (typeof renderPowayAuthHeader === 'function') renderPowayAuthHeader(null);
     });
 }
 

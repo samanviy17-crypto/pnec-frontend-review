@@ -39,7 +39,7 @@
                   location.pathname.slice(window.PNEC_SITE_BASE.length).replace(/^\/pages\//, '').replace(/\.html$/, ''));
       var host = location.hostname;
       var apiBase = (host === 'localhost' || host === '127.0.0.1')
-        ? 'http://127.0.0.1:8425'
+        ? (window.PNEC_API_BASE || `http://${location.hostname}:8425`)
         : (window.PNEC_API_BASE || 'https://api.pnec-review.invalid');
       fetch(apiBase + '/api/cms/page/' + encodeURIComponent(slug) + '/seo')
         .then(function (r) { return r.ok ? r.json() : null; })
@@ -79,7 +79,7 @@
     (function () {
       var host = window.location.hostname;
       var apiBase = (host === 'localhost' || host === '127.0.0.1')
-        ? 'http://127.0.0.1:8425'
+        ? (window.PNEC_API_BASE || `http://${location.hostname}:8425`)
         : (window.PNEC_API_BASE || 'https://api.pnec-review.invalid');
       var qs = new URLSearchParams(window.location.search);
       var state = qs.get('preview') === '1' ? 'draft' : 'published';
@@ -118,7 +118,8 @@
 <script src="{{ "/assets/js/ui/reading-preferences.js" | relative_url }}" defer></script>
 <script src="{{ '/assets/js/utils/errors.js' | relative_url }}"></script>
 </head>
-<body class="pnec-site {{ page.body_class }}"{% if page.body_attributes %} {{ page.body_attributes }}{% endif %} data-cms-page="{{ page.cms_slug | default: page.name | remove: '.html' | replace: 'index', 'home' }}">
+{% capture navigation_category %}{% include navigation-category.html %}{% endcapture %}{% assign navigation_category = navigation_category | strip %}
+<body class="pnec-site {{ page.body_class }}{% unless navigation_category == 'home' %} pnec-has-sidebar{% endunless %}"{% if page.body_attributes %} {{ page.body_attributes }}{% endif %} data-cms-page="{{ page.cms_slug | default: page.name | remove: '.html' | replace: 'index', 'home' }}">
 {% unless page.use_poway_embed %}{% include ocs-header.html %}{% endunless %}
 {% include poway-alert-banner.html %}
 <div data-cms-section-host="_header" id="cms-header-host"></div>

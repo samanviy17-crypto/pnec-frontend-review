@@ -4,7 +4,7 @@
   const key = 'pnec_dismissed_notice_versions';
   let dismissed = [];
   try {const saved = JSON.parse(localStorage.getItem(key)); if (Array.isArray(saved)) dismissed = saved.filter(v => typeof v === 'string').slice(-100);} catch { /* In-memory dismissal remains available. */ }
-  const base = (location.hostname === 'localhost' || location.hostname === '127.0.0.1') ? 'http://127.0.0.1:8425' : window.PNEC_API_BASE;
+  const base = (location.hostname === 'localhost' || location.hostname === '127.0.0.1') ? (window.PNEC_API_BASE || `http://${location.hostname}:8425`) : window.PNEC_API_BASE;
   const utcTime = value => {
     if (typeof value !== 'string') return NaN;
     return Date.parse(value + (/Z$|[+-]\d\d:\d\d$/.test(value) ? '' : 'Z'));

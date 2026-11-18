@@ -17,13 +17,14 @@
     - {title: Emergency Kit, url: /pages/kit.html}
     - {title: Preparedness Quiz, url: '/pages/checklist.html#preparedness-quiz'}
     - {title: Household Planning, url: '/pages/checklist.html#household-plan'}
+    - {title: Trees Near Your Home, url: /pages/fire-safety.html}
     - {title: Find Your PNEC Role, url: /role-quiz/}
 - id: resources
   title: Resources
   url: /pages/preparedness-resources.html
   links:
     - {title: Resource Library, url: /pages/preparedness-resources.html}
-    - {title: Fire Safety, url: '/pages/preparedness-resources.html#fire-safety'}
+    - {title: Fire Safety, url: /pages/fire-safety.html}
     - {title: Earthquake Safety, url: '/pages/preparedness-resources.html#earthquake-safety'}
     - {title: Hazard Information, url: '/pages/preparedness-resources.html#poway-risk-context'}
     - {title: Programs and Services, url: /pages/programs-and-services.html}

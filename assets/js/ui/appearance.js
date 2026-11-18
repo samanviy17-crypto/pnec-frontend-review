@@ -53,7 +53,7 @@
     window.dispatchEvent(new CustomEvent('pnec:appearance-changed', {detail:structuredClone(current)}));
   }
   const translations = {
-    Home:'Inicio',Prepare:'Preparación',Resources:'Recursos',Community:'Comunidad',Profile:'Perfil',
+    Login:'Entrar',Account:'Cuenta',Home:'Inicio',Prepare:'Preparación',Resources:'Recursos',Community:'Comunidad',Profile:'Perfil',
     'Home Overview':'Resumen de inicio','About PNEC':'Acerca de PNEC','Weekly Preparedness Tip':'Consejo semanal','Our Story':'Nuestra historia','Contact PNEC':'Contacto',
     'Preparedness Dashboard':'Panel de preparación','Preparedness Checklist':'Lista de preparación','Emergency Kit':'Kit de emergencia','Preparedness Quiz':'Cuestionario de preparación','Household Planning':'Plan del hogar','Find Your PNEC Role':'Encuentre su función',
     'Resource Library':'Biblioteca de recursos','Fire Safety':'Seguridad contra incendios','Earthquake Safety':'Seguridad ante terremotos','Hazard Information':'Información sobre peligros','Programs and Services':'Programas y servicios','Past Events and Articles':'Eventos y artículos anteriores','Security and Privacy':'Seguridad y privacidad',
