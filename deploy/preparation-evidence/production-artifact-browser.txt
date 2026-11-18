@@ -1,0 +1,1 @@
+PASS: 27 production-origin route/viewport checks, runtime/canonical/API/base paths, Login destination and local assets; fixture API only.

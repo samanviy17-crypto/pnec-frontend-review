@@ -17,9 +17,12 @@ import tempfile
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--backend-root', type=Path, required=True)
 parser.add_argument('--port', type=int, default=8425)
+parser.add_argument('--frontend-port', type=int, default=8766)
 parser.add_argument('--resume-state', type=Path, help='Reuse only an existing private disposable state directory')
 parser.add_argument('--enable-announcements', action='store_true', help='Register the existing announcement blueprint locally; backend release still needs the supplied patch')
 args = parser.parse_args()
+assert 1 <= args.frontend_port <= 65535
+frontend_origin = f'http://localhost:{args.frontend_port}'
 source = args.backend_root.resolve(strict=True)
 assert (source / 'app/config.py').is_file(), 'Select the PNEC backend source'
 with socket.socket() as probe:
@@ -44,7 +47,7 @@ for name in ['DB_ENDPOINT','DB_USERNAME','DB_PASSWORD','DATABASE_URL','ADMIN_PAS
              'GROQ_API_KEY','VAPID_PRIVATE_KEY','VAPID_PUBLIC_KEY','REDIS_URL']:
     os.environ.pop(name, None)
 os.environ.update(FLASK_ENV='development', SECRET_KEY=secrets.token_urlsafe(48),
-                  PNEC_REVIEW_EPHEMERAL='true', FRONTEND_URL='http://localhost:8766', MAIL_DELIVERY='disabled')
+                  PNEC_REVIEW_EPHEMERAL='true', FRONTEND_URL=frontend_origin, MAIL_DELIVERY='disabled')
 import requests
 
 def no_provider(*args, **kwargs):
@@ -59,10 +62,10 @@ Config.SECRET_KEY = os.environ['SECRET_KEY']
 Config.ADMIN_PASSWORD = None
 Config.MAIL_SERVER = None
 Config.MAIL_DELIVERY = 'disabled'
-Config.FRONTEND_URL = 'http://localhost:8766'
+Config.FRONTEND_URL = frontend_origin
 # Exact loopback origins only. The existing CORS and CSRF middleware stays enabled.
 import app.utils.csrf as csrf
-csrf.APPROVED_ORIGINS[:] = [f'http://{host}:{port}' for host in ['localhost','127.0.0.1'] for port in [8766,4000,8080]]
+csrf.APPROVED_ORIGINS[:] = [f'http://{host}:{port}' for host in ['localhost','127.0.0.1'] for port in sorted({args.frontend_port,8766,4000,8080})]
 from app import create_app, db
 from flask import jsonify
 from flask_migrate import upgrade
@@ -71,7 +74,7 @@ from app.models.user import User
 from werkzeug.security import generate_password_hash
 app = create_app(initialize_database=False)
 compatibility_fixes = []
-if args.enable_announcements:
+if args.enable_announcements and 'announcements' not in app.blueprints:
     # Existing routes/decorators unchanged; only repair the omitted registration
     # in this disposable adapter, never the backend checkout or production app.
     from app.routes.announcement import announcements_bp
@@ -88,15 +91,17 @@ with app.app_context():
         # The frozen backend migration also omits this existing model. This
         # additive table is created ONLY in the guarded disposable database.
         from app.models.announcement import Announcement
-        Announcement.__table__.create(bind=db.engine, checkfirst=True)
-        compatibility_fixes.append('create-missing-announcements-table')
+        from sqlalchemy import inspect
+        if not inspect(db.engine).has_table('announcements'):
+            Announcement.__table__.create(bind=db.engine)
+            compatibility_fixes.append('create-missing-announcements-table')
     if args.resume_state:
         credentials = prior
     else:
         neighborhood = Neighborhood(name='Synthetic Local Review Neighborhood', number=999, zone='A')
         db.session.add(neighborhood); db.session.flush()
         credentials = {'email':'local-review@example.test','password':secrets.token_urlsafe(24),
-                       'display_name':'Local Review Resident (synthetic)', 'frontend':'http://localhost:8766/',
+                       'display_name':'Local Review Resident (synthetic)', 'frontend':frontend_origin+'/',
                        'backend':f'http://localhost:{args.port}', 'state_dir':str(state),
                        'note':'Disposable local-only account; never use production credentials or resident data.'}
         resident = User(email=credentials['email'],password_hash=generate_password_hash(credentials['password']),

@@ -1,0 +1,9 @@
+PASS: local links, images, srcsets and scripts across 41 HTML files
+PASS: production root/API/preview configuration verified in 40 rendered pages; artifact only, no publication.
+PASS: expected API URL embedded in 40 rendered pages
+PASS: GitHub Pages project-site build
+PASS: local links, images, srcsets and scripts across 41 HTML files
+Workflow validation: actionlint 1.7.12 passed for modified CI, artifact-only workflow and dormant publishing template.
+No workflow dispatched; no artifact published.
+
+Final production rebuild after canonical/RPG guards: root/API/preview/canonical config passes40 runtime pages and paths across41 HTML files.

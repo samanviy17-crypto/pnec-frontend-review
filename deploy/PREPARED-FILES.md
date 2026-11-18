@@ -1,0 +1,28 @@
+# Frontend files changed from `29902cf`
+
+- `.github/workflows/frontend-ci.yml`
+- `_config.production.yml`
+- `_layouts/pnec-base.html`
+- `deploy/PREPARATION-RESULTS.md`
+- `deploy/PREPARED-FILES.md`
+- `deploy/PRODUCTION-PREPARATION.md`
+- `deploy/preparation-evidence/README.md`
+- `deploy/preparation-evidence/build-summary.txt`
+- `deploy/preparation-evidence/integration-results.json`
+- `deploy/preparation-evidence/integration-run.txt`
+- `deploy/preparation-evidence/javascript-tests.txt`
+- `deploy/preparation-evidence/preparedness-live-results.json`
+- `deploy/preparation-evidence/production-artifact-browser.txt`
+- `deploy/preparation-evidence/production-artifact-results.json`
+- `deploy/preparation-evidence/production-gates.txt`
+- `deploy/preparation-evidence/stakeholder-native-results.json`
+- `deploy/production-pages-workflow.yml.example`
+- `navigation/rpg.md`
+- `pages/poway-statistics-and-information.html`
+- `scripts/build-production.py`
+- `scripts/check-pages-paths.py`
+- `scripts/local-review-backend.py`
+- `scripts/test-production-artifact.py`
+- `scripts/test-production-gates.py`
+- `scripts/test-stakeholder-live.py`
+- `.github/workflows/prepare-production.yml`

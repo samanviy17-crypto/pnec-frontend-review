@@ -1,0 +1,172 @@
+{
+  "checks": [
+    {
+      "path": "/",
+      "width": 390,
+      "passed": true
+    },
+    {
+      "path": "/pages/register.html",
+      "width": 390,
+      "passed": true
+    },
+    {
+      "path": "/pages/checklist.html",
+      "width": 390,
+      "passed": true
+    },
+    {
+      "path": "/pages/fire-safety.html",
+      "width": 390,
+      "passed": true
+    },
+    {
+      "path": "/pages/profile.html",
+      "width": 390,
+      "passed": true
+    },
+    {
+      "path": "/pages/settings.html",
+      "width": 390,
+      "passed": true
+    },
+    {
+      "path": "/pages/volunteer.html",
+      "width": 390,
+      "passed": true
+    },
+    {
+      "path": "/pages/preparedness-resources.html",
+      "width": 390,
+      "passed": true
+    },
+    {
+      "path": "/rpg/latest/",
+      "width": 390,
+      "passed": true
+    },
+    {
+      "path": "/",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "path": "/pages/register.html",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "path": "/pages/checklist.html",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "path": "/pages/fire-safety.html",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "path": "/pages/profile.html",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "path": "/pages/settings.html",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "path": "/pages/volunteer.html",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "path": "/pages/preparedness-resources.html",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "path": "/rpg/latest/",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "path": "/",
+      "width": 1280,
+      "passed": true
+    },
+    {
+      "path": "/pages/register.html",
+      "width": 1280,
+      "passed": true
+    },
+    {
+      "path": "/pages/checklist.html",
+      "width": 1280,
+      "passed": true
+    },
+    {
+      "path": "/pages/fire-safety.html",
+      "width": 1280,
+      "passed": true
+    },
+    {
+      "path": "/pages/profile.html",
+      "width": 1280,
+      "passed": true
+    },
+    {
+      "path": "/pages/settings.html",
+      "width": 1280,
+      "passed": true
+    },
+    {
+      "path": "/pages/volunteer.html",
+      "width": 1280,
+      "passed": true
+    },
+    {
+      "path": "/pages/preparedness-resources.html",
+      "width": 1280,
+      "passed": true
+    },
+    {
+      "path": "/rpg/latest/",
+      "width": 1280,
+      "passed": true
+    }
+  ],
+  "api_paths": [
+    "/api/announcements",
+    "/api/auth/me",
+    "/api/cms/page/%2Frpg%2Flatest%2F/seo",
+    "/api/cms/page/_footer",
+    "/api/cms/page/_header",
+    "/api/cms/page/checklist/seo",
+    "/api/cms/page/fire-safety/seo",
+    "/api/cms/page/home/seo",
+    "/api/cms/page/preparedness-resources/seo",
+    "/api/cms/page/profile/seo",
+    "/api/cms/page/register/seo",
+    "/api/cms/page/settings/seo",
+    "/api/cms/page/volunteer/seo",
+    "/api/cms/theme.css",
+    "/api/neighborhoods",
+    "/api/overrides/checklist",
+    "/api/overrides/fire-safety",
+    "/api/overrides/home",
+    "/api/overrides/preparedness-resources",
+    "/api/overrides/profile",
+    "/api/overrides/register",
+    "/api/overrides/rpg.md",
+    "/api/overrides/settings",
+    "/api/overrides/volunteer",
+    "/api/preparedness/weekly",
+    "/api/risk",
+    "/api/site-config",
+    "/api/volunteer/tasks"
+  ],
+  "missing_assets": [],
+  "policy": "anonymous API fixtures; all network local; no authentication/persistence claim",
+  "passed": true
+}

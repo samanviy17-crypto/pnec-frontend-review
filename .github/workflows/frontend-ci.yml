@@ -55,6 +55,11 @@ jobs:
           test -s "$RUNNER_TEMP/pnec-site/assets/css/main.css"
           python3 scripts/check-pages-paths.py --site "$RUNNER_TEMP/pnec-site"
 
+      - name: Validate separate production artifact and release gates (offline)
+        run: |
+          python3 scripts/test-production-gates.py
+          python3 scripts/build-production.py --destination "$RUNNER_TEMP/pnec-production"
+
       # The cross-repository browser release suite is a separate check and has
       # documented baseline failures (README.md, Known review limitations).
       # This workflow validates standalone frontend tests/build; it never deploys.
@@ -63,6 +68,8 @@ jobs:
         run: |
           python3 -m pip install playwright==1.65.1
           python3 -m playwright install --with-deps chromium
+      - name: Verify production-domain artifact without external network
+        run: python3 scripts/test-production-artifact.py --site "$RUNNER_TEMP/pnec-production" --output-dir "$RUNNER_TEMP/production-evidence"
       - name: Verify sidebar, hero, preferences and responsive routes
         run: bash scripts/check-redesign-browser.sh "$RUNNER_TEMP/pnec-site" "$RUNNER_TEMP/navigation-evidence"
 
@@ -71,5 +78,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: 111326-redesign-evidence
-          path: ${{ runner.temp }}/navigation-evidence
+          path: |
+            ${{ runner.temp }}/navigation-evidence
+            ${{ runner.temp }}/production-evidence
           if-no-files-found: ignore

@@ -1,0 +1,32 @@
+name: Prepare Production Artifact (no deployment)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+      - run: npm test
+      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1
+        with:
+          ruby-version: '3.3'
+          bundler: '4.0.19'
+      - run: |
+          bundle lock --add-platform x86_64-linux
+          bundle install
+          python3 scripts/test-production-gates.py
+          python3 scripts/build-production.py --destination "$RUNNER_TEMP/pnec-production"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: pnec-production-candidate
+          path: ${{ runner.temp }}/pnec-production
+          if-no-files-found: error
+# Intentionally no pages:write/id-token permission or deploy step.

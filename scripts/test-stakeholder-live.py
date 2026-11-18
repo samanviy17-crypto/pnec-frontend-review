@@ -15,6 +15,7 @@ parser.add_argument('--base-url',default='http://localhost:8766/')
 parser.add_argument('--api-url',default='http://localhost:8426')
 parser.add_argument('--credentials-file',type=Path,required=True)
 parser.add_argument('--output-dir',type=Path,required=True)
+parser.add_argument('--native-announcements',action='store_true',help='Require real backend migration/registration without local compatibility fixes')
 a=parser.parse_args();base=a.base_url.rstrip('/')+'/';api=a.api_url.rstrip('/')
 assert urlsplit(base).hostname in ('localhost','127.0.0.1')
 assert urlsplit(api).hostname==urlsplit(base).hostname
@@ -28,7 +29,11 @@ with sync_playwright() as p:
  browser=p.chromium.launch()
  probe=browser.new_context();marker=probe.request.get(api+'/api/local-review').json()
  assert marker.get('disposable') is True and marker.get('external_providers') is False and marker.get('synthetic_data_only') is True
- assert 'register-existing-announcements-blueprint' in marker.get('local_compatibility_fixes',[]), 'Enable the explicit disposable announcement compatibility fix'
+ if a.native_announcements:
+  assert marker.get('local_compatibility_fixes')==[]
+  assert probe.request.get(api+'/api/ready').json()['schema_revision']=='0002_announcements'
+ else:
+  assert 'register-existing-announcements-blueprint' in marker.get('local_compatibility_fixes',[]), 'Enable the explicit disposable announcement compatibility fix'
  report['local_compatibility_fixes']=marker['local_compatibility_fixes']
  probe.close()
  # Role fixtures are explicit test setup, never public registration privileges.
@@ -83,7 +88,7 @@ with sync_playwright() as p:
  assert write(resident,'PATCH',f'/hazards/{hid}',{'status':'resolved'}).status==403
  assert write(resident,'POST','/volunteer/tasks',{}).status==403
  assert write(resident,'POST','/announcements',{'message':'Rejected resident notice'}).status==403
- report['blockers']=['Unmodified backend application factory omits announcement blueprint registration. This local launcher repairs it explicitly; the reviewed backend registration patch and additive migration must be integrated separately before a release.']
+ report['blockers']=[] if a.native_announcements else ['Unmodified backend requires its separate announcement release patch.']
  report['checks'].append('Real registration creates resident; role/id escalation rejected; household/check-in/hazard data isolated between two residents, including forged identity/neighborhood parameters')
  coordinator=context();cp=page_for(coordinator);login(cp,roles['coordinator'])
  assert write(coordinator,'POST','/volunteer/tasks',{'title':'Rejected cross-block shift','neighborhood_id':other}).status==403
@@ -110,7 +115,7 @@ with sync_playwright() as p:
  page.reload(wait_until='networkidle');expect(banner).not_to_contain_text('SYNTHETIC demo notification '+run)
  assert write(admin,'PATCH',f'/announcements/{ann}',{'message':'SYNTHETIC revised demo notification '+run+' — not an emergency.'}).status==200
  page.reload(wait_until='networkidle');expect(banner).to_contain_text('SYNTHETIC revised demo notification '+run)
- report['checks'].append('Actual admin notification API on explicitly repaired disposable backend; community source label, keyboard dismissal/persistence and changed-version reappearance; resident creation 403. Backend release patch and additive migration remain required.')
+ report['checks'].append('Actual admin notification API, keyboard dismissal/persistence/version reappearance and resident denial403. Native backend migration/registration verified.' if a.native_announcements else 'Notification API verified with disclosed local compatibility adapter.')
  page.goto(base+'pages/settings.html',wait_until='networkidle');page.locator('[data-theme="ocean"]').click();page.goto(base+'pages/fire-safety.html',wait_until='networkidle');assert page.locator('html').get_attribute('data-appearance-preset')=='ocean'
  page.goto(base+'pages/settings.html',wait_until='networkidle');page.select_option('#site-language','es');page.locator('#pnec-language-form button[type="submit"]').click();page.reload(wait_until='networkidle');assert page.locator('#site-language').input_value()=='es'
  page.locator('#pnec-language-form button[type="reset"]').click();page.locator('[data-theme="site-default"]').click()
@@ -121,4 +126,4 @@ with sync_playwright() as p:
  for c in [resident,second,coordinator,admin]:c.close()
  browser.close()
 (a.output_dir/'stakeholder-live-results.json').write_text(json.dumps(report,indent=2)+'\n')
-print('PASS: real registration/login/profile/logout, multi-resident privacy, role/CSRF-protected volunteer journeys and real notification rendering/dismissal/versioning on the explicit local compatibility fix, persisted preferences; synthetic disposable data only.')
+print('PASS: real registration/login/profile/logout, multi-resident privacy, volunteer/notification journeys and persisted preferences; '+('native backend migration/registration, no compatibility adapter.' if a.native_announcements else 'explicit local compatibility adapter.')+' Synthetic disposable data only.')
