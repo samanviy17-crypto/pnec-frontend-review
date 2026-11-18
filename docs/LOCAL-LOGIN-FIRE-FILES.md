@@ -30,6 +30,11 @@ Relative to prior feature head `550b5bb`; evidence files are included.
 - `assets/js/ui/chatbot-inject.js`
 - `assets/js/utils/errors.js`
 - `docs/111326-login-fire-evidence/feature-release-results.json`
+- `docs/111326-login-fire-evidence/feature-test-admin-security.py.log`
+- `docs/111326-login-fire-evidence/feature-test-community-tools.py.log`
+- `docs/111326-login-fire-evidence/feature-test-media-release.py.log`
+- `docs/111326-login-fire-evidence/feature-test-production-contract.py.log`
+- `docs/111326-login-fire-evidence/feature-test-responsive.py.log`
 - `docs/111326-login-fire-evidence/fire-login-ui-results.json`
 - `docs/111326-login-fire-evidence/fire-safety-1280.png`
 - `docs/111326-login-fire-evidence/fire-safety-390.png`
@@ -38,8 +43,14 @@ Relative to prior feature head `550b5bb`; evidence files are included.
 - `docs/111326-login-fire-evidence/local-integration-127.json`
 - `docs/111326-login-fire-evidence/local-integration-localhost.json`
 - `docs/111326-login-fire-evidence/main-release-results.json`
+- `docs/111326-login-fire-evidence/main-test-admin-security.py.log`
+- `docs/111326-login-fire-evidence/main-test-community-tools.py.log`
+- `docs/111326-login-fire-evidence/main-test-media-release.py.log`
+- `docs/111326-login-fire-evidence/main-test-production-contract.py.log`
+- `docs/111326-login-fire-evidence/main-test-responsive.py.log`
 - `docs/111326-login-fire-evidence/mobile-resources-navigation.png`
 - `docs/111326-login-fire-evidence/mortenson-results.json`
+- `docs/111326-login-fire-evidence/prepare-authenticated-account-1280.png`
 - `docs/111326-login-fire-evidence/prepare-signed-out-1280.png`
 - `docs/111326-login-fire-evidence/prepare-signed-out-390.png`
 - `docs/111326-login-fire-evidence/profile-preferences-results.json`
@@ -50,7 +61,6 @@ Relative to prior feature head `550b5bb`; evidence files are included.
 - `docs/LOCAL-LOGIN-FIRE-REVIEW.md`
 - `docs/MORTENSON-REDESIGN.md`
 - `index.html`
-- `pages/fire-safety.html`
 - `scripts/check-redesign-browser.sh`
 - `scripts/local-review-backend.py`
 - `scripts/test-account-regression.py`
@@ -62,4 +72,4 @@ Relative to prior feature head `550b5bb`; evidence files are included.
 - `scripts/test-profile.py`
 - `scripts/test-quiz.py`
 - `scripts/test-request-worker.py`
-- `docs/111326-login-fire-evidence/prepare-authenticated-account-1280.png`
+- `pages/fire-safety.html`
