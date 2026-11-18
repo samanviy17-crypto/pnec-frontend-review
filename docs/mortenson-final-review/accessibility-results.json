@@ -1,0 +1,1275 @@
+{
+  "axe_version": "4.11.0",
+  "policy": "real loopback API for anonymous pages; no external providers; no mocked identity",
+  "checks": [
+    {
+      "route": "/",
+      "width": 1280,
+      "theme": "cyberpunk",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/checklist.html",
+      "width": 1280,
+      "theme": "cyberpunk",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/fire-safety.html",
+      "width": 1280,
+      "theme": "cyberpunk",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/profile.html",
+      "width": 1280,
+      "theme": "cyberpunk",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/register.html",
+      "width": 1280,
+      "theme": "cyberpunk",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/settings.html",
+      "width": 1280,
+      "theme": "cyberpunk",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/volunteer.html",
+      "width": 1280,
+      "theme": "cyberpunk",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "/",
+      "width": 1280,
+      "theme": "green",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/checklist.html",
+      "width": 1280,
+      "theme": "green",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/fire-safety.html",
+      "width": 1280,
+      "theme": "green",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/profile.html",
+      "width": 1280,
+      "theme": "green",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/register.html",
+      "width": 1280,
+      "theme": "green",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/settings.html",
+      "width": 1280,
+      "theme": "green",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/volunteer.html",
+      "width": 1280,
+      "theme": "green",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "/",
+      "width": 1280,
+      "theme": "light",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/checklist.html",
+      "width": 1280,
+      "theme": "light",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/fire-safety.html",
+      "width": 1280,
+      "theme": "light",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/profile.html",
+      "width": 1280,
+      "theme": "light",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/register.html",
+      "width": 1280,
+      "theme": "light",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/settings.html",
+      "width": 1280,
+      "theme": "light",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/volunteer.html",
+      "width": 1280,
+      "theme": "light",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "/",
+      "width": 1280,
+      "theme": "midnight",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/checklist.html",
+      "width": 1280,
+      "theme": "midnight",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/fire-safety.html",
+      "width": 1280,
+      "theme": "midnight",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/profile.html",
+      "width": 1280,
+      "theme": "midnight",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/register.html",
+      "width": 1280,
+      "theme": "midnight",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/settings.html",
+      "width": 1280,
+      "theme": "midnight",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/volunteer.html",
+      "width": 1280,
+      "theme": "midnight",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "/",
+      "width": 1280,
+      "theme": "ocean",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/checklist.html",
+      "width": 1280,
+      "theme": "ocean",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/fire-safety.html",
+      "width": 1280,
+      "theme": "ocean",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/profile.html",
+      "width": 1280,
+      "theme": "ocean",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/register.html",
+      "width": 1280,
+      "theme": "ocean",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/settings.html",
+      "width": 1280,
+      "theme": "ocean",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/volunteer.html",
+      "width": 1280,
+      "theme": "ocean",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "/",
+      "width": 1280,
+      "theme": "sepia",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/checklist.html",
+      "width": 1280,
+      "theme": "sepia",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/fire-safety.html",
+      "width": 1280,
+      "theme": "sepia",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/profile.html",
+      "width": 1280,
+      "theme": "sepia",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/register.html",
+      "width": 1280,
+      "theme": "sepia",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/settings.html",
+      "width": 1280,
+      "theme": "sepia",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/volunteer.html",
+      "width": 1280,
+      "theme": "sepia",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "/",
+      "width": 390,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ],
+      "screenshot": "home-390.png"
+    },
+    {
+      "route": "donation-form/",
+      "width": 390,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/about.html",
+      "width": 390,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/blog.html",
+      "width": 390,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/checklist.html",
+      "width": 390,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ],
+      "screenshot": "checklist-390.png"
+    },
+    {
+      "route": "pages/community-events-and-activities.html",
+      "width": 390,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ],
+      "screenshot": "community-events-and-activities-390.png"
+    },
+    {
+      "route": "pages/contact.html",
+      "width": 390,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/find-your-neighborhood.html",
+      "width": 390,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/fire-safety.html",
+      "width": 390,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ],
+      "screenshot": "fire-safety-390.png"
+    },
+    {
+      "route": "pages/gallery.html",
+      "width": 390,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "aria-prohibited-attr",
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/kit.html",
+      "width": 390,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "aria-prohibited-attr",
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/preparedness-resources.html",
+      "width": 390,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "aria-prohibited-attr",
+        "color-contrast"
+      ],
+      "screenshot": "preparedness-resources-390.png"
+    },
+    {
+      "route": "pages/profile.html",
+      "width": 390,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ],
+      "screenshot": "profile-390.png"
+    },
+    {
+      "route": "pages/programs-and-services.html",
+      "width": 390,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/register.html",
+      "width": 390,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ],
+      "screenshot": "register-390.png"
+    },
+    {
+      "route": "pages/security.html",
+      "width": 390,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/settings.html",
+      "width": 390,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ],
+      "screenshot": "settings-390.png"
+    },
+    {
+      "route": "pages/volunteer.html",
+      "width": 390,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ],
+      "screenshot": "volunteer-390.png"
+    },
+    {
+      "route": "/",
+      "width": 768,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "donation-form/",
+      "width": 768,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/about.html",
+      "width": 768,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/blog.html",
+      "width": 768,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/checklist.html",
+      "width": 768,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/community-events-and-activities.html",
+      "width": 768,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/contact.html",
+      "width": 768,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/find-your-neighborhood.html",
+      "width": 768,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/fire-safety.html",
+      "width": 768,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/gallery.html",
+      "width": 768,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "aria-prohibited-attr",
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/kit.html",
+      "width": 768,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "aria-prohibited-attr",
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/preparedness-resources.html",
+      "width": 768,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "aria-prohibited-attr",
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/profile.html",
+      "width": 768,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/programs-and-services.html",
+      "width": 768,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/register.html",
+      "width": 768,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/security.html",
+      "width": 768,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/settings.html",
+      "width": 768,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/volunteer.html",
+      "width": 768,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "/",
+      "width": 1280,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ],
+      "screenshot": "home-1280.png"
+    },
+    {
+      "route": "donation-form/",
+      "width": 1280,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/about.html",
+      "width": 1280,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/blog.html",
+      "width": 1280,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/checklist.html",
+      "width": 1280,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ],
+      "screenshot": "checklist-1280.png"
+    },
+    {
+      "route": "pages/community-events-and-activities.html",
+      "width": 1280,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ],
+      "screenshot": "community-events-and-activities-1280.png"
+    },
+    {
+      "route": "pages/contact.html",
+      "width": 1280,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/find-your-neighborhood.html",
+      "width": 1280,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/fire-safety.html",
+      "width": 1280,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ],
+      "screenshot": "fire-safety-1280.png"
+    },
+    {
+      "route": "pages/gallery.html",
+      "width": 1280,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "aria-prohibited-attr",
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/kit.html",
+      "width": 1280,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "aria-prohibited-attr",
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/preparedness-resources.html",
+      "width": 1280,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "aria-prohibited-attr",
+        "color-contrast"
+      ],
+      "screenshot": "preparedness-resources-1280.png"
+    },
+    {
+      "route": "pages/profile.html",
+      "width": 1280,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ],
+      "screenshot": "profile-1280.png"
+    },
+    {
+      "route": "pages/programs-and-services.html",
+      "width": 1280,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/register.html",
+      "width": 1280,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ],
+      "screenshot": "register-1280.png"
+    },
+    {
+      "route": "pages/security.html",
+      "width": 1280,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/settings.html",
+      "width": 1280,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ],
+      "screenshot": "settings-1280.png"
+    },
+    {
+      "route": "pages/volunteer.html",
+      "width": 1280,
+      "theme": "site-default",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ],
+      "screenshot": "volunteer-1280.png"
+    },
+    {
+      "route": "/",
+      "width": 1280,
+      "theme": "sunset",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/checklist.html",
+      "width": 1280,
+      "theme": "sunset",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/fire-safety.html",
+      "width": 1280,
+      "theme": "sunset",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/profile.html",
+      "width": 1280,
+      "theme": "sunset",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/register.html",
+      "width": 1280,
+      "theme": "sunset",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/settings.html",
+      "width": 1280,
+      "theme": "sunset",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "route": "pages/volunteer.html",
+      "width": 1280,
+      "theme": "sunset",
+      "http_status": 200,
+      "overflow": false,
+      "page_errors": [],
+      "violations": [],
+      "incomplete_rules": [
+        "color-contrast"
+      ]
+    }
+  ],
+  "manual_required": [
+    "VoiceOver/NVDA reading order and announcements",
+    "audible OS voice playback",
+    "image-background contrast and gradient text",
+    "touch and high zoom with assistive technology"
+  ]
+}

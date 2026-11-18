@@ -315,3 +315,11 @@ manual screen-reader review and live authenticated end-to-end checks remain open
 The same complete 90-check navigation and 156-check acceptance suites also passed
 with the project-prefixed `/pnec-frontend-review/` build. Current environment and
 aggregate results are recorded in `111326-evidence/validation.json`.
+
+## Final Mortenson review
+
+The current [demo guide](MORTENSON-DEMO.md), [release audit](MORTENSON-RELEASE-AUDIT.md),
+[changes since 3f41a99](MORTENSON-FINAL-CHANGES.md), and
+[current evidence](mortenson-final-review/README.md) supersede earlier baseline
+limitations where explicitly resolved. Stakeholder review is ready with disclosed
+limitations; no merge or deployment is authorized.

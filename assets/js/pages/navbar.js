@@ -33,8 +33,11 @@ function loadAuthState() {
   // Cached identity is not authentication. Confirm the current backend session
   // before exposing account/role controls, especially after switching local APIs.
   renderNavbarLoggedOut();
+  const revision = window.PNEC_AUTH_REVISION || 0;
   fetchCurrentUser({strict:true})
     .then(user => {
+      // A delayed pre-login response must not erase newer account credentials.
+      if (revision !== (window.PNEC_AUTH_REVISION || 0)) return;
       if (user) {
         localStorage.setItem('pnec_user', JSON.stringify(user));
         sessionStorage.removeItem('pnec_user');
@@ -49,6 +52,7 @@ function loadAuthState() {
       }
     })
     .catch(() => {
+      if (revision !== (window.PNEC_AUTH_REVISION || 0)) return;
       // Preserve credentials for a retry, but do not claim an unverified session.
       renderNavbarLoggedOut();
       if (typeof renderPowayAuthHeader === 'function') renderPowayAuthHeader(null);

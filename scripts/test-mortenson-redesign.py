@@ -122,12 +122,16 @@ with sync_playwright() as play:
         search.fill('no matching synthetic item')
         assert page.locator('.kit-item:visible').count()==0
         search.fill('')
-        item=page.locator('.kit-item').first
+        item=page.locator('.kit-item-toggle').first
+        info=page.locator('.kit-item-expand').first
+        info.focus();info.press('Enter')
+        assert info.get_attribute('aria-expanded')=='true'
+        assert item.get_attribute('aria-checked')=='false'
         item.press('Space')
         assert item.get_attribute('aria-checked')=='true'
         page.reload(wait_until='networkidle')
         close_home_welcome(page)
-        assert page.locator('.kit-item').first.get_attribute('aria-checked')=='true'
+        assert page.locator('.kit-item-toggle').first.get_attribute('aria-checked')=='true'
         page.goto(base+'pages/preparedness-resources.html',wait_until='networkidle')
         close_home_welcome(page)
         page.locator('#pnec-resource-filter').fill('Wildfire')

@@ -1,0 +1,40 @@
+// Final review: legacy feature surfaces must use the same readable theme tokens.
+body.pnec-site {
+  main p a:not(.ocs-button), .pnec-live-preview a { text-decoration: underline; text-underline-offset: .16em; }
+  .auth-brand, .auth-brand-quote, .auth-brand-quote-avatar,
+  .checklist-category, .checklist-cat-header, .checklist-item,
+  .auth-form-stack, .auth-tabs, .vol-form-shell, .vol-role {
+    background: var(--pnec-surface); color: var(--pnec-text); border-color: var(--pnec-line);
+  }
+  .auth-brand-mark, .auth-brand-hero-eyebrow, .auth-brand-hero p,
+  .auth-brand-stat-num, .auth-brand-stat-label, .auth-brand-quote-attr,
+  .vol-eyebrow, .vol-stat-label, .vol-stat-num,
+  .checklist-cat-name, .checklist-item-label, .checklist-item-qty {
+    color: var(--pnec-text); opacity: 1;
+  }
+  .vol-eyebrow { background: var(--pnec-bg); }
+  .checklist-cat-count, .checklist-item-note { color: var(--pnec-muted); }
+}
+body.pnec-site .ocs-card a:not(.ocs-button),
+body.pnec-site .pnec-tree-rules a { text-decoration: underline; text-underline-offset: .16em; }
+
+body.pnec-site a.checklist-back-link { font-size: .85rem; color: var(--pnec-accent); text-decoration: underline; }
+body.pnec-site {
+  .community-tools article { background: var(--pnec-surface); color: var(--pnec-text); border-color: var(--pnec-line); }
+  .page-hero-eyebrow, .kit-progress-pct, .blog-empty p { color: var(--pnec-accent); }
+  .kit-item-toggle { display: flex; flex: 1; min-width: 0; gap: $spacing-sm; padding: 0; border: 0; background: transparent; color: var(--pnec-text); text-align: left; }
+  .kit-item-name, .kit-item-why { display: block; }
+  .kit-item-name, .kit-item.checked .kit-item-name { color: var(--pnec-text); }
+  .kit-item-why { color: var(--pnec-muted); }
+  .kit-item-expand { min-width: 44px; min-height: 44px; color: var(--pnec-accent); }
+}
+body.pnec-site {
+  .profile-card, .profile-summary-card, .profile-badge, .profile-badge.is-earned,
+  .profile-edit-section, .profile-status-section, .profile-signout-section,
+  .profile-missing-link { background: var(--pnec-surface); color: var(--pnec-text); border-color: var(--pnec-line); }
+  .profile-name, .profile-email, .profile-phone, .profile-bio-display,
+  .profile-summary-title, .profile-meter-value, .profile-detail,
+  .profile-badge-label, .is-earned .profile-badge-label { color: var(--pnec-text); }
+  .profile-muted-small, .profile-badges-note, .profile-optional,
+  .profile-missing-percent, .form-field small { color: var(--pnec-muted); }
+}

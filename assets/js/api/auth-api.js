@@ -46,6 +46,7 @@ function _getAuthHeaders() {
 }
 
 function _storeAuthResult(data, remember = true) {
+  window.PNEC_AUTH_REVISION = (window.PNEC_AUTH_REVISION || 0) + 1;
   const storage = remember ? localStorage : sessionStorage;
   const other = remember ? sessionStorage : localStorage;
   other.removeItem('pnec_token'); other.removeItem('pnec_user');
@@ -81,6 +82,7 @@ function logoutUser() {
   return pnecJsonRequest(`${API_BASE}/api/auth/logout`, {
     method: 'POST', credentials: 'include', headers: _getAuthHeaders(),
   }).then(data => {
+    window.PNEC_AUTH_REVISION = (window.PNEC_AUTH_REVISION || 0) + 1;
     // Keep credentials available for retry if the server cannot confirm logout.
     for (const storage of [localStorage, sessionStorage]) {
       storage.removeItem('pnec_token'); storage.removeItem('pnec_user');

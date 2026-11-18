@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
       ? '<div class="profile-missing-actions">' +
           comp.missing.map(function(m) {
             var anchor = m.action === 'avatar' ? '#avatar-change-btn' : m.action === 'bio' ? '#edit-bio' : m.action === 'phone' ? '#edit-phone' : '#edit-neighborhood';
-            return '<a href="' + anchor + '" onclick="document.querySelector(\'' + anchor + '\')&&document.querySelector(\'' + anchor + '\').focus?document.querySelector(\'' + anchor + '\').focus():null" class="profile-missing-link">+ ' + escapeHtml(m.label) + ' <span style=\'color:#9e9e9e\'>(' + m.pct + '%)</span></a>';
+            return '<a href="' + anchor + '" onclick="document.querySelector(\'' + anchor + '\')&&document.querySelector(\'' + anchor + '\').focus?document.querySelector(\'' + anchor + '\').focus():null" class="profile-missing-link">+ ' + escapeHtml(m.label) + ' <span class="profile-missing-percent">(' + m.pct + '%)</span></a>';
           }).join('') +
         '</div>'
       : '<div class="profile-complete">🎉 Profile fully complete!</div>';
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
       '<div class="profile-summary-card">' +
         '<div class="profile-summary-heading">' +
           '<span class="profile-summary-title">Profile Strength</span>' +
-          '<span class="profile-meter-value" style="color:' + barColor + ';">' + comp.score + '%</span>' +
+          '<span class="profile-meter-value">' + comp.score + '%</span>' +
         '</div>' +
         '<div class="profile-meter">' +
           '<div class="profile-meter-fill" style="background:' + barColor + ';width:' + comp.score + '%;"></div>' +

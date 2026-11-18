@@ -1,0 +1,11 @@
+{
+  "patch": "docs/backend-patches/register-announcements.patch",
+  "fresh_migration": {
+    "schema_revision": "0002_announcements",
+    "status": "ready"
+  },
+  "actual_HTTP": "anonymous read 200/write 401; resident write 403; admin write 201; unapproved Origin 403; persisted public list",
+  "production_applied": false,
+  "backend_checkout_changed": false,
+  "passed": true
+}

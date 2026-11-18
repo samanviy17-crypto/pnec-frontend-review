@@ -1,0 +1,21 @@
+{
+  "transport": "real loopback HTTP; no API mocks",
+  "synthetic_data_only": true,
+  "checks": [
+    "Existing UI login, account menu, dashboard and profile edit/reload",
+    "Real registration creates resident; role/id escalation rejected; household/check-in/hazard data isolated between two residents, including forged identity/neighborhood parameters",
+    "Coordinator UI posts shift; resident UI claims/cancels; full capacity 409; no resident roster leakage; cross-neighborhood coordinator write 403; volunteer interest UI submitted",
+    "Actual admin notification API on explicitly repaired disposable backend; community source label, keyboard dismissal/persistence and changed-version reappearance; resident creation 403. Backend release patch and additive migration remain required.",
+    "Unmocked browser theme and reviewed language preferences persist across routes/reload",
+    "Actual logout revokes account session"
+  ],
+  "local_compatibility_fixes": [
+    "register-existing-announcements-blueprint",
+    "create-missing-announcements-table"
+  ],
+  "blockers": [
+    "Unmodified backend application factory omits announcement blueprint registration. This local launcher repairs it explicitly; the reviewed backend registration patch and additive migration must be integrated separately before a release."
+  ],
+  "page_errors": [],
+  "passed": true
+}
