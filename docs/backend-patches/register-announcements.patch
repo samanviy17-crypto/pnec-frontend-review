@@ -1,0 +1,49 @@
+--- a/app/__init__.py
++++ b/app/__init__.py
+@@ -462,6 +462,8 @@
+     """
+     from app.routes.preparedness import preparedness_bp
+     app.register_blueprint(preparedness_bp, url_prefix="/api")
++    from app.routes.announcement import announcements_bp
++    app.register_blueprint(announcements_bp, url_prefix="/api")
+     from app.routes.auth import auth_bp
+     from app.routes.legacy_user import legacy_user_bp
+     from app.routes.faq import faq_bp
+--- /dev/null
++++ b/migrations/versions/0002_announcements.py
+@@ -0,0 +1,24 @@
++"""Add the missing announcement table; review against deployed schema first."""
++from alembic import op
++import sqlalchemy as sa
++revision = '0002_announcements'
++down_revision = '0001_pnec_release'
++branch_labels = None
++depends_on = None
++
++def upgrade():
++    # Refuse silent adoption of an unversioned pre-existing table.
++    if 'announcements' in sa.inspect(op.get_bind()).get_table_names():
++        raise RuntimeError('Existing announcements table needs schema reconciliation before migration.')
++    op.create_table('announcements',
++        sa.Column('id', sa.Integer(), primary_key=True),
++        sa.Column('message', sa.Text(), nullable=False),
++        sa.Column('level', sa.String(20), nullable=False),
++        sa.Column('is_active', sa.Boolean(), nullable=False),
++        sa.Column('expires_at', sa.DateTime(), nullable=True),
++        sa.Column('created_by', sa.Integer(), sa.ForeignKey('users.id'), nullable=True),
++        sa.Column('created_at', sa.DateTime(), nullable=False),
++        sa.Column('updated_at', sa.DateTime(), nullable=False))
++
++def downgrade():
++    raise RuntimeError('Destructive announcement downgrade is not supported.')
+--- a/app/release.py
++++ b/app/release.py
+@@ -3,7 +3,7 @@
+ from flask import jsonify
+ from sqlalchemy import text
+ 
+-REVISION = '0001_pnec_release'
++REVISION = '0002_announcements'
+ 
+ 
+ def register_release_commands(app):

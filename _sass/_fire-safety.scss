@@ -1,0 +1,12 @@
+// OCS cards/grids and accessible, illustrative top-view distances.
+body.pnec-site {
+  .pnec-zone-grid { @include base-grid(3,$spacing-lg); grid-template-columns: repeat(3,minmax(0,1fr)); @include main-container($spacing-xl); }
+  .pnec-fire-intro, .pnec-tree-guidance, .pnec-tree-demo { @include main-container($spacing-xl); }
+  .pnec-verification { font-size: $text-md; color: var(--pnec-muted); }
+  .pnec-tree-rules { margin: 0 0 $spacing-lg; div { @include main-container($spacing-lg); padding-left: $spacing-md; border-left: 3px solid var(--pnec-accent); } dt { font-weight: 700; } dd { margin: $spacing-xxs 0 0; } }
+  .pnec-distance-controls { @include base-grid(2,$spacing-lg); label { display: grid; gap: $spacing-xs; font-weight: 600; } input { width: 100%; min-height: 44px; accent-color: var(--pnec-accent); } }
+  .pnec-distance-scroll { overflow-x: auto; margin: $spacing-lg 0; border: 1px solid var(--pnec-line); border-radius: $radius-sm; }
+  .pnec-distance-diagram { display: block; width: 100%; min-width: 640px; text { fill: var(--pnec-text); font: 16px var(--pnec-font); } .zone-zero { fill: var(--pnec-accent); opacity: .3; } .zone-one { fill: var(--pnec-accent); opacity: .18; } .zone-two { fill: var(--pnec-accent); opacity: .07; } .diagram-house { fill: var(--pnec-surface); stroke: var(--pnec-text); stroke-width: 2; } .diagram-roof, .diagram-boundary, .diagram-distance { fill: none; stroke: var(--pnec-text); stroke-width: 2; } .diagram-distance { stroke-dasharray: 5 3; } .diagram-canopy { fill: var(--pnec-accent); fill-opacity: .18; stroke: var(--pnec-accent); stroke-width: 3; } }
+  .pnec-reading-tools.pnec-container button { @include text-button; min-height: 44px; height: auto; &:hover {transform: none;} }
+}
+@media (max-width: $breakpoint-mobile) { body.pnec-site .pnec-zone-grid, body.pnec-site .pnec-distance-controls { grid-template-columns: minmax(0,1fr); } }

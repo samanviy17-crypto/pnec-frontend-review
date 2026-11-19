@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-17",
+  "branch": "feature/mortenson-website-redesign-20261116",
+  "base_main": "ce475278ba406ddb4fa39a93daafb6dd3b5f7af7",
+  "environment": {
+    "ruby": "4.0.6",
+    "bundler": "4.0.19",
+    "jekyll": "3.9.5",
+    "node": "24.11.1",
+    "python": "3.14",
+    "playwright": "1.65.2"
+  },
+  "results": {
+    "javascript": "9 passed",
+    "jekyll_and_sass": "passed",
+    "project_paths": "40 HTML files passed",
+    "root_browser": "90 navigation + 156 acceptance passed",
+    "project_browser": "90 navigation + 156 acceptance passed",
+    "weekly_backend_pytest": "2 passed, 39 deselected",
+    "broader_release_feature": "4/10",
+    "broader_release_clean_main": "4/10, matching failure causes"
+  },
+  "limitations": [
+    "Browser APIs mocked or blocked; no live authentication or publishing verification",
+    "No scheduled editorial weekly publisher found in inspected backend source",
+    "Six broader suites fail on both baseline and feature",
+    "Existing homepage helper auto-open is preserved; unrelated browser interactions explicitly dismiss it"
+  ],
+  "screenshots": "API unavailable; reduced motion; desktop 1280 and mobile 390"
+}

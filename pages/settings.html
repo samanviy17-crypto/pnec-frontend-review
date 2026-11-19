@@ -1,0 +1,58 @@
+---
+layout: pnec-base
+title: Profile Preferences
+description: Personalize PNEC appearance, language and audio on this browser.
+body_class: page-settings
+---
+<header class="pnec-page-heading"><p class="pnec-eyebrow" data-i18n="Your PNEC">Your PNEC</p><h1 data-i18n="Preferences">Preferences</h1><p data-i18n="preferences-intro">Make PNEC comfortable for you. These preferences stay in this browser and are available without an account.</p></header>
+<nav class="pnec-preference-sections" aria-label="Preference sections"><a href="#appearance" data-i18n="Appearance">Appearance</a><a href="#language" data-i18n="Language">Language</a><a href="#audio" data-i18n="Audio">Audio</a></nav>
+<form id="pnec-appearance-form" class="pnec-preferences-stack">
+<section id="appearance" class="ocs-card pnec-preference-card" aria-labelledby="appearance-heading">
+  <header class="pnec-preference-heading"><span class="pnec-step" aria-hidden="true">1</span><div><p class="pnec-eyebrow" data-i18n="Appearance">Appearance</p><h2 id="appearance-heading" data-i18n="Pick a starting point">Pick a starting point</h2></div></header>
+  <p data-i18n="theme-intro">Choose a visual preset, then fine-tune it below. Choices save automatically; custom colors preview first and apply with Save preferences.</p>
+  <div class="pnec-theme-grid" role="group" aria-label="Theme presets">
+    <button type="button" class="ocs__prefs-swatch" data-theme="site-default" aria-pressed="true"><span class="ocs__prefs-swatch-sample" aria-hidden="true"><span class="pnec-mini-nav"></span><span class="pnec-mini-content">Aa<span class="ocs__prefs-swatch-bar"></span><span class="pnec-mini-line"></span></span></span><span class="ocs__prefs-swatch-name">Site Default</span><span class="pnec-theme-selected" aria-hidden="true">✓</span></button>
+    <button type="button" class="ocs__prefs-swatch" data-theme="midnight" aria-pressed="false"><span class="ocs__prefs-swatch-sample" aria-hidden="true"><span class="pnec-mini-nav"></span><span class="pnec-mini-content">Aa<span class="ocs__prefs-swatch-bar"></span><span class="pnec-mini-line"></span></span></span><span class="ocs__prefs-swatch-name">Midnight</span><span class="pnec-theme-selected" aria-hidden="true">✓</span></button>
+    <button type="button" class="ocs__prefs-swatch" data-theme="light" aria-pressed="false"><span class="ocs__prefs-swatch-sample" aria-hidden="true"><span class="pnec-mini-nav"></span><span class="pnec-mini-content">Aa<span class="ocs__prefs-swatch-bar"></span><span class="pnec-mini-line"></span></span></span><span class="ocs__prefs-swatch-name">Light</span><span class="pnec-theme-selected" aria-hidden="true">✓</span></button>
+    <button type="button" class="ocs__prefs-swatch" data-theme="green" aria-pressed="false"><span class="ocs__prefs-swatch-sample" aria-hidden="true"><span class="pnec-mini-nav"></span><span class="pnec-mini-content">Aa<span class="ocs__prefs-swatch-bar"></span><span class="pnec-mini-line"></span></span></span><span class="ocs__prefs-swatch-name">Green</span><span class="pnec-theme-selected" aria-hidden="true">✓</span></button>
+    <button type="button" class="ocs__prefs-swatch" data-theme="sepia" aria-pressed="false"><span class="ocs__prefs-swatch-sample" aria-hidden="true"><span class="pnec-mini-nav"></span><span class="pnec-mini-content">Aa<span class="ocs__prefs-swatch-bar"></span><span class="pnec-mini-line"></span></span></span><span class="ocs__prefs-swatch-name">Sepia</span><span class="pnec-theme-selected" aria-hidden="true">✓</span></button>
+    <button type="button" class="ocs__prefs-swatch" data-theme="cyberpunk" aria-pressed="false"><span class="ocs__prefs-swatch-sample" aria-hidden="true"><span class="pnec-mini-nav"></span><span class="pnec-mini-content">Aa<span class="ocs__prefs-swatch-bar"></span><span class="pnec-mini-line"></span></span></span><span class="ocs__prefs-swatch-name">Cyberpunk</span><span class="pnec-theme-selected" aria-hidden="true">✓</span></button>
+    <button type="button" class="ocs__prefs-swatch" data-theme="ocean" aria-pressed="false"><span class="ocs__prefs-swatch-sample" aria-hidden="true"><span class="pnec-mini-nav"></span><span class="pnec-mini-content">Aa<span class="ocs__prefs-swatch-bar"></span><span class="pnec-mini-line"></span></span></span><span class="ocs__prefs-swatch-name">Ocean</span><span class="pnec-theme-selected" aria-hidden="true">✓</span></button>
+    <button type="button" class="ocs__prefs-swatch" data-theme="sunset" aria-pressed="false"><span class="ocs__prefs-swatch-sample" aria-hidden="true"><span class="pnec-mini-nav"></span><span class="pnec-mini-content">Aa<span class="ocs__prefs-swatch-bar"></span><span class="pnec-mini-line"></span></span></span><span class="ocs__prefs-swatch-name">Sunset</span><span class="pnec-theme-selected" aria-hidden="true">✓</span></button>
+  </div>
+</section>
+<section class="ocs-card pnec-preference-card" aria-labelledby="customize-heading">
+  <header class="pnec-preference-heading"><span class="pnec-step" aria-hidden="true">2</span><h2 id="customize-heading" data-i18n="Fine-tune">Fine-tune</h2></header>
+  <div class="pnec-customize-layout"><div class="pnec-preference-fields">
+    <label for="appearance-theme"><span data-i18n="Color scheme">Color scheme</span><select id="appearance-theme" name="theme"><option value="system">Use system setting</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
+    <label for="appearance-font"><span data-i18n="Font family">Font family</span><select id="appearance-font" name="font"><option value="sans">Sans serif</option><option value="serif">Serif</option><option value="mono">Monospace</option></select></label>
+    <label for="appearance-size"><span data-i18n="Text size">Text size</span><select id="appearance-size" name="size"><option value="standard">Standard (16 px)</option><option value="large">Large (19 px)</option><option value="extra">Extra large (22 px)</option></select></label>
+    <label for="appearance-background"><span data-i18n="Background pattern">Background pattern</span><select id="appearance-background" name="background"><option value="plain">Plain</option><option value="soft">Soft tint</option><option value="grid">Subtle grid</option></select></label>
+    <label for="appearance-bg-color"><span data-i18n="Background color">Background color</span><input id="appearance-bg-color" type="color" name="bgColor" value="#f7f9fb"></label>
+    <label for="appearance-text-color"><span data-i18n="Text color">Text color</span><input id="appearance-text-color" type="color" name="textColor" value="#10213a"></label>
+    <label for="appearance-accent-color"><span data-i18n="Accent color">Accent color</span><input id="appearance-accent-color" type="color" name="accentColor" value="#066b76"></label>
+    <label for="appearance-button"><span data-i18n="Button style">Button style</span><select id="appearance-button" name="button"><option value="rounded">Rounded</option><option value="square">Square</option><option value="pill">Pill</option></select></label>
+    <label class="pnec-check"><input type="checkbox" name="spacing"><span data-i18n="More line spacing">More line spacing</span></label>
+    <label class="pnec-check"><input type="checkbox" name="motion"><span data-i18n="Reduce motion">Reduce motion</span></label>
+  </div><section class="pnec-live-preview" aria-labelledby="preview-heading">
+    <p class="pnec-eyebrow" data-i18n="Live preview">Live preview</p><h3 id="preview-heading">Ready for your next step?</h3><p>Your neighbors, your plan, your PNEC. Read a guide, build a kit, and stay connected.</p><a href="{{ '/pages/checklist.html' | relative_url }}">Explore preparedness</a><button class="ocs-button primary" type="button" id="preview-button">Sample button</button>
+    <p id="appearance-contrast" role="status"></p>
+  </section></div>
+  <div class="pnec-preference-actions"><button class="ocs-button primary" type="submit" data-i18n="Save preferences">Save preferences</button><button class="ocs-button" type="reset" data-i18n="Reset to defaults">Reset to defaults</button></div><p id="appearance-status" role="status"></p>
+</section>
+</form>
+<section id="language" class="ocs-card pnec-preference-card" aria-labelledby="language-heading">
+  <h2 id="language-heading" data-i18n="Language">Language</h2><p data-i18n="language-coverage">Language applies to reviewed navigation and preference labels. Guides, user content, forms and API messages retain their original language. No automatic page translation is provided.</p>
+  <form id="pnec-language-form"><label for="site-language" data-i18n="Site language">Site language</label><select id="site-language" name="language"><option value="en">English</option><option value="es">Español — navegación y preferencias</option></select><div class="pnec-preference-actions"><button class="ocs-button" type="submit" data-i18n="Save language">Save language</button><button class="ocs-button" type="reset" data-i18n="Reset to English">Reset to English</button></div><p id="language-status" role="status"></p></form>
+</section>
+<section id="audio" class="ocs-card pnec-preference-card" aria-labelledby="audio-heading">
+  <h2 id="audio-heading" data-i18n="Audio">Audio</h2><p data-i18n="audio-intro">Listen to selected text or a page’s main content when you choose. Audio never starts automatically. Available voices depend on your browser and operating system.</p>
+  <form id="pnec-audio-form"><div class="pnec-preference-fields">
+    <label class="pnec-check"><input type="checkbox" name="enabled"><span data-i18n="Enable text-to-speech">Enable text-to-speech</span></label>
+    <label for="speech-voice"><span data-i18n="Voice">Voice</span><select id="speech-voice" name="voice"><option value="">Browser default voice</option></select></label>
+    <label for="speech-rate"><span data-i18n="Speech speed">Speech speed</span> <output for="speech-rate" id="speech-rate-value">1×</output><input id="speech-rate" name="rate" type="range" min="0.5" max="2" step="0.1" value="1"></label>
+    <label for="speech-pitch"><span data-i18n="Pitch">Pitch</span> <output for="speech-pitch" id="speech-pitch-value">1</output><input id="speech-pitch" name="pitch" type="range" min="0.5" max="2" step="0.1" value="1"></label>
+    <label for="speech-volume"><span data-i18n="Volume">Volume</span> <output for="speech-volume" id="speech-volume-value">100%</output><input id="speech-volume" name="volume" type="range" min="0" max="1" step="0.1" value="1"></label>
+    <label for="speech-test-text"><span data-i18n="Test text">Test text</span><textarea id="speech-test-text" rows="3" maxlength="1000">Neighbors helping neighbors through preparedness, response, and recovery.</textarea></label>
+  </div><div class="pnec-preference-actions"><button class="ocs-button" type="button" data-speech="test" data-i18n="Test Voice">Test Voice</button><button class="ocs-button" type="button" data-speech="pause" data-i18n="Pause speech">Pause speech</button><button class="ocs-button" type="button" data-speech="stop" data-i18n="Stop speech">Stop speech</button><button class="ocs-button primary" type="submit" data-i18n="Save audio">Save audio</button><button class="ocs-button" type="reset" data-i18n="Reset audio">Reset audio</button></div><p class="pnec-speech-status" role="status"></p><p id="audio-status" role="status"></p></form>
+</section>

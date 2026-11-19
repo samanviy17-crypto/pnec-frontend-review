@@ -46,9 +46,9 @@ with sync_playwright() as play:
       await failure('403 authorization', async () => response('{}',403), /permission/,403,'FORBIDDEN');
       await failure('400 validation detail', async () => response('{"message":"Answer all questions"}',400), /Answer all questions/,400,'INVALID_DATA');
       await failure('400 specific detail before generic message', async () => response('{"message":"The submitted data was invalid.","detail":"This reset link is invalid or expired."}',400), /invalid or expired/,400,'INVALID_DATA');
-      await failure('HTML 502 server error', async () => response('<html>private upstream trace</html>',502), /unexpected error/,502,'SERVER_ERROR');
+      await failure('HTML 502 server error', async () => response('<html>private upstream trace</html>',502), /backend.*unavailable|server error/,502,'SERVER_ERROR');
       await failure('Malformed success response', async () => response('not json'), /unreadable response/);
-      await failure('Offline/network failure', async () => {throw new TypeError('Failed to fetch');}, /internet connection/,undefined,'NETWORK_ERROR');
+      await failure('Offline/network failure', async () => {throw new TypeError('Failed to fetch');}, /service.*network|network.*unavailable/,undefined,'NETWORK_ERROR');
       await failure('Fetch timeout', (url, options) => new Promise((resolve,reject) =>
         options.signal.addEventListener('abort', () => reject(new DOMException('aborted','AbortError')))), /timed out/,undefined,'TIMEOUT');
       await failure('Body-read timeout', async (url, options) => ({ok:true,status:200,json:() => new Promise((resolve,reject) =>

@@ -1,0 +1,61 @@
+// OCS header/link and dashboard-context patterns, scoped to PNEC.
+$pnec-top-height: 80px;
+$pnec-sidebar-width: 264px;
+body.pnec-site { padding: $pnec-top-height 0 0; }
+body.pnec-site.pnec-has-sidebar { padding-left: $pnec-sidebar-width; }
+html { scroll-padding-top: $pnec-top-height + $spacing-lg; }
+#pnec-site-header.site-header {
+  @import "vendor/ocs/navigation";
+  position: fixed; inset: 0 0 auto; width: 100%; height: $pnec-top-height;
+  min-height: 0; z-index: 100000; border: 0; border-bottom: 1px solid var(--pnec-line);
+  background: var(--pnec-surface); color: var(--pnec-text); font-family: var(--pnec-font);
+  .wrapper { @include inline-container(flex, $spacing-lg); height: 100%; padding: 0 $spacing-lg; max-width: none; margin: 0; }
+  .site-title { @include inline-container(flex, $spacing-xs); flex: 0 0 210px; float: none; margin: 0; text-decoration: none; color: var(--pnec-text); line-height: 1.2; }
+  .site-title img { width: 125px; height: 60px; object-fit: contain; filter: brightness(0) saturate(100%) invert(30%) sepia(48%) saturate(1262%) hue-rotate(145deg) brightness(91%) contrast(99%); }
+  .site-title strong { font-size: $text-xxl + 4px; }
+  .site-nav { flex: 1; display: block; float: none; position: static; min-width: 0; background: transparent; border: 0; }
+  .pnec-primary { @include inline-container(flex, $spacing-xxs); }
+  .page-link { @include text-button; min-height: 48px; height: auto; margin: 0; padding: $spacing-xs $spacing-sm; background: transparent; color: var(--pnec-text); font: 700 1.1rem/1.4 var(--pnec-font); text-decoration: none; border: 0; }
+  .page-link:hover, .page-link[aria-current] { background: var(--pnec-bg); color: var(--pnec-accent); transform: none; opacity: 1; box-shadow: inset 0 -3px var(--pnec-accent); }
+  .pnec-context { position: fixed; inset: $pnec-top-height auto 0 0; width: $pnec-sidebar-width; overflow-y: auto; padding: $spacing-xl $spacing-md; border-right: 1px solid var(--pnec-line); background: var(--pnec-surface); }
+  .pnec-context h2 { font-size: $text-xl; margin: 0 0 $spacing-md; color: var(--pnec-text); }
+  .pnec-context ul { list-style: none; padding: 0; margin: 0; }
+  .pnec-context li { list-style: none; padding: 0; margin: 0; }
+  .pnec-context a, .pnec-context button, .pnec-context summary { display: block; width: 100%; min-height: 44px; padding: $spacing-xs $spacing-sm; border: 0; border-radius: $radius-sm; color: var(--pnec-text); background: transparent; font: inherit; font-size: .95em; text-align: left; text-decoration: none; white-space: normal; overflow-wrap: anywhere; cursor: pointer; }
+  .pnec-context summary { display: list-item; margin-left: $spacing-md; width: calc(100% - #{$spacing-md}); }
+  .pnec-context a:hover, .pnec-context button:hover, .pnec-context a[aria-current] { background: var(--pnec-bg); color: var(--pnec-accent); box-shadow: inset 3px 0 var(--pnec-accent); }
+  .pnec-context details ul { padding-left: $spacing-sm; border-left: 1px solid var(--pnec-line); }
+  .pnec-context .pnec-account, .pnec-reading-tools { border-top: 1px solid var(--pnec-line); margin-top: $spacing-lg; padding-top: $spacing-lg; }
+  .pnec-reading-tools p { font-size: $text-sm; }
+  :focus-visible { outline: 3px solid var(--pnec-accent); outline-offset: 2px; }
+  #navbar-login-item { list-style: none; }
+  .pnec-top-account { position: relative; flex: 0 0 auto; margin-left: auto; }
+  .pnec-top-account > a, .pnec-top-account summary { @include text-button; font: inherit; min-height: 44px; height: auto; color: var(--pnec-accent); background: var(--pnec-surface); border-color: var(--pnec-line); transform: none; cursor: pointer; }
+  #pnec-account-dropdown > ul { position: absolute; top: 100%; right: 0; width: 244px; max-width: calc(100vw - 40px); max-height: calc(100dvh - 100px); overflow-y: auto; list-style: none; padding: $spacing-sm; margin: $spacing-xxs 0 0; background: var(--pnec-surface); border: 1px solid var(--pnec-line); border-radius: $radius-sm; box-shadow: $shadow-md; }
+  #pnec-account-dropdown li { list-style: none; }
+  #pnec-account-dropdown a, #pnec-account-dropdown button { display: block; width: 100%; min-height: 44px; padding: $spacing-xs; background: transparent; color: var(--pnec-text); border: 0; font: inherit; text-align: left; text-decoration: none; cursor: pointer; }
+  #pnec-account-dropdown a:hover, #pnec-account-dropdown button:hover { background: var(--pnec-bg); }
+  #pnec-account-dropdown details ul { padding-left: $spacing-sm; }
+  .nav-trigger { display: none; }
+  .pnec-skip { position: fixed; top: -100px; left: $spacing-lg; padding: $spacing-sm; background: var(--pnec-surface); color: var(--pnec-text); &:focus { top: $spacing-xs; } }
+}
+.pnec-drawer-backdrop { display: none; }
+@media (max-width: 1050px) {
+  body.pnec-site, body.pnec-site.pnec-has-sidebar { padding: $pnec-top-height 0 0; }
+  body.pnec-drawer-open { overflow: hidden; }
+  #pnec-site-header.site-header {
+    .wrapper { justify-content: space-between; }
+    .site-title { flex: 1; min-width: 0; }
+    .site-title strong { display: none; }
+    .pnec-top-account { order: 2; }
+    .nav-trigger { order: 3; }
+    .nav-trigger { @include text-button; width: 44px; height: 44px; display: block; background: var(--pnec-surface); color: var(--pnec-text); transform: none; font-size: $text-xxl; }
+    .site-nav { display: none; position: fixed; inset: $pnec-top-height auto 0 0; width: unquote("min(340px, calc(100% - #{$spacing-lg}))"); overflow-y: auto; padding: $spacing-lg; background: var(--pnec-surface); }
+    .site-nav.is-open { display: block; }
+    .pnec-primary { @include base-grid(1, $spacing-xxs); padding-bottom: $spacing-lg; border-bottom: 1px solid var(--pnec-line); }
+    .page-link { text-align: left; justify-content: flex-start; white-space: normal; }
+    .pnec-context { position: static; width: 100%; padding: $spacing-lg 0; border: 0; overflow: visible; }
+  }
+  .pnec-drawer-backdrop:not([hidden]) { display: block; position: fixed; inset: $pnec-top-height 0 0; z-index: 99999; border: 0; background: rgba(0,0,0,.5); }
+}
+@media print { #pnec-site-header, .pnec-drawer-backdrop { display: none; } body.pnec-site { padding: 0; } }

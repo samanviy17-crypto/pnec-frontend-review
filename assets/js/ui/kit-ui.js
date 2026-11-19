@@ -45,13 +45,15 @@ function renderKitCategories(categories, state) {
 function buildKitItemHtml(item, isChecked) {
   const checkedClass = isChecked ? 'checked' : '';
   return `
-    <div class="kit-item ${checkedClass}" data-item-id="${item.id}" role="checkbox" aria-checked="${isChecked}" tabindex="0">
-      <div class="kit-checkbox" aria-hidden="true"></div>
-      <div class="kit-item-content">
+    <div class="kit-item ${checkedClass}" data-item-id="${item.id}">
+      <button type="button" class="kit-item-toggle" role="checkbox" aria-label="${escapeHtml(item.name)}" aria-checked="${isChecked}">
+      <span class="kit-checkbox" aria-hidden="true"></span>
+      <span class="kit-item-content">
         <span class="kit-item-name">${escapeHtml(item.name)}</span>
-        <p class="kit-item-why">${escapeHtml(item.why || '')}</p>
-      </div>
-      <button class="kit-item-expand" aria-label="Why include this item" title="Why this matters">ℹ</button>
+        <span class="kit-item-why">${escapeHtml(item.why || '')}</span>
+      </span>
+      </button>
+      <button type="button" aria-expanded="false" class="kit-item-expand" aria-label="Why include this item" title="Why this matters">ℹ</button>
     </div>`;
 }
 
@@ -69,7 +71,7 @@ function updateKitItemDisplay(itemId, isChecked) {
   const itemEl = document.querySelector(`.kit-item[data-item-id="${itemId}"]`);
   if (!itemEl) return;
   itemEl.classList.toggle('checked', isChecked);
-  itemEl.setAttribute('aria-checked', isChecked.toString());
+  itemEl.querySelector('.kit-item-toggle').setAttribute('aria-checked', isChecked.toString());
 }
 
 /**
@@ -89,6 +91,7 @@ function updateKitProgressBar(total, checked) {
 
   if (fillEl) fillEl.style.width = `${pct}%`;
   if (pctEl)  pctEl.textContent  = `${pct}%`;
+  document.querySelector('.progress-bar-wrap')?.setAttribute('aria-valuenow', String(pct));
 }
 
 /**
@@ -110,7 +113,10 @@ function updateCategoryCount(categoryId, items, state) {
  */
 function toggleItemExpand(itemEl) {
   const contentEl = itemEl.querySelector('.kit-item-content');
-  if (contentEl) contentEl.classList.toggle('expanded');
+  if (contentEl) {
+    const expanded = contentEl.classList.toggle('expanded');
+    itemEl.querySelector('.kit-item-expand').setAttribute('aria-expanded',String(expanded));
+  }
 }
 
 // ─── Private helpers ──────────────────────────────────────────────────────────

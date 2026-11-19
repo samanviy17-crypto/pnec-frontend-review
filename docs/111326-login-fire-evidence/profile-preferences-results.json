@@ -1,0 +1,42 @@
+[
+  {
+    "width": 320,
+    "themes": 8,
+    "persistence": true,
+    "custom_contrast_guard": true,
+    "language": "reviewed en/es labels",
+    "speech": "mock browser contract; no real audio assertion",
+    "page_errors": [],
+    "passed": true
+  },
+  {
+    "width": 390,
+    "themes": 8,
+    "persistence": true,
+    "custom_contrast_guard": true,
+    "language": "reviewed en/es labels",
+    "speech": "mock browser contract; no real audio assertion",
+    "page_errors": [],
+    "passed": true
+  },
+  {
+    "width": 768,
+    "themes": 8,
+    "persistence": true,
+    "custom_contrast_guard": true,
+    "language": "reviewed en/es labels",
+    "speech": "mock browser contract; no real audio assertion",
+    "page_errors": [],
+    "passed": true
+  },
+  {
+    "width": 1280,
+    "themes": 8,
+    "persistence": true,
+    "custom_contrast_guard": true,
+    "language": "reviewed en/es labels",
+    "speech": "mock browser contract; no real audio assertion",
+    "page_errors": [],
+    "passed": true
+  }
+]

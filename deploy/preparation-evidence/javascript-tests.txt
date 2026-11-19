@@ -1,0 +1,25 @@
+
+> test
+> node --import ./scripts/no-network.mjs --test assets/js/chatbot/*.test.mjs assets/js/cms/*.test.mjs assets/js/review-status.test.mjs
+
+render.test.mjs: 17 passed, 0 failed
+✔ assets/js/chatbot/render.test.mjs (39.644708ms)
+store.test.mjs: 12 passed, 0 failed
+✔ assets/js/chatbot/store.test.mjs (39.296041ms)
+tools.test.mjs: 22 passed, 0 failed
+✔ assets/js/chatbot/tools.test.mjs (37.815709ms)
+hydrate.test.mjs: all assertions passed
+✔ assets/js/cms/hydrate.test.mjs (36.907125ms)
+✔ unconfigured and unapproved destinations keep the disconnected warning without requests (2.27675ms)
+✔ successful review health and readiness retain service and storage limitations (0.755167ms)
+✔ network and CORS failures keep the unverified warning (0.353708ms)
+✔ HTTP errors and unreadable responses keep the unverified warning (0.596875ms)
+✔ wrong service identity or readiness cannot claim a verified connection (0.60025ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 56.424458

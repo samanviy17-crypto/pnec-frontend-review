@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-17",
+  "branch": "feature/mortenson-website-redesign-20261116",
+  "base_main": "ce475278ba406ddb4fa39a93daafb6dd3b5f7af7",
+  "prior_feature_head": "7b0073920244059a4f353e8b8f58476cdf647b18",
+  "environment": {
+    "ruby": "4.0.6",
+    "bundler": "4.0.19",
+    "jekyll": "3.9.5",
+    "node": "24.11.1",
+    "python": "3.14",
+    "playwright": "1.65.2"
+  },
+  "results": {
+    "javascript": "9 passed",
+    "jekyll_sass": "passed",
+    "project_paths": "40 HTML files passed",
+    "navigation": "90 routes/widths plus 5 categories, keyboard/modal and 4 roles passed",
+    "homepage_and_features": "156 routes/widths plus fixed hero/API/notice/kit/resource checks passed",
+    "preferences": "8 themes at 4 widths plus font/button/custom contrast, storage, language and speech protocol passed",
+    "feature_release": "5/10; profile integration now passes with requested public signed-out prompt",
+    "baseline_release": "4/10; unchanged main profile fails on old missing risk widget"
+  },
+  "limitations": [
+    "Partial English/Spanish navigation/preference labels only; no full site translator",
+    "Speech contract mocked; real installed voices/audio/screen-reader interaction require manual review",
+    "Five broader release suites still fail on both feature and main",
+    "No production endpoints or real resident data used; no merge/deploy"
+  ]
+}

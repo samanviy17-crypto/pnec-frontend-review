@@ -1,0 +1,13 @@
+Configuration file: /Users/samanviyachareni/PNEC-Workspace/pnec-redesign-20261116/_config.yml
+Configuration file: /Users/samanviyachareni/PNEC-Workspace/pnec-redesign-20261116/_config.pages.yml
+Configuration file: /var/folders/_g/p61_lz8s2935chrz1ck2lhk40000gp/T/pnec-pages-nbir747o/api.yml
+            Source: /Users/samanviyachareni/PNEC-Workspace/pnec-redesign-20261116
+       Destination: /private/tmp/pnec-final-project-site
+ Incremental build: disabled. Enable with --incremental
+      Generating... 
+       Jekyll Feed: Generating feed for posts
+                    done in 2.3 seconds.
+ Auto-regeneration: disabled. Use --watch to enable.
+PASS: expected API URL embedded in 40 rendered pages
+PASS: GitHub Pages project-site build
+PASS: local links, images, srcsets and scripts across 41 HTML files

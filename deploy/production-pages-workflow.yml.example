@@ -1,0 +1,75 @@
+# DORMANT TEMPLATE. Install only in the separately approved production publisher.
+# Never install/dispatch in pnec-frontend-review: that site's Pages stay independent.
+name: Publish Approved PNEC Production
+on:
+  workflow_dispatch:
+    inputs:
+      frontend_sha:
+        description: Reviewed full 40-character frontend commit SHA
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - name: Verify publisher and existing domain binding (read only)
+        env:
+          EXPECTED_REPOSITORY: ${{ vars.PNEC_PRODUCTION_PUBLISHER_REPOSITORY }}
+          REQUESTED_SHA: ${{ inputs.frontend_sha }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$GITHUB_REPOSITORY_OWNER" = samanviy17-crypto
+          test "$GITHUB_REF" = refs/heads/main
+          test -n "$EXPECTED_REPOSITORY"
+          test "$GITHUB_REPOSITORY" = "$EXPECTED_REPOSITORY"
+          test "$GITHUB_REPOSITORY" != samanviy17-crypto/pnec-frontend-review
+          [[ "$REQUESTED_SHA" =~ ^[0-9a-f]{40}$ ]]
+          test "$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq '.cname')" = powaynec.opencodingsociety.com
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          repository: samanviy17-crypto/pnec-frontend-review
+          ref: ${{ inputs.frontend_sha }}
+          persist-credentials: false
+      - name: Verify source provenance
+        env:
+          REQUESTED_SHA: ${{ inputs.frontend_sha }}
+        run: test "$(git rev-parse HEAD)" = "$REQUESTED_SHA"
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+      - run: npm test
+      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1
+        with:
+          ruby-version: '3.3'
+          bundler: '4.0.19'
+      - run: |
+          bundle lock --add-platform x86_64-linux
+          bundle install
+          python3 scripts/test-production-gates.py
+          python3 scripts/build-production.py --destination "$RUNNER_TEMP/pnec-production" --verify-live-api
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
+        with:
+          path: ${{ runner.temp }}/pnec-production
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.publication.outputs.page_url }}
+    steps:
+      - name: Publish after required environment reviewer approval
+        id: publication
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
