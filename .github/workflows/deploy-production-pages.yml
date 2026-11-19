@@ -1,0 +1,72 @@
+name: Deploy PNEC Production (GitHub Pages)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: a1e1585c009c0f991225c550f26c7fa051f4748d
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+      - run: npm test
+      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1
+        with:
+          ruby-version: '3.3'
+          bundler: '4.0.19'
+      - name: Install Jekyll dependencies
+        run: |
+          bundle lock --add-platform x86_64-linux
+          bundle install
+          bundle check
+      - name: Build production root and check live API
+        run: python3 scripts/build-production.py --destination "$RUNNER_TEMP/pnec-production" --verify-live-api
+      - name: Install browser verification tools
+        run: |
+          python3 -m pip install playwright==1.65.1
+          python3 -m playwright install --with-deps chromium
+      - name: Verify production routes and interactions
+        run: |
+          site="$RUNNER_TEMP/pnec-production"
+          evidence="$RUNNER_TEMP/pnec-browser"
+          base_url="http://127.0.0.1:8765/"
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory "$site" &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          curl --fail --silent --retry 10 --retry-connrefused "$base_url" --output /dev/null
+          python3 scripts/test-navigation-redesign.py --base-url "$base_url" --output-dir "$evidence"
+          python3 scripts/test-mortenson-redesign.py --base-url "$base_url" --site "$site" --output-dir "$evidence"
+          python3 scripts/test-profile-preferences.py --base-url "$base_url" --output-dir "$evidence"
+          python3 scripts/test-fire-login-ui.py --base-url "$base_url" --output-dir "$evidence"
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
+        with:
+          path: ${{ runner.temp }}/pnec-production
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy approved production artifact
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
