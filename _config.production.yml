@@ -1,0 +1,29 @@
+# Separate production-root build. Never substitute for _config.pages.yml.
+title: "Poway Neighborhood Emergency Corps"
+description: "Neighbors helping neighbors prepare, respond, and recover in Poway."
+url: "https://powaynec.opencodingsociety.com"
+baseurl: ""
+api_base_url: "https://powaynec-api.opencodingsociety.com"
+review_preview: false
+production_build: true
+exclude:
+  - scripts/
+  - docs/
+  - deploy/
+  - .github/
+  - REVIEW_DEPLOYMENT.md
+  - README.md
+  - SOURCE-NOTES.md
+  - SECURITY.md
+  - ATTRIBUTION.md
+  - RPG-LIMITATIONS.md
+  - LICENSE
+  - .env.example
+  - .gitignore
+  - Gemfile
+  - Gemfile.lock
+  - requirements-dev.txt
+  - package.json
+  - assets/js/chatbot/*.test.mjs
+  - assets/js/cms/*.test.mjs
+  - assets/js/review-status.test.mjs

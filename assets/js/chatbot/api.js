@@ -25,7 +25,7 @@ function defaultApiBase() {
   if (cfg.apiBase) return cfg.apiBase;
   const h = window.location.hostname;
   return (h === 'localhost' || h === '127.0.0.1')
-    ? 'http://127.0.0.1:8425'
+    ? (window.PNEC_API_BASE || `http://${location.hostname}:8425`)
     : (window.PNEC_API_BASE || 'https://api.pnec-review.invalid');
 }
 

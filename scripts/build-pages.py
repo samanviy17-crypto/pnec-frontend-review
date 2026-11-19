@@ -40,7 +40,7 @@ with tempfile.TemporaryDirectory(prefix='pnec-pages-') as temporary:
                     '--destination', str(destination), '--config', config], cwd=temporary,
                    env={**os.environ, 'BUNDLE_GEMFILE': str(root / 'Gemfile')}, check=True)
 expected_api = api or 'https://api.pnec-review.invalid'
-runtime_pattern = r'window\.PNEC_API_BASE\s*=\s*("(?:[^"\\]|\\.)*")\s*;'
+runtime_pattern = r'window\.PNEC_REMOTE_API_BASE\s*=\s*("(?:[^"\\]|\\.)*")\s*;'
 checked = 0
 for page in destination.rglob('*.html'):
     for value in re.findall(runtime_pattern, page.read_text(encoding='utf-8')):

@@ -1,0 +1,38 @@
+[
+  {
+    "width": 320,
+    "home_sidebar": false,
+    "top_login": true,
+    "stale_cache_rejected": true,
+    "fire_scope_sources_and_geometry": true,
+    "page_errors": [],
+    "passed": true
+  },
+  {
+    "width": 390,
+    "home_sidebar": false,
+    "top_login": true,
+    "stale_cache_rejected": true,
+    "fire_scope_sources_and_geometry": true,
+    "page_errors": [],
+    "passed": true
+  },
+  {
+    "width": 768,
+    "home_sidebar": false,
+    "top_login": true,
+    "stale_cache_rejected": true,
+    "fire_scope_sources_and_geometry": true,
+    "page_errors": [],
+    "passed": true
+  },
+  {
+    "width": 1280,
+    "home_sidebar": false,
+    "top_login": true,
+    "stale_cache_rejected": true,
+    "fire_scope_sources_and_geometry": true,
+    "page_errors": [],
+    "passed": true
+  }
+]

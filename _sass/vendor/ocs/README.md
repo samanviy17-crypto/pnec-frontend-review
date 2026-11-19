@@ -23,3 +23,9 @@ the course-specific glass/toast/DM behavior is omitted. Its import is scoped to
 #pnec-site-header. See docs/REDESIGN.md for the template adaptation and minimal
 disclosure extension. ocs-pnec.scss uses base-grid, grid-card-cell, text-button,
 inline-container, main-container and the original spacing tokens.
+
+The navigation/preferences follow-up adapts the live OCS dashboard's swatch
+sample/accent-bar/name structure and contrast-feedback concept. It uses the
+existing mixins above, not the OCS Spring preferences backend. Source inspection,
+palette/contrast adjustments and retained Apache-2.0 attribution are documented
+in docs/NAVIGATION-PREFERENCES.md.

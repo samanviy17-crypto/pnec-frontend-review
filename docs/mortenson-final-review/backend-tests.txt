@@ -1,0 +1,5 @@
+Entire unmodified backend test suite, copied source at 159addd266d1a797c9f4c96a181bd7f5e3be4a7f.
+External providers blocked; scripts/app/migrations/tests/config source copied, no .env/resident data.
+Command: pytest -q -p no:cacheprovider tests
+194 passed, 7893 warnings in 30.88s
+The separate proposed announcement patch is tested in another copy, not part of this baseline 194-test run.

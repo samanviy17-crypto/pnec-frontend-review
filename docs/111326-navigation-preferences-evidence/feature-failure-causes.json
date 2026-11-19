@@ -1,0 +1,33 @@
+{
+  "test-media-release.py.log": [
+    "assert request.url.startswith(API + '/'), 'Media/API fell back to frontend or localhost'",
+    "AssertionError: Media/API fell back to frontend or localhost",
+    "assert request.url.startswith(API + '/'), 'Media/API fell back to frontend or localhost'",
+    "AssertionError: Media/API fell back to frontend or localhost",
+    "playwright._impl._errors.TimeoutError: Page.goto: Timeout 30000ms exceeded."
+  ],
+  "test-quiz.py.log": [],
+  "test-community-tools.py.log": [
+    "AssertionError(",
+    "AssertionError: Locator expected to contain text 'Flood preparedness this week'",
+    "Error: strict mode violation: locator(\".community-tools\") resolved to 2 elements:"
+  ],
+  "test-request-worker.py.log": [],
+  "test-admin-security.py.log": [
+    "assert request.url.startswith(API + '/api/'), 'Wrong API origin'",
+    "AssertionError: Wrong API origin",
+    "assert request.url.startswith(API + '/api/'), 'Wrong API origin'",
+    "AssertionError: Wrong API origin",
+    "playwright._impl._errors.TimeoutError: Page.goto: Timeout 30000ms exceeded."
+  ],
+  "test-production-contract.py.log": [
+    "assert not (FRONTEND_ROOT / '_config.pages.yml').exists()",
+    "AssertionError"
+  ],
+  "test-account-regression.py.log": [],
+  "test-profile.py.log": [],
+  "test-pnec-scss.py.log": [],
+  "test-responsive.py.log": [
+    "playwright._impl._errors.Error: Page.evaluate: TypeError: Cannot read properties of null (reading 'getBoundingClientRect')"
+  ]
+}

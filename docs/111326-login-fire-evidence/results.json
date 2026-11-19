@@ -1,0 +1,86 @@
+[
+  {
+    "width": 1440,
+    "routes": 15,
+    "categories": 5,
+    "header": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 80
+    },
+    "columns": 4,
+    "errors": [],
+    "passed": true
+  },
+  {
+    "width": 1280,
+    "routes": 15,
+    "categories": 5,
+    "header": {
+      "x": 0,
+      "y": 0,
+      "width": 1280,
+      "height": 80
+    },
+    "columns": 4,
+    "errors": [],
+    "passed": true
+  },
+  {
+    "width": 1024,
+    "routes": 15,
+    "categories": 5,
+    "header": {
+      "x": 0,
+      "y": 0,
+      "width": 1024,
+      "height": 80
+    },
+    "columns": 2,
+    "errors": [],
+    "passed": true
+  },
+  {
+    "width": 768,
+    "routes": 15,
+    "categories": 5,
+    "header": {
+      "x": 0,
+      "y": 0,
+      "width": 768,
+      "height": 80
+    },
+    "columns": 2,
+    "errors": [],
+    "passed": true
+  },
+  {
+    "width": 390,
+    "routes": 15,
+    "categories": 5,
+    "header": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 80
+    },
+    "columns": 1,
+    "errors": [],
+    "passed": true
+  },
+  {
+    "width": 320,
+    "routes": 15,
+    "categories": 5,
+    "header": {
+      "x": 0,
+      "y": 0,
+      "width": 320,
+      "height": 80
+    },
+    "columns": 1,
+    "errors": [],
+    "passed": true
+  }
+]

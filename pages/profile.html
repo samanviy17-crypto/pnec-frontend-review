@@ -1,6 +1,6 @@
 ---
 layout: pnec-base
-title: "Profile"
+title: "Profile Dashboard"
 description: "Manage your PNEC account."
 use_poway_live_styles: true
 body_class: inner-page
@@ -55,13 +55,19 @@ document.addEventListener('DOMContentLoaded', function() {
   function loadProfile() {
     fetchCurrentUser({strict: true}).then(function(user) {
       if (!user) {
-        window.location.href = siteBase + '/pages/register.html?next=' + encodeURIComponent(siteBase + '/pages/profile.html') + '#login';
+        container.replaceChildren();
+        var prompt = document.createElement('section'); prompt.className = 'ocs-card pnec-profile-welcome';
+        var heading = document.createElement('h1'); heading.textContent = 'Your PNEC dashboard';
+        var text = document.createElement('p'); text.textContent = 'Sign in to view your account and household information. Appearance, language and audio preferences are available without an account.';
+        var login = document.createElement('a'); login.className = 'ocs-button primary'; login.textContent = 'Log In / Sign Up'; login.href = siteBase + '/pages/register.html?next=' + encodeURIComponent(siteBase + '/pages/profile.html') + '#login';
+        var preferences = document.createElement('a'); preferences.className = 'ocs-button'; preferences.textContent = 'Open Preferences'; preferences.href = siteBase + '/pages/settings.html';
+        prompt.append(heading, text, login, preferences); container.append(prompt);
         return;
       }
       _storeAuthResult({user: user}, localStorage.getItem('pnec_token') !== null);
       renderProfile(user);
     }).catch(function(error) {
-      container.innerHTML = '<div class="profile-edit-section"><p role="alert" id="profile-load-error"></p><button type="button" id="profile-retry-btn">Retry profile</button></div>';
+      container.innerHTML = '<section class="ocs-card pnec-profile-welcome"><h1>Your PNEC dashboard</h1><p role="alert" id="profile-load-error"></p><button class="ocs-button" type="button" id="profile-retry-btn">Retry profile</button><a class="ocs-button" href="' + siteBase + '/pages/settings.html">Open Preferences</a><a class="ocs-button" href="' + siteBase + '/pages/register.html#login">Log In / Sign Up</a></section>';
       document.getElementById('profile-load-error').textContent = 'Unable to load your profile. ' + error.message;
       document.getElementById('profile-retry-btn').addEventListener('click', loadProfile);
     });
@@ -131,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var roleLabels = { coordinator: 'Coordinator', staff: 'Staff', admin: 'Admin' };
     var roleClasses = { coordinator: 'badge-coordinator', staff: 'badge-staff', admin: 'badge-admin' };
     var roleBadge = (user.role && user.role !== 'resident')
-      ? '<span class="badge ' + (roleClasses[user.role] || '') + '">' + (roleLabels[user.role] || user.role) + '</span>'
+      ? '<span class="badge ' + (roleClasses[user.role] || '') + '">' + escapeHtml(roleLabels[user.role] || user.role) + '</span>'
       : '';
 
     var joined = user.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) : '';
@@ -152,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
       ? '<div class="profile-missing-actions">' +
           comp.missing.map(function(m) {
             var anchor = m.action === 'avatar' ? '#avatar-change-btn' : m.action === 'bio' ? '#edit-bio' : m.action === 'phone' ? '#edit-phone' : '#edit-neighborhood';
-            return '<a href="' + anchor + '" onclick="document.querySelector(\'' + anchor + '\')&&document.querySelector(\'' + anchor + '\').focus?document.querySelector(\'' + anchor + '\').focus():null" class="profile-missing-link">+ ' + escapeHtml(m.label) + ' <span style=\'color:#9e9e9e\'>(' + m.pct + '%)</span></a>';
+            return '<a href="' + anchor + '" onclick="document.querySelector(\'' + anchor + '\')&&document.querySelector(\'' + anchor + '\').focus?document.querySelector(\'' + anchor + '\').focus():null" class="profile-missing-link">+ ' + escapeHtml(m.label) + ' <span class="profile-missing-percent">(' + m.pct + '%)</span></a>';
           }).join('') +
         '</div>'
       : '<div class="profile-complete">🎉 Profile fully complete!</div>';
@@ -161,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
       '<div class="profile-summary-card">' +
         '<div class="profile-summary-heading">' +
           '<span class="profile-summary-title">Profile Strength</span>' +
-          '<span class="profile-meter-value" style="color:' + barColor + ';">' + comp.score + '%</span>' +
+          '<span class="profile-meter-value">' + comp.score + '%</span>' +
         '</div>' +
         '<div class="profile-meter">' +
           '<div class="profile-meter-fill" style="background:' + barColor + ';width:' + comp.score + '%;"></div>' +
@@ -186,13 +192,14 @@ document.addEventListener('DOMContentLoaded', function() {
       '</div>';
 
     container.innerHTML =
-      '<div class="profile-card">' +
+      '<header class="pnec-page-heading"><p class="pnec-eyebrow">Your PNEC</p><h1>Profile Dashboard</h1><p>Your authenticated account overview and personal tools.</p></header>' +
+      '<div class="profile-card" id="profile-overview">' +
         '<div class="profile-avatar-wrap">' +
           '<div class="profile-avatar" id="profile-avatar-display">' + avatarHtml + '</div>' +
           '<button class="avatar-change-btn" id="avatar-change-btn" title="Change photo" aria-label="Change profile picture">✎</button>' +
         '</div>' +
         '<div class="profile-meta-flex profile-meta">' +
-          '<h1 class="profile-name">' + escapeHtml(user.display_name) + ' ' + roleBadge + '</h1>' +
+          '<h2 class="profile-name">' + escapeHtml(user.display_name) + ' ' + roleBadge + '</h2>' +
           '<p class="profile-email">' + escapeHtml(user.email) + '</p>' +
           '<p class="profile-phone">Phone: ' + escapeHtml(user.phone || 'Not provided') + '</p>' +
           (user.bio ? '<p class="profile-bio-display">' + escapeHtml(user.bio) + '</p>' : '') +
@@ -210,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
          ['Preparedness Checklist', '/pages/checklist.html'],
          ['Volunteer Opportunities', '/pages/volunteer.html'],
          ['Neighborhood Information', '/pages/find-your-neighborhood.html'],
-         ['Risk Watch', '/#risk-widget'],
+         ['Hazard Information', '/pages/preparedness-resources.html#poway-risk-context'],
          ['Hazard Reporting', '/pages/checklist.html#hazard-reporting'],
          ['Home', '/']].map(function(link) {
           return '<a class="btn btn-outline" href="' + siteBase + link[1] + '">' + link[0] + '</a>';
@@ -220,8 +227,8 @@ document.addEventListener('DOMContentLoaded', function() {
       completionSection +
       badgesSection +
 
-      '<div class="profile-edit-section">' +
-        '<h3>Edit Profile</h3>' +
+      '<div class="profile-edit-section" id="account-settings">' +
+        '<h2>Account Settings</h2><h3>Edit Profile</h3>' +
         '<div class="form-field">' +
           '<label for="edit-display-name">Full Name</label>' +
           '<input type="text" id="edit-display-name" value="' + escapeHtml(user.display_name) + '" maxlength="100">' +
@@ -277,6 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     bindProfileActions(user);
     populateNeighborhoodSelect(user.neighborhood_id);
+    if (location.hash === '#account-settings') document.getElementById('account-settings').scrollIntoView();
   }
 
   function bindProfileActions(user) {

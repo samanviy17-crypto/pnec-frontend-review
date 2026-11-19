@@ -50,32 +50,29 @@ def main():
         for width in [320,375,390,414,767,768,1024,1280,1333,1334,1365,1440]:
             page.set_viewport_size({'width':width, 'height':900})
             page.wait_for_timeout(100)
-            # Wait for font/image layout and inherited transitions to settle;
-            # retain the exact overflow/video assertions below.
+            # The documented redesign replaces the old video with three photos.
             page.wait_for_function('document.documentElement.scrollWidth <= innerWidth', timeout=5000)
-            row = page.evaluate('''() => ({viewport:innerWidth,
-                scroll:document.documentElement.scrollWidth,
-                videoRight:document.getElementById('pnec-homepage-video').getBoundingClientRect().right,
-                videoMargin:getComputedStyle(document.querySelector('.elementor-element-7bddfff > .elementor-widget-container')).marginRight})''')
+            row = page.evaluate("""() => {
+                const hero = document.querySelector('.pnec-hero');
+                const bounds = hero.getBoundingClientRect();
+                return {viewport:innerWidth, scroll:document.documentElement.scrollWidth,
+                    heroLeft:bounds.left, heroRight:bounds.right,
+                    backgrounds:document.querySelectorAll('.pnec-hero-backgrounds img').length,
+                    sidebar:document.querySelectorAll('.pnec-context').length,
+                    paddingLeft:getComputedStyle(document.body).paddingLeft};
+            }""")
             assert row['scroll'] <= width, row
-            assert row['videoRight'] <= width + 1, row
+            assert 0 <= row['heroLeft'] and row['heroRight'] <= width + 1, row
+            assert row['backgrounds'] == 3 and row['sidebar'] == 0, row
+            assert row['paddingLeft'] == '0px', row
             rows.append(row)
             if args.output_dir and width in [320,390,1440]:
                 args.output_dir.mkdir(parents=True, exist_ok=True)
                 page.screenshot(path=str(args.output_dir / f'homepage-{width}.png'), full_page=True)
         assert not escaped, escaped
-        # Keep the inherited desktop offset; the narrow-screen correction must not flatten it.
-        # Preserve the desktop assertion; emit all offline measurements even on failure.
-        if float(rows[-1]['videoMargin'].removesuffix('px')) >= 0:
-            print('OFFLINE_RESPONSIVE_DIAGNOSTIC ' + json.dumps({
-                'status': 'FAIL', 'widths': rows,
-                'desktop_expected': 'negative margin from external theme',
-                'desktop_actual': rows[-1]['videoMargin'],
-                'escaping_local_requests': escaped}), flush=True)
-        assert float(rows[-1]['videoMargin'].removesuffix('px')) < 0, rows[-1]
         browser.close()
     result = {'status':'PASS', 'widths':rows, 'escaping_local_requests':escaped,
-              'network_policy':'external static assets allowed; API calls and external scripts blocked'}
+              'network_policy':'local assets only; external assets, APIs and scripts blocked'}
     if args.output_dir:
         (args.output_dir/'responsive-results.json').write_text(json.dumps(result, indent=2))
     print(json.dumps(result, indent=2))

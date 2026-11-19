@@ -6,3 +6,7 @@ gem "jekyll-seo-tag", "2.9.1"
 gem "jekyll-include-cache", "0.3.1"
 gem "webrick", "1.9.2"
 gem "csv"
+# Jekyll 3 dependencies still require libraries removed from Ruby's default gems.
+gem "base64"
+gem "bigdecimal"
+gem "kramdown-parser-gfm"

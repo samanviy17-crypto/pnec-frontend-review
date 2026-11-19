@@ -66,7 +66,7 @@ try:
             # Keep browser verification local; inherited CDN widgets may be unavailable.
             context.route('**/*', lambda route: route.continue_() if route.request.url.startswith((PREVIEW_URL + '/', 'http://127.0.0.1:' + str(backend.server_port) + '/')) else route.abort())
             if backend.server_port != 8425:
-                context.route('http://127.0.0.1:8425/**', lambda route: route.continue_(url=route.request.url.replace(':8425', ':'+str(backend.server_port), 1)))
+                context.route('http://{localhost,127.0.0.1}:8425/**', lambda route: route.continue_(url=route.request.url.replace(':8425', ':'+str(backend.server_port), 1)))
             page = context.new_page()
             return context, page
         resident_context, resident = account('resident')

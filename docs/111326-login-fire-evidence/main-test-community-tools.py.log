@@ -1,0 +1,353 @@
+Release inputs: frontend=/private/tmp/pnec-111326-main; backend=/Users/samanviyachareni/PNEC-Workspace/pnec-backend-review; site=/private/var/folders/_g/p61_lz8s2935chrz1ck2lhk40000gp/T/pnec-frontend-release-3y70tr7g/site
+127.0.0.1 - - [17/Nov/2026 17:41:24] "GET /api/cms/page/checklist/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:24] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:24] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:24] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:24] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:24] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:24] "GET /api/overrides/checklist HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:24] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:24] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:24] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:24] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:24] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:24] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:24] "GET /api/preparedness/quiz HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:24] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:24] "GET /api/check-ins HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:24] "GET /api/hazards HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "PATCH /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "PATCH /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "POST /api/preparedness/quiz HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "PUT /api/check-ins HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "GET /api/check-ins HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "[35m[1mPOST /api/hazards HTTP/1.1[0m" 201 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "GET /api/hazards HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "GET /api/cms/page/checklist/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "GET /api/overrides/checklist HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "GET /api/preparedness/quiz HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "GET /api/check-ins HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:25] "GET /api/hazards HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:26] "GET /api/cms/page/checklist/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:26] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:26] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:26] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:26] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:26] "GET /api/overrides/checklist HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:26] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:26] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:26] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:26] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:26] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:26] "GET /api/preparedness/quiz HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:26] "GET /api/check-ins HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:26] "GET /api/hazards HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "PATCH /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/cms/page/checklist/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/overrides/checklist HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/preparedness/quiz HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/check-ins HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/hazards HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/cms/page/checklist/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/overrides/checklist HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/preparedness/quiz HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "PATCH /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "PATCH /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "PATCH /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/cms/page/checklist/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/overrides/checklist HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/preparedness/quiz HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/check-ins HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:27] "GET /api/hazards HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/page/checklist/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/overrides/checklist HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/preparedness/quiz HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/check-ins HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/hazards HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "PATCH /api/preparedness HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/page/dashboard/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/overrides/dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/check-ins HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/hazards HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "PATCH /api/hazards/1 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/hazards HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/page/volunteer/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/overrides/volunteer HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/volunteer/tasks HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "[35m[1mPOST /api/volunteer/tasks HTTP/1.1[0m" 201 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/volunteer/tasks HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/page/volunteer/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/overrides/volunteer HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/volunteer/tasks HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "POST /api/volunteer/tasks/1/signup HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/volunteer/tasks HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "[32mGET /api/cms/page/%2Fdonation-form%2F/seo HTTP/1.1[0m" 308 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/page/donation-form/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/overrides/donate HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "GET /api/supply-drives HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:28] "[35m[1mPOST /api/supply-drives HTTP/1.1[0m" 201 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/supply-drives HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/supply-drives/1/pledges HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "[32mGET /api/cms/page/%2Fdonation-form%2F/seo HTTP/1.1[0m" 308 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/cms/page/donation-form/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/overrides/donate HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/supply-drives HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/supply-drives/1/pledges HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "[35m[1mPOST /api/supply-drives/1/pledges HTTP/1.1[0m" 201 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/supply-drives HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/supply-drives/1/pledges HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "[32mGET /api/cms/page/%2Fdonation-form%2F/seo HTTP/1.1[0m" 308 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/cms/page/donation-form/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/overrides/donate HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/supply-drives HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/supply-drives/1/pledges HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "PATCH /api/supply-pledges/1/receive HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/supply-drives HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/supply-drives/1/pledges HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/cms/page/preparedness-resources/seo HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/cms/theme.css?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "[33mGET /api/announcements HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/site-config HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/overrides/preparedness-resources HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/auth/me HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/cms/page/_header?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/neighborhoods HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/cms/page/_footer?state=published HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/risk HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/preparedness/weekly HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/preparedness/weekly HTTP/1.1" 200 -
+127.0.0.1 - - [17/Nov/2026 17:41:29] "GET /api/risk HTTP/1.1" 200 -
+Traceback (most recent call last):
+  File "/private/tmp/pnec-111326-main/scripts/test-community-tools.py", line 215, in <module>
+    expect(language).to_contain_text('Inundación: Alto')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/pnec-preview-check-8766-venv/lib/python3.14/site-packages/playwright/sync_api/_generated.py", line 14994, in to_contain_text
+    self._sync(
+    ~~~~~~~~~~^
+        self._impl_obj.to_contain_text(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+        )
+        ^
+    )
+    ^
+  File "/private/tmp/pnec-preview-check-8766-venv/lib/python3.14/site-packages/playwright/_impl/_sync_base.py", line 124, in _sync
+    return task.result()
+           ~~~~~~~~~~~^^
+  File "/private/tmp/pnec-preview-check-8766-venv/lib/python3.14/site-packages/playwright/_impl/assertions.py", line 306, in to_contain_text
+    await self._expect_impl(
+    ...<9 lines>...
+    )
+  File "/private/tmp/pnec-preview-check-8766-venv/lib/python3.14/site-packages/playwright/_impl/assertions.py", line 122, in _expect_impl
+    _record_soft_or_raise(
+    ~~~~~~~~~~~~~~~~~~~~~^
+        AssertionError(
+        ^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        self._is_soft,
+        ^^^^^^^^^^^^^^
+    )
+    ^
+  File "/private/tmp/pnec-preview-check-8766-venv/lib/python3.14/site-packages/playwright/_impl/_assertions.py", line 50, in _record_soft_or_raise
+    raise error
+AssertionError: Locator expected to contain text 'Inundación: Alto'
+Actual value: Preparedness information / Información / ImpormasyonLanguage / Idioma / WikaChoose…EnglishEspañolTagalogNeighborhood / Vecindario / KapitbahayanChoose…Old Poway VillagePoway Road CorridorTwin Peaks AreaCommunity RoadGarden RoadEspola Road NorthEspola Road SouthHilleary Park AreaMidland RoadScripps Poway Parkway WestScripps Poway Parkway EastStowe Drive AreaMartincoit RoadKirkham RoadPoway Valley RoadCrestridge RoadRattlesnake Creek AreaLake Poway Recreation AreaBlue Sky Reserve NorthBlue Sky Reserve SouthPoway Industrial AreaCreekside VillageOak Knoll AreaSummerfieldTierra BonitaValley RimHeritage HillsCountry ManorLos RanchitosSilversetEastviewAlta VistaCasa BlancaValle VerdeMeadowbrookMorning StarSun Country EstatesSpring RanchChaparral RanchRocky Road EstatesStonebridgePoway Town CenterSouth Poway IndustrialWindmill FarmsRidgewayPintail LandingBudwin Lane AreaSunset HillsCanyon CrestCarriage HillsBrooksideSycamore Canyon AreaUpper Poway EstatesEl Capitan EstatesDonart Drive AreaOlive HillsPoway Park AreaWelton Drive AreaCobblestone CreekHidden Meadows (Poway)Emergency preparednessReview your household kit and evacuation plan. Find your neighborhood for local resources. Risk Watch displays wildfire, flood and heat levels. Follow official local emergency alerts and evacuation instructions.Neighborhood: Old Poway Village. Evacuation zone: A. Coordinator: [Coordinator TBD] contact@example.testRisk Watch: Wildfire: Low; Flood: High; Heat: Low. 2026-10-05T12:00:00Household checklistNeighborhood and evacuation resourcesPreparedness resourcesHelper Bot will respond in English. 
+Call log:
+  - Expect "to_contain_text" locator(".community-tools section").filter(has=get_by_role("heading", name="Preparedness information / Información / Impormasyon", exact=True)).last with timeout 5000ms
+  - waiting for locator(".community-tools section").filter(has=get_by_role("heading", name="Preparedness information / Información / Impormasyon", exact=True)).last
+    14 × locator resolved to <section>…</section>
+       - unexpected value "Preparedness information / Información / ImpormasyonLanguage / Idioma / WikaChoose…EnglishEspañolTagalogNeighborhood / Vecindario / KapitbahayanChoose…Old Poway VillagePoway Road CorridorTwin Peaks AreaCommunity RoadGarden RoadEspola Road NorthEspola Road SouthHilleary Park AreaMidland RoadScripps Poway Parkway WestScripps Poway Parkway EastStowe Drive AreaMartincoit RoadKirkham RoadPoway Valley RoadCrestridge RoadRattlesnake Creek AreaLake Poway Recreation AreaBlue Sky Reserve NorthBlue Sky Reserve SouthPoway Industrial AreaCreekside VillageOak Knoll AreaSummerfieldTierra BonitaValley RimHeritage HillsCountry ManorLos RanchitosSilversetEastviewAlta VistaCasa BlancaValle VerdeMeadowbrookMorning StarSun Country EstatesSpring RanchChaparral RanchRocky Road EstatesStonebridgePoway Town CenterSouth Poway IndustrialWindmill FarmsRidgewayPintail LandingBudwin Lane AreaSunset HillsCanyon CrestCarriage HillsBrooksideSycamore Canyon AreaUpper Poway EstatesEl Capitan EstatesDonart Drive AreaOlive HillsPoway Park AreaWelton Drive AreaCobblestone CreekHidden Meadows (Poway)Emergency preparednessReview your household kit and evacuation plan. Find your neighborhood for local resources. Risk Watch displays wildfire, flood and heat levels. Follow official local emergency alerts and evacuation instructions.Neighborhood: Old Poway Village. Evacuation zone: A. Coordinator: [Coordinator TBD] contact@example.testRisk Watch: Wildfire: Low; Flood: High; Heat: Low. 2026-10-05T12:00:00Household checklistNeighborhood and evacuation resourcesPreparedness resourcesHelper Bot will respond in English."
+
+Aria snapshot:
+- heading "Preparedness information / Información / Impormasyon" [level=2]
+- text: Language / Idioma / Wika
+- combobox "Language / Idioma / Wika":
+  - option "Choose…"
+  - option "English" [selected]
+  - option "Español"
+  - option "Tagalog"
+- text: Neighborhood / Vecindario / Kapitbahayan
+- combobox "Neighborhood / Vecindario / Kapitbahayan":
+  - option "Choose…"
+  - option "Old Poway Village" [selected]
+  - option "Poway Road Corridor"
+  - option "Twin Peaks Area"
+  - option "Community Road"
+  - option "Garden Road"
+  - option "Espola Road North"
+  - option "Espola Road South"
+  - option "Hilleary Park Area"
+  - option "Midland Road"
+  - option "Scripps Poway Parkway West"
+  - option "Scripps Poway Parkway East"
+  - option "Stowe Drive Area"
+  - option "Martincoit Road"
+  - option "Kirkham Road"
+  - option "Poway Valley Road"
+  - option "Crestridge Road"
+  - option "Rattlesnake Creek Area"
+  - option "Lake Poway Recreation Area"
+  - option "Blue Sky Reserve North"
+  - option "Blue Sky Reserve South"
+  - option "Poway Industrial Area"
+  - option "Creekside Village"
+  - option "Oak Knoll Area"
+  - option "Summerfield"
+  - option "Tierra Bonita"
+  - option "Valley Rim"
+  - option "Heritage Hills"
+  - option "Country Manor"
+  - option "Los Ranchitos"
+  - option "Silverset"
+  - option "Eastview"
+  - option "Alta Vista"
+  - option "Casa Blanca"
+  - option "Valle Verde"
+  - option "Meadowbrook"
+  - option "Morning Star"
+  - option "Sun Country Estates"
+  - option "Spring Ranch"
+  - option "Chaparral Ranch"
+  - option "Rocky Road Estates"
+  - option "Stonebridge"
+  - option "Poway Town Center"
+  - option "South Poway Industrial"
+  - option "Windmill Farms"
+  - option "Ridgeway"
+  - option "Pintail Landing"
+  - option "Budwin Lane Area"
+  - option "Sunset Hills"
+  - option "Canyon Crest"
+  - option "Carriage Hills"
+  - option "Brookside"
+  - option "Sycamore Canyon Area"
+  - option "Upper Poway Estates"
+  - option "El Capitan Estates"
+  - option "Donart Drive Area"
+  - option "Olive Hills"
+  - option "Poway Park Area"
+  - option "Welton Drive Area"
+  - option "Cobblestone Creek"
+  - option "Hidden Meadows (Poway)"
+- heading "Emergency preparedness" [level=3]
+- paragraph: Review your household kit and evacuation plan. Find your neighborhood for local resources. Risk Watch displays wildfire, flood and heat levels. Follow official local emergency alerts and evacuation instructions.
+- paragraph: "Neighborhood: Old Poway Village. Evacuation zone: A. Coordinator: [Coordinator TBD] contact@example.test"
+- paragraph: "Risk Watch: Wildfire: Low; Flood: High; Heat: Low. 2026-10-05T12:00:00"
+- paragraph:
+  - link "Household checklist":
+    - /url: /pages/checklist.html
+- paragraph:
+  - link "Neighborhood and evacuation resources":
+    - /url: /pages/find-your-neighborhood.html
+- paragraph:
+  - link "Preparedness resources":
+    - /url: /pages/preparedness-resources.html
+- paragraph: Helper Bot will respond in English.

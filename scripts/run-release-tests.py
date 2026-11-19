@@ -45,6 +45,7 @@ Jekyll::Commands::Build.process({
   "destination"=>ENV.fetch("PNEC_SITE_ROOT"),
   "config"=>File.join(ENV.fetch("PNEC_FRONTEND_ROOT"), "_config.yml"),
   "url"=>"https://pnec-review.invalid", "baseurl"=>"",
+  "api_base_url"=>"https://api.pnec-review.invalid",
   "sass"=>{"cache"=>false, "cache_location"=>File.join(Dir.pwd,"sass-cache")}
 })'''
     with (artifacts / 'build.log').open('w') as log:

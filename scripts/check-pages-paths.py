@@ -7,9 +7,11 @@ from urllib.parse import unquote, urlsplit
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--site', type=Path, required=True)
+parser.add_argument('--base-path', default='/pnec-frontend-review', help='Empty for a separate production-root artifact')
 args = parser.parse_args()
 root = args.site.resolve(strict=True)
-base = '/pnec-frontend-review'
+base = args.base_path
+assert base == '' or (base.startswith('/') and not base.endswith('/') and '..' not in base), 'Invalid base path'
 errors = set()
 
 
