@@ -9,7 +9,7 @@ layout: null
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	{% include runtime-config.html %}
 <title>Poway Statistics and Information &#8211; Poway NEC &amp; FSC</title>
-	<link rel="canonical" href="preparedness-resources.html#poway-risk-context" />
+	<link rel="canonical" href="{% if site.production_build %}{{ "/pages/preparedness-resources.html" | absolute_url }}{% else %}preparedness-resources.html#poway-risk-context{% endif %}" />
 	<script>
 		window.location.replace("preparedness-resources.html#poway-risk-context");
 	</script>

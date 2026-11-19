@@ -11,6 +11,10 @@
   {% include runtime-config.html %}
 
   <!-- SEO -->
+  {% if site.production_build %}
+  <link rel="canonical" href="{{ page.url | absolute_url }}">
+  <meta property="og:url" content="{{ page.url | absolute_url }}">
+  {% endif %}
   <meta property="og:title" content="{% if page.title %}{{ page.title }} — {% endif %}{{ site.title }}">
   <meta property="og:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
   <meta property="og:type" content="website">
