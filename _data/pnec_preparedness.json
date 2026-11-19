@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "kind": "ocs-ui-page",
+  "page": {
+    "title": "PNEC preparedness links",
+    "description": "Reusable links to preparedness tools and resources.",
+    "course": "csp",
+    "width": "contained"
+  },
+  "sections": [
+    {
+      "type": "stack",
+      "settings": {
+        "style": "tint"
+      },
+      "cells": [
+        {
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "text": "Prepare your household",
+                "level": "2",
+                "subtitle": "Build an emergency kit, explore volunteer roles, or find local preparedness information."
+              }
+            },
+            {
+              "type": "link_cards",
+              "settings": {
+                "items": [
+                  {
+                    "kicker": "",
+                    "title": "My Emergency Kit",
+                    "text": "Use the 72-hour checklist to keep track of your emergency supplies.",
+                    "url": "https://powaynec.opencodingsociety.com/pages/checklist.html"
+                  },
+                  {
+                    "kicker": "",
+                    "title": "Find Your PNEC Role",
+                    "text": "Take a five-question scenario quiz to explore volunteer roles.",
+                    "url": "https://powaynec.opencodingsociety.com/role-quiz/"
+                  },
+                  {
+                    "kicker": "",
+                    "title": "Find Your Neighborhood",
+                    "text": "Use the map to identify your Poway neighborhood.",
+                    "url": "https://powaynec.opencodingsociety.com/pages/find-your-neighborhood.html"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

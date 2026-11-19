@@ -1,0 +1,36 @@
+.pnec-preparedness {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.pnec-preparedness .ocs__nav-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  gap: 0.75rem;
+}
+
+.pnec-preparedness .ocs__nav-card {
+  display: block;
+  padding: 1rem;
+  border: 1px solid #b2c8ba;
+  border-radius: 0.75rem;
+  background: #f4faf6;
+  color: #153923;
+  overflow-wrap: anywhere;
+}
+
+.pnec-preparedness .ocs__nav-card:hover {
+  background: #e9f4ed;
+}
+
+.pnec-preparedness .ocs__nav-card:focus-visible {
+  outline: 3px solid #1e6940;
+  outline-offset: 2px;
+}
+
+.pnec-preparedness .ocs__nav-card-title {
+  display: block;
+  font-weight: 700;
+  text-decoration: underline;
+}
