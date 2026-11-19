@@ -1,0 +1,22 @@
+{% assign blocks = site.data.pnec_preparedness.sections[0].cells[0].blocks %}
+{% assign heading = blocks[0].settings %}
+<section class="pnec-preparedness" aria-labelledby="pnec-preparedness-title">
+  <h2 id="pnec-preparedness-title">{{ heading.text | escape }}</h2>
+  <p>{{ heading.subtitle | escape }}</p>
+  <nav class="ocs__nav-grid" aria-labelledby="pnec-preparedness-title">
+    {% assign pnec_origin = 'https://powaynec.opencodingsociety.com' %}
+    {% assign origin_length = pnec_origin | size %}
+    {% for card in blocks[1].settings.items %}
+      {% assign card_origin = card.url | slice: 0, origin_length %}
+      {% assign card_path = card.url | remove_first: pnec_origin %}
+      {% assign initial = card_path | slice: 0, 1 %}
+      {% assign first_two = card_path | slice: 0, 2 %}
+      {% if card_origin == pnec_origin and initial == '/' and first_two != '//' %}
+      <a class="ocs__nav-card" href="{{ card_path | relative_url | escape }}">
+        <span class="ocs__nav-card-title">{{ card.title | escape }}</span>
+        <span class="ocs__text">{{ card.text | escape }}</span>
+      </a>
+      {% endif %}
+    {% endfor %}
+  </nav>
+</section>

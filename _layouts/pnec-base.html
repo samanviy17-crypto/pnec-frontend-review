@@ -103,6 +103,9 @@
   {% endif %}
 
   {% include scss-head.html %}
+  {% if page.preparedness_links %}
+  <link rel="stylesheet" href="{{ '/assets/css/pnec-preparedness.css' | relative_url }}">
+  {% endif %}
 
   <!-- CMS hydrate flash-prevention -->
   <style>

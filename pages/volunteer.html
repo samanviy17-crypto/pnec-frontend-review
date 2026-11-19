@@ -1,7 +1,7 @@
 ---
 layout: pnec-base
 title: "Volunteer with PNEC"
-description: "Join PNEC as a Neighborhood Emergency Coordinator, CERT volunteer, ham radio operator, or community organizer in Poway, CA. Apply online — a coordinator will follow up within a few days."
+description: "Explore volunteer roles in Poway and express interest in helping with community preparedness."
 body_class: inner-page volunteer-page
 ---
 
@@ -17,21 +17,7 @@ body_class: inner-page volunteer-page
   <div class="vol-hero-shell">
     <span class="vol-eyebrow">Get Involved</span>
     <h1>Volunteer with PNEC</h1>
-    <p>Whether you can give two hours a year or become a frontline responder, there's a meaningful role for you in Poway's emergency preparedness network. Every neighborhood needs a coordinator. Every emergency needs ham radio. Every drill needs a hand.</p>
-    <div class="vol-stats">
-      <div>
-        <div class="vol-stat-num">60</div>
-        <div class="vol-stat-label">Neighborhoods to staff</div>
-      </div>
-      <div>
-        <div class="vol-stat-num">~100</div>
-        <div class="vol-stat-label">Active CERT volunteers</div>
-      </div>
-      <div>
-        <div class="vol-stat-num">100%</div>
-        <div class="vol-stat-label">Volunteer-run since 2003</div>
-      </div>
-    </div>
+    <p>PNEC is an all-volunteer organization established in 2011. Help your neighbors prepare for emergencies through outreach, neighborhood coordination, or community events.</p>
   </div>
 </section>
 
@@ -39,7 +25,7 @@ body_class: inner-page volunteer-page
 <section class="vol-section" aria-labelledby="roles-heading">
   <div class="vol-section-head">
     <h2 id="roles-heading">Pick your role</h2>
-    <p>All roles are open to Poway residents. No prior experience required — PNEC provides all training. Pick one and we'll match you with the right volunteer lead.</p>
+    <p>Explore roles with PNEC and its community partners. Requirements and training vary by role.</p>
   </div>
 
   <div class="vol-roles">
@@ -65,17 +51,11 @@ body_class: inner-page volunteer-page
       <div class="vol-role-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
       </div>
-      <h3>CERT Volunteer</h3>
-      <p class="role-blurb">Complete PNEC's 24-hour Community Emergency Response Team training and join the team that activates during local emergencies — light search-and-rescue, fire extinguishers, triage, cribbing — until professional responders arrive.</p>
-      <ul class="role-meta">
-        <li><strong>Commitment:</strong> 24-hr training + quarterly drills</li>
-        <li><strong>Training:</strong> FEMA curriculum, taught free by Poway Fire Dept</li>
-        <li><strong>Best for:</strong> hands-on helpers ready to respond when called</li>
-      </ul>
-      <button type="button" class="vol-role-pick" data-role="cert_volunteer">
-        Pick this role
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </button>
+      <h3>City of Poway CERT</h3>
+      <p class="role-blurb">The City of Poway’s Disaster Preparedness Coordinator oversees its Community Emergency Response Team (CERT). Contact the City for current training and participation requirements.</p>
+      <a class="vol-role-pick" href="https://poway.org/436/Community-Emergency-Response-Team-CERT">
+        Visit the City’s CERT program
+      </a>
     </article>
 
     <article class="vol-role">
@@ -120,18 +100,18 @@ body_class: inner-page volunteer-page
   <div class="vol-form-card">
     <div class="vol-form-head">
       <h2>Express Your Interest</h2>
-      <p>Fill this out and a PNEC coordinator will follow up within a few business days. We use email-only contact so volunteer names stay off public pages.</p>
+      <p>Use this form to express interest in a volunteer role.</p>
     </div>
 
     <div id="vol-alert-success" class="vol-alert vol-alert--success" role="status" aria-live="polite">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
       <div>
-        <strong>Thanks — we got it!</strong> A PNEC coordinator will email you within a few business days. Watch for a message from <strong>contact@example.test</strong>.
+        <strong>Thanks — we got it!</strong> Your volunteer interest was submitted.
       </div>
     </div>
     <div id="vol-alert-error" class="vol-alert vol-alert--error" role="alert" aria-live="assertive">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <div id="vol-alert-error-msg">Something went wrong. Please email us directly at <a href="mailto:contact@example.test">contact@example.test</a>.</div>
+      <div><span id="vol-alert-error-msg"></span> <a id="vol-contact-fallback" href="https://powaynec.com/contact/" hidden>Contact PNEC through its official website</a></div>
     </div>
 
     <form class="vol-form" id="vol-form" novalidate>
@@ -161,7 +141,7 @@ body_class: inner-page volunteer-page
           <select id="vol-role" name="role" required>
             <option value="">Select a role…</option>
             <option value="neighborhood_coordinator">Neighborhood Coordinator</option>
-            <option value="cert_volunteer">CERT Volunteer</option>
+            <option value="cert_volunteer">Questions about City of Poway CERT</option>
             <option value="ham_radio_operator">Ham Radio Operator (PACT)</option>
             <option value="admin_board">Administrative / Board Support</option>
             <option value="flex">I'm open — match me to what's needed</option>
@@ -178,8 +158,7 @@ body_class: inner-page volunteer-page
       <button type="submit" class="vol-submit" id="vol-submit-btn">Send My Interest</button>
 
       <p class="vol-form-foot">
-        Your info goes only to PNEC's coordinator team. We don't sell, share, or publish it.
-        Questions? Email <a href="mailto:contact@example.test">contact@example.test</a>.
+        Questions? <a href="https://powaynec.com/contact/">Visit the official PNEC contact page</a>.
       </p>
     </form>
   </div>
@@ -187,7 +166,7 @@ body_class: inner-page volunteer-page
 
 <section class="vol-final-cta">
   <h3>Already trained somewhere else?</h3>
-  <p>If you have prior CERT, ham, EMS, or disaster-volunteer experience and want to plug straight in, mention it in the message field above — we'll fast-track the conversation.</p>
+  <p>If you have prior CERT, ham radio, EMS, or disaster-volunteer experience, you can mention it in the message field above.</p>
 </section>
 
 <script>
@@ -203,10 +182,18 @@ body_class: inner-page volunteer-page
   var alertOk = document.getElementById('vol-alert-success');
   var alertErr = document.getElementById('vol-alert-error');
   var alertErrMsg = document.getElementById('vol-alert-error-msg');
+  var contactFallback = document.getElementById('vol-contact-fallback');
   if (!form) return;
 
+  function showSubmissionError(message) {
+    alertErrMsg.textContent = message;
+    contactFallback.hidden = false;
+    showOnly(alertErr);
+    alertErr.scrollIntoView({ block: 'nearest' });
+  }
+
   // Role-card "Pick this role" buttons → fill the select + scroll to form
-  document.querySelectorAll('.vol-role-pick').forEach(function(btn) {
+  document.querySelectorAll('.vol-role-pick[data-role]').forEach(function(btn) {
     btn.addEventListener('click', function() {
       var role = btn.getAttribute('data-role');
       var sel = document.getElementById('vol-role');
@@ -234,7 +221,9 @@ body_class: inner-page volunteer-page
 
   form.addEventListener('submit', function(ev) {
     ev.preventDefault();
+    if (submitBtn.disabled) return;
     clearAlerts();
+    contactFallback.hidden = true;
 
     var payload = {
       name:         document.getElementById('vol-name').value.trim(),
@@ -266,26 +255,25 @@ body_class: inner-page volunteer-page
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(payload),
-      credentials: 'omit'
+      credentials: 'omit',
+      signal: AbortSignal.timeout(10000)
     }).then(function(res) {
       return res.json().catch(function() { return {}; }).then(function(data) {
         return { ok: res.ok, status: res.status, data: data };
       });
     }).then(function(result) {
-      if (result.ok && result.data && result.data.ok) {
+      if (result.ok && result.data && result.data.ok === true) {
         showOnly(alertOk);
         form.reset();
         // Make sure success message is visible
         alertOk.scrollIntoView({ behavior: 'smooth', block: 'center' });
       } else {
-        var detail = (result.data && (result.data.detail || result.data.message || result.data.error))
-                  || ('Server returned ' + result.status + '.');
-        alertErrMsg.innerHTML = detail + ' If this keeps happening, email <a href="mailto:contact@example.test">contact@example.test</a>.';
-        showOnly(alertErr);
+        showSubmissionError(result.status === 429
+          ? 'The form has received too many requests. Please wait before trying again.'
+          : 'We could not confirm your submission. Your entries are still in the form.');
       }
     }).catch(function() {
-      alertErrMsg.innerHTML = 'Could not reach the PNEC server. Please check your connection or email <a href="mailto:contact@example.test">contact@example.test</a> directly.';
-      showOnly(alertErr);
+      showSubmissionError('We could not confirm your submission. Your entries are still in the form.');
     }).finally(function() {
       submitBtn.disabled = false;
       submitBtn.textContent = 'Send My Interest';

@@ -1,14 +1,14 @@
 """Read-only browser regression for the OCS redesign. No writes to the API.
 Run: python scripts/test-navigation-redesign.py --base-url http://127.0.0.1:8765/pnec-frontend-review/ --output-dir /tmp/pnec-evidence
-API responses are mocked for repeatable layout/interaction checks; --live allows
+Volunteer requests are intercepted in the offline run. API responses are mocked for repeatable layout/interaction checks; --live allows
 real requests for a second deployed-site pass. Authentication rendering uses a
 synthetic cached resident; this does not claim backend authentication validation.
 """
 import argparse
 import json
 from pathlib import Path
-from urllib.parse import urlsplit
-from playwright.sync_api import sync_playwright
+from urllib.parse import urljoin, urlsplit
+from playwright.sync_api import expect, sync_playwright
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--base-url', required=True)
@@ -75,6 +75,20 @@ with sync_playwright() as play:
                 page.evaluate('document.activeElement.blur(); window.scrollTo(0,0)')
                 page.mouse.move(0,0)
                 page.screenshot(path=str(args.output_dir/f'home-{width}.png'),full_page=True)
+            if route == 'pages/preparedness-resources.html':
+                cards = page.get_by_role('navigation', name='Prepare your household').get_by_role('link')
+                destinations = ['pages/checklist.html', 'role-quiz/', 'pages/find-your-neighborhood.html']
+                expect(cards).to_have_count(len(destinations))
+                for card, destination in zip(cards.all(), destinations):
+                    href = urljoin(page.url, card.get_attribute('href'))
+                    assert href == urljoin(base, destination), (width, href)
+                    assert page.request.get(href).ok
+                    card.focus()
+                    expect(card).to_be_focused()
+                    box = card.bounding_box()
+                    assert 0 <= box['x'] < box['x'] + box['width'] <= width + 1
+                if width in (320, 1440):
+                    page.locator('.pnec-preparedness').screenshot(path=str(args.output_dir / f'preparedness-{width}.png'))
             # Compare navigation link positions after every actual page load.
             if width > 1050:
                 positions=page.locator('#pnec-site-header .trigger > .page-link, #pnec-site-header .trigger > .pnec-disclosure > .page-link').evaluate_all('(els)=>els.map(e=>({x:e.getBoundingClientRect().x,y:e.getBoundingClientRect().y,width:e.getBoundingClientRect().width,height:e.getBoundingClientRect().height}))')
@@ -135,6 +149,63 @@ with sync_playwright() as play:
         assert not page.locator('#pnec-bot-panel').is_visible()
         assert not errors,(width,errors)
         report.append({'width':width,'routes':len(routes),'header':reference,'columns':columns,'errors':errors,'passed':True})
+        context.close()
+    if not args.live:
+        context = browser.new_context()
+        context.route('**/*', lambda r: r.continue_() if r.request.url.startswith(base)
+                      else mock_api(r) if '/api/' in r.request.url else r.abort())
+        page = context.new_page()
+        page.goto(base + 'pages/volunteer.html', wait_until='domcontentloaded')
+        expect(page.locator('.vol-hero')).to_contain_text('established in 2011')
+        expect(page.get_by_role('heading', name='City of Poway CERT')).to_be_visible()
+        expect(page.get_by_role('link', name='Visit the City’s CERT program')).to_have_attribute(
+            'href', 'https://poway.org/436/Community-Emergency-Response-Team-CERT')
+        form = page.locator('#vol-form')
+        submit = page.get_by_role('button', name='Send My Interest')
+        error = page.locator('#vol-alert-error')
+        success = page.locator('#vol-alert-success')
+        fallback = page.locator('#vol-contact-fallback')
+        name = form.get_by_label('Full Name')
+        submit.click()
+        expect(error).to_contain_text('Please enter your name.')
+        expect(fallback).to_be_hidden()
+
+        name.fill('Synthetic Volunteer')
+        form.get_by_label('Email Address').fill('synthetic@example.test')
+        form.get_by_label('Role of Interest').select_option('cert_volunteer')
+        requests = []
+        responses = iter([None, (502, 'text/html', 'Bad Gateway'),
+                          (200, 'application/json', '{"ok":"true"}'),
+                          (200, 'application/json', '{"ok":true}')])
+
+        def mock_volunteer(route):
+            requests.append((route.request.method, route.request.post_data_json))
+            response = next(responses)
+            if response is None:
+                route.abort()
+                return
+            status, content_type, body = response
+            route.fulfill(status=status, content_type=content_type, body=body)
+
+        context.route('**/api/volunteer/submit', mock_volunteer)
+        for _ in range(3):
+            submit.click()
+            expect(error).to_contain_text('We could not confirm your submission.')
+            expect(fallback).to_be_visible()
+            expect(fallback).to_have_attribute('href', 'https://powaynec.com/contact/')
+            expect(success).to_be_hidden()
+            expect(name).to_have_value('Synthetic Volunteer')
+            expect(submit).to_be_enabled()
+
+        submit.click()
+        expect(success).to_be_visible()
+        expect(error).to_be_hidden()
+        expect(name).to_have_value('')
+        assert len(requests) == 4
+        for method, payload in requests:
+            assert method == 'POST'
+            assert payload['role'] == 'cert_volunteer'
+            assert payload['email'] == 'synthetic@example.test'
         context.close()
     browser.close()
 (args.output_dir/'results.json').write_text(json.dumps(report,indent=2))
