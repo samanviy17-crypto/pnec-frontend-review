@@ -9,7 +9,9 @@
     clearInterval(timer);
     const motionOff = reduced.matches || document.documentElement.dataset.appearanceMotion === 'true';
     pause.hidden = motionOff;
-    pause.textContent = paused ? 'Resume background photos' : 'Pause background photos';
+    window.PNECLocale.text(pause.querySelector('[data-photo-action]'), paused ? 'Resume background photos' : 'Pause background photos');
+    pause.querySelector('.pnec-photo-pause-icon').hidden = paused;
+    pause.querySelector('.pnec-photo-play-icon').hidden = !paused;
     if (!paused && !motionOff && !document.hidden) {
       timer = setInterval(() => {
         if (reduced.matches || document.documentElement.dataset.appearanceMotion === 'true' || document.hidden) {
@@ -28,21 +30,28 @@
   reduced.addEventListener('change', start);
   window.addEventListener('pnec:appearance-changed', start);
   start();
-  // Reuse the published weekly-tip endpoint and content workflow, never a synthetic tip.
+  // Keep the static, sourced tip until the API supplies usable published content.
   const content = document.getElementById('weekly-tip-content');
   const source = document.getElementById('weekly-tip-source');
+  const heading = document.getElementById('weekly-tip-heading');
   const base = (location.hostname === 'localhost' || location.hostname === '127.0.0.1') ? (window.PNEC_API_BASE || `http://${location.hostname}:8425`) : window.PNEC_API_BASE;
   fetch(base + '/api/preparedness/weekly', {credentials:'omit', signal:AbortSignal.timeout(10000)})
     .then(response => {if (!response.ok) throw new Error(); return response.json();})
     .then(data => {
-      const tips = (Array.isArray(data.tips) ? data.tips : []).filter(tip => typeof tip.title === 'string' && typeof tip.body === 'string');
+      const tips = (Array.isArray(data.tips) ? data.tips : []).filter(tip => typeof tip?.title === 'string' && tip.title.trim() && typeof tip.body === 'string' && tip.body.trim());
       if (!tips.length) throw new Error();
+      window.PNECLocale.text(heading, "This week's preparedness tip");
       content.replaceChildren();
       tips.forEach((tip) => {
-        const title = document.createElement('h3'); title.textContent = tip.title; content.append(title);
-        const body = document.createElement('p'); body.textContent = tip.body; content.append(body);
+        const title = document.createElement('h3'); title.lang = 'en'; title.textContent = tip.title; content.append(title);
+        const body = document.createElement('p'); body.lang = 'en'; body.textContent = tip.body; content.append(body);
       });
-      source.textContent = 'PNEC preparedness tips' + (data.week_start ? ' · Week of ' + data.week_start : '') + '. Educational guidance; not an emergency alert.';
+      if (/^\d{4}-\d{2}-\d{2}$/.test(data.week_start)) {
+        window.PNECLocale.text(source, 'tip.published.week',
+          'PNEC guidance for the week of {date}. No live conditions or alerts.', {date: data.week_start});
+      } else {
+        window.PNECLocale.text(source, 'tip.published', 'PNEC preparedness guidance. No live conditions or alerts.');
+      }
     })
-    .catch(() => {content.textContent = 'The current weekly tip is unavailable. You can still use the emergency kit guide.'; source.textContent = 'No live risk information is shown.';});
+    .catch(() => { /* The source-reviewed evergreen tip stays visible. */ });
 })();

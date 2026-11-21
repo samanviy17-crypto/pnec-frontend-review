@@ -30,9 +30,9 @@ speech_fixture="""
 window.__speech={calls:[],canceled:0,paused:false};
 window.SpeechSynthesisUtterance=class {constructor(text){this.text=text}};
 Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{
- getVoices:()=>[{name:'Synthetic English voice',voiceURI:'fixture-en',lang:'en-US'}],
+ getVoices:()=>[{name:'Synthetic English voice',voiceURI:'fixture-en',lang:'en-US'},{name:'Synthetic Spanish voice',voiceURI:'fixture-es',lang:'es-MX'}],
  addEventListener(){},
- speak(utterance){window.__speech.calls.push({text:utterance.text,rate:utterance.rate,pitch:utterance.pitch,volume:utterance.volume,voice:utterance.voice?.voiceURI});},
+ speak(utterance){window.__speech.calls.push({text:utterance.text,rate:utterance.rate,pitch:utterance.pitch,volume:utterance.volume,voice:utterance.voice?.voiceURI,lang:utterance.lang});},
  cancel(){window.__speech.canceled++},
  pause(){window.__speech.paused=true},resume(){window.__speech.paused=false},
  get paused(){return window.__speech.paused}
@@ -88,10 +88,10 @@ with sync_playwright() as play:
         # Reviewed shell labels translate; main editorial/user content stays original.
         page.select_option('#site-language','es');page.locator('#pnec-language-form button[type="submit"]').click()
         assert page.locator('h1').inner_text()=='Preferencias'
-        assert page.locator('html').get_attribute('lang')=='en'
+        assert page.locator('html').get_attribute('lang')=='es-US'
         open_page(page,'pages/kit.html')
         assert page.locator('[data-category-link="prepare"]').inner_text()=='Preparación'
-        assert page.locator('[data-category-link="prepare"]').get_attribute('lang')=='es'
+        assert page.locator('html').get_attribute('lang')=='es-US'
         open_page(page);assert page.locator('#site-language').input_value()=='es'
         page.locator('#pnec-language-form button[type="reset"]').click()
         assert page.locator('h1').inner_text()=='Preferences'
@@ -107,6 +107,12 @@ with sync_playwright() as play:
         page.locator('#audio [data-speech="pause"]').click();assert page.evaluate('__speech.paused')
         page.locator('#audio [data-speech="pause"]').click();assert not page.evaluate('__speech.paused')
         page.locator('#audio [data-speech="stop"]').click();assert 'stopped' in page.locator('#audio .pnec-speech-status').inner_text()
+        page.select_option('#site-language','es')
+        page.locator('#pnec-language-form button[type="submit"]').click()
+        page.locator('[data-speech="test"]').click()
+        spanish = page.evaluate('__speech.calls.at(-1)')
+        assert spanish['text'].startswith('Los vecinos') and spanish['lang']=='es-MX' and spanish['voice']=='fixture-es'
+        page.locator('#pnec-language-form button[type="reset"]').click()
         page.reload(wait_until='networkidle');assert page.evaluate('__speech.calls.length')==0
         assert page.locator('#pnec-audio-form [name="enabled"]').is_checked()
         assert page.locator('#speech-rate').input_value()=='1.5'

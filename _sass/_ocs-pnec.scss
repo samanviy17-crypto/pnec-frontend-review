@@ -2,29 +2,21 @@
 @import "vendor/ocs/grid";
 @import "vendor/ocs/buttons";
 @import "vendor/ocs/container";
+@import "vendor/ocs/forms";
 
 body.pnec-site {
-  --panel: #fff;
-  --panel-mid: #f0f8f8;
-  --ui-border: #dfe8ec;
-  --pref-text-color: #10213a;
-  --pref-accent-color: #087c82;
-  --pref-bg-color: #fff;
   --pref-font-family: Arial, sans-serif;
   --pref-font-size: 16px;
   margin: 0;
   padding: 80px 0 0;
-  background: #f7f9fb;
-  color: #10213a;
   font: 16px/1.5 Arial, sans-serif;
 }
 html { scrollbar-gutter: stable; scroll-padding-top: 100px; }
 body.pnec-site *, body.pnec-site *::before, body.pnec-site *::after { box-sizing: border-box; }
 body.pnec-site img { max-width: 100%; height: auto; }
 body.pnec-site [hidden] { display: none !important; }
-body.pnec-site a { color: #066b76; }
-body.pnec-site :focus-visible { outline: 3px solid #087c82; outline-offset: 3px; }
-body.pnec-site h1, body.pnec-site h2, body.pnec-site h3 { color: #10213a; line-height: 1.2; }
+body.pnec-site :focus-visible { outline: 3px solid var(--pnec-accent); outline-offset: 3px; }
+body.pnec-site h1, body.pnec-site h2, body.pnec-site h3 { line-height: 1.2; }
 body.pnec-site p { margin: 0 0 $spacing-md; }
 body.pnec-site h1 { font-size: clamp(28px, 3vw, 42px); margin: 0 0 $spacing-lg; }
 body.pnec-site h2 { font-size: 28px; margin: 0 0 $spacing-sm; }
@@ -41,7 +33,6 @@ body.pnec-site .ocs-button {
   text-decoration: none;
   gap: $spacing-sm;
   &:hover, &:focus { transform: none; }
-  &.primary { background: #087c82; color: #fff; border-color: #087c82; }
   &.light { background: transparent; color: #fff; border-color: #fff; }
 }
 body.pnec-site .ocs-card {
@@ -61,8 +52,8 @@ body.pnec-site .pnec-home-hero {
   p:not(.pnec-eyebrow) { font-size: 20px; max-width: 670px; margin-bottom: $spacing-xl; }
   .pnec-eyebrow { color: #fff; }
 }
-body.pnec-site .pnec-home-details { @include base-grid(2,$spacing-xl); padding-top: $spacing-xxs; padding-bottom: $spacing-lg; }
-body.pnec-site .pnec-about-preview { background: linear-gradient(125deg,#e4f4f4,#d7ebeb); padding: $spacing-xl; }
+body.pnec-site .pnec-home-details { @include base-grid(2,$spacing-xl); padding-top: $spacing-lg; padding-bottom: $spacing-lg; }
+body.pnec-site .pnec-about-preview { padding: $spacing-lg; }
 body.pnec-site .pnec-tip { @include inline-container(flex,$spacing-lg); align-items: flex-start; padding: $spacing-xl; .pnec-tip-icon { color: #087c82; font-size: 44px; line-height: 1; } }
 .pnec-resource-grid { @include base-grid(3,$spacing-lg); a { text-decoration: none; } p { color: #526071; } }
 .pnec-account-note { margin-top: $spacing-md !important; font-size: $text-md; color: #526071; }
@@ -74,7 +65,7 @@ body.pnec-site .community-tools { max-width: none; margin: 0 0 $spacing-xl; }
 body.pnec-site .community-tools > section, body.pnec-site .card {
   @include grid-card-cell;
   @include main-container($spacing-lg);
-  &:hover { transform: none; background: #fff; box-shadow: none; border-color: #dfe8ec; }
+  &:hover { transform: none; background: var(--pnec-surface); box-shadow: none; border-color: var(--pnec-line); }
 }
 body.pnec-site .community-tools form { max-width: 760px; }
 body.pnec-site .community-tools input, body.pnec-site .community-tools textarea, body.pnec-site .community-tools select { max-width: 100%; }
@@ -161,3 +152,48 @@ body.pnec-site .pnec-bot-panel.is-modal { top: 92px; max-height: calc(100dvh - 1
 @import "fire-safety";
 
 @import "review-accessibility";
+
+body.pnec-site {
+  .pnec-preparedness { margin-top: $spacing-lg; margin-bottom: $spacing-lg; }
+  .pnec-preparedness .ocs__nav-grid {
+    @include base-grid(3, $spacing-lg);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding-inline-start: $spacing-xl;
+    li::marker { color: var(--pnec-accent); font-weight: 700; }
+    a { display: grid; align-content: start; height: 100%; gap: $spacing-xs; }
+    .ocs__nav-card-title { font-weight: 700; }
+    .ocs__text { color: var(--pnec-text); }
+  }
+  .pnec-resource-icon { width: 1.5em; height: 1.5em; color: var(--pnec-accent); }
+  .community-tools, .community-tools article {
+    background: var(--pnec-surface);
+    color: var(--pnec-text);
+    border-color: var(--pnec-line);
+  }
+  .community-tools .community-error { color: var(--pnec-text); font-weight: 700; }
+  .community-tools a { color: var(--pnec-accent); }
+  .community-tools .pnec-preparedness-form {
+    @include base-grid(2, $spacing-sm);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
+    > div { align-self: end; }
+    .pnec-form-actions, .pnec-field-wide { grid-column: 1 / -1; }
+    textarea { min-height: 4em; }
+  }
+  @media (max-width: $breakpoint-mobile) {
+    .pnec-preparedness .ocs__nav-grid, .community-tools .pnec-preparedness-form {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}
+
+
+body.pnec-site {
+  .pnec-about-preview, .pnec-task-panel { background: var(--pnec-tint); }
+  .pnec-preparedness-form > div:not(.pnec-form-actions) {
+    --text-muted: var(--pnec-text);
+    @include form-group(0);
+    label, input { font-size: inherit; }
+    input:focus-visible { outline: 2px solid var(--pnec-accent); outline-offset: 2px; }
+  }
+}

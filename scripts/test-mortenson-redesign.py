@@ -150,7 +150,7 @@ with sync_playwright() as play:
         page.goto(base+'pages/settings.html',wait_until='networkidle')
         close_home_welcome(page)
         page.get_by_role('button',name='Reset to defaults').click()
-        assert page.locator('[name="theme"]').input_value()=='system'
+        assert page.locator('[name="theme"]').input_value()=='light'
         assert not errors, (width,errors)
         context.close()
     # Backgrounds cycle; the content DOM and its geometry remain fixed.
@@ -170,17 +170,26 @@ with sync_playwright() as play:
         assert copy.inner_html()==before
         assert copy.bounding_box()==box
     assert len(set(seen[:3]))==3 and seen[0]==seen[3]
-    prepared = page.get_by_role('link',name='Get Prepared →',exact=True)
-    assert prepared.get_attribute('href')==urlsplit(base).path+'pages/checklist.html'
+    prepared = page.get_by_role('link', name='Get Prepared', exact=True)
+    assert prepared.get_attribute('href') == urlsplit(base).path + 'pages/preparedness-resources.html#preparedness-journey'
     prepared.click()
-    assert page.url==base+'pages/checklist.html'
+    assert page.url == base + 'pages/preparedness-resources.html#preparedness-journey'
+    cards = page.locator('.pnec-preparedness .ocs__nav-card')
+    assert cards.count() == 3
+    assert cards.evaluate_all('(links) => links.map(link => new URL(link.href).hash)') == [
+        '#preparedness-quiz', '#household-plan', '#kit-checklist']
+    cards.first.click()
+    page.locator('#preparedness-quiz').wait_for()
+    assert page.url == base + 'pages/checklist.html#preparedness-quiz'
     page.goto(base,wait_until='networkidle')
     close_home_welcome(page)
-    page.get_by_role('button',name='Pause background photos').click()
+    page.get_by_role('button',name='Pause background photos').press('Enter')
+    assert page.locator('.pnec-photo-play-icon').is_visible()
     current = page.locator('.pnec-hero-backgrounds .is-current').get_attribute('src')
     page.clock.fast_forward(16000)
     assert page.locator('.pnec-hero-backgrounds .is-current').get_attribute('src')==current
-    page.get_by_role('button',name='Resume background photos').click()
+    page.get_by_role('button',name='Resume background photos').press('Space')
+    assert page.locator('.pnec-photo-pause-icon').is_visible()
     page.emulate_media(reduced_motion='reduce')
     page.locator('.pnec-hero-pause').wait_for(state='hidden')
     current = page.locator('.pnec-hero-backgrounds .is-current').get_attribute('src')
@@ -194,7 +203,7 @@ with sync_playwright() as play:
     assert page.locator('.pnec-hero-backgrounds .is-current').get_attribute('src')==current
     context.close()
     # Empty successful responses, errors and malformed tip payloads share the notice.
-    for payload in ({'tips':[]}, {'tips':[{'title':42,'body':None}]}, None):
+    for payload in ({'tips':[]}, {'tips':[None, {'title':42,'body':None}, {'title':' ', 'body':' '}]}, None):
         context = browser.new_context()
         def missing(route):
             if route.request.url.startswith(base): route.continue_()
@@ -202,9 +211,12 @@ with sync_playwright() as play:
         context.route('**/*',missing)
         page=context.new_page(); page.goto(base,wait_until='networkidle')
         close_home_welcome(page)
-        assert page.locator('#weekly-tip-content').inner_text()=='The current weekly tip is unavailable. You can still use the emergency kit guide.'
-        assert page.locator('#weekly-tip-source').inner_text()=='No live risk information is shown.'
+        assert page.locator('#weekly-tip-content h3').inner_text()=='Set aside water for your household'
+        assert 'General preparedness guidance' in page.locator('#weekly-tip-source').inner_text()
         assert page.get_by_role('link',name='Review your emergency kit →').is_visible()
+        assert page.get_by_role('link',name='FEMA emergency kit guide').is_visible()
+        assert page.locator('#pnec-bot-fab').evaluate("(button) => getComputedStyle(button).position !== 'fixed'")
+        assert page.locator('#pnec-bot-panel').is_hidden()
         assert page.locator('.pnec-alert').count()==0
         context.close()
     # Source-reviewed official notice config requires an allowlisted source and expiry.
@@ -245,7 +257,7 @@ with sync_playwright() as play:
         page.goto(base,wait_until='networkidle')
         close_home_welcome(page)
         assert page.locator('#pnec-alert-banner').is_hidden()
-        assert 'unavailable' in page.locator('#weekly-tip-content').inner_text()
+        assert 'Set aside water' in page.locator('#weekly-tip-content').inner_text()
         page.goto(base+'pages/settings.html',wait_until='networkidle')
         close_home_welcome(page)
         page.select_option('[name="theme"]','dark')

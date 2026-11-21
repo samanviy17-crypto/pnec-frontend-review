@@ -12,6 +12,7 @@
   title: Prepare
   url: /pages/checklist.html
   links:
+    - {title: Preparedness Journey, url: '/pages/preparedness-resources.html#preparedness-journey'}
     - {title: Preparedness Dashboard, url: /pages/checklist.html}
     - {title: Preparedness Checklist, url: '/pages/checklist.html#kit-checklist'}
     - {title: Emergency Kit, url: /pages/kit.html}

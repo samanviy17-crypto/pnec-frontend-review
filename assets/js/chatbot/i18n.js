@@ -53,7 +53,7 @@ const STRINGS = {
     'error.timeout':           'Estoy tardando más de lo esperado. ¿Puedes intentarlo de nuevo?',
     'error.network':           'No puedo conectarme al servidor de PNEC ahora. ¿Revisa tu conexión y vuelve a intentar?',
     'error.empty':             'Recibí una respuesta vacía. ¿Puedes reformular tu pregunta?',
-    'error.config':            'Helper Bot está fuera de línea ahora — un voluntario de PNEC ha sido notificado. Usa el formulario de contacto por ahora.',
+    'error.config':            'El asistente no está disponible. Puedes consultar los recursos de preparación o usar el formulario de contacto.',
     'error.generic':           'Algo salió mal. ¿Puedes intentarlo de nuevo o usar el formulario de contacto?',
   },
   tl: {

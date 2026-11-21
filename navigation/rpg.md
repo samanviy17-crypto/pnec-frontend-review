@@ -48,8 +48,8 @@ html, body { height: 100%; }
 #rpg-sidebar {
     width: 300px;
     min-width: 300px;
-    background: #0d1b2e;
-    border-right: 1px solid #1e3a5f;
+    background: var(--pnec-surface);
+    border-right: 1px solid var(--pnec-line);
     overflow-y: auto;
     overflow-x: hidden;
     display: flex;
@@ -58,10 +58,10 @@ html, body { height: 100%; }
                 min-width 0.38s cubic-bezier(0.4,0,0.2,1),
                 opacity 0.28s ease;
     scrollbar-width: thin;
-    scrollbar-color: #1e3a5f transparent;
+    scrollbar-color: var(--pnec-line) transparent;
 }
 #rpg-sidebar::-webkit-scrollbar { width: 4px; }
-#rpg-sidebar::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 4px; }
+#rpg-sidebar::-webkit-scrollbar-thumb { background: var(--pnec-line); border-radius: 4px; }
 
 .rpg-fullscreen #rpg-sidebar {
     width: 0 !important;
@@ -84,7 +84,7 @@ html, body { height: 100%; }
     margin-bottom: 6px;
 }
 .rpg-title {
-    color: #f1f5f9;
+    color: var(--pnec-text);
     font-size: 15px;
     font-weight: 800;
     text-align: center;
@@ -92,7 +92,7 @@ html, body { height: 100%; }
     line-height: 1.3;
 }
 .rpg-tagline {
-    color: #64748b;
+    color: var(--pnec-muted);
     font-size: 11px;
     text-align: center;
     margin: 0 0 16px;
@@ -103,15 +103,15 @@ html, body { height: 100%; }
     font-size: 9px;
     font-weight: 700;
     letter-spacing: 1.2px;
-    color: #475569;
+    color: var(--pnec-muted);
     text-transform: uppercase;
     margin: 14px 0 6px;
 }
 
 /* Controls */
 .rpg-controls {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid #1e3a5f;
+    background: var(--pnec-bg);
+    border: 1px solid var(--pnec-line);
     border-radius: 8px;
     padding: 10px 12px;
     display: flex;
@@ -123,20 +123,20 @@ html, body { height: 100%; }
     align-items: center;
     gap: 8px;
     font-size: 12px;
-    color: #94a3b8;
+    color: var(--pnec-muted);
 }
 .rpg-key {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: #1e293b;
-    border: 1px solid #334155;
-    border-bottom: 2px solid #475569;
+    background: var(--pnec-line);
+    border: 1px solid var(--pnec-line);
+    border-bottom: 2px solid var(--pnec-muted);
     border-radius: 4px;
     padding: 2px 6px;
     font-size: 10px;
     font-weight: 700;
-    color: #e2e8f0;
+    color: var(--pnec-text);
     min-width: 22px;
     text-align: center;
     font-family: monospace;
@@ -160,19 +160,19 @@ html, body { height: 100%; }
     transition: background 0.2s, border-color 0.2s;
 }
 .rpg-mission.locked {
-    background: rgba(255,255,255,0.02);
-    border-color: #1e293b;
-    color: #475569;
+    background: var(--pnec-bg);
+    border-color: var(--pnec-line);
+    color: var(--pnec-muted);
 }
 .rpg-mission.active {
-    background: rgba(59,130,246,0.1);
+    background: var(--pnec-tint);
     border-color: #3b82f6;
-    color: #93c5fd;
+    color: var(--pnec-accent);
 }
 .rpg-mission.done {
     background: rgba(34,197,94,0.08);
-    border-color: #166534;
-    color: #86efac;
+    border-color: var(--pnec-accent);
+    color: var(--pnec-accent);
 }
 .rpg-mission-icon { font-size: 18px; flex-shrink: 0; }
 .rpg-mission-info { flex: 1; }
@@ -194,15 +194,15 @@ html, body { height: 100%; }
     border-radius: 6px;
     font-size: 11px;
     font-weight: 600;
-    border: 1px solid #1e293b;
-    color: #64748b;
-    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--pnec-line);
+    color: var(--pnec-muted);
+    background: var(--pnec-bg);
     transition: all 0.3s;
 }
 .rpg-kit-item.collected {
-    color: #e2e8f0;
+    color: var(--pnec-text);
     border-color: currentColor;
-    background: rgba(255,255,255,0.06);
+    background: var(--pnec-tint);
 }
 
 /* Tips */
@@ -214,7 +214,7 @@ html, body { height: 100%; }
 }
 .rpg-tip {
     font-size: 11px;
-    color: #fde68a;
+    color: var(--pnec-text);
     line-height: 1.55;
     display: flex;
     gap: 6px;
@@ -319,7 +319,7 @@ html:-webkit-full-screen .page-content .wrapper { padding: 0 !important; margin:
     min-width: 0;
 }
 #gameCanvas { width: 100%; height: 100%; display: block; }
-#gameContainer, #gameCanvas { background: #000; }
+#gameContainer, #gameCanvas { background: var(--pnec-bg); }
 
 /* ── Objective bar ────────────────────────────────────────────────────────── */
 #rpg-objective {
@@ -348,7 +348,7 @@ html:-webkit-full-screen .page-content .wrapper { padding: 0 !important; margin:
 #engine-blocker {
     position: absolute;
     inset: 0;
-    background: #000;
+    background: var(--pnec-bg);
     z-index: 10;
     display: none;
 }

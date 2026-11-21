@@ -224,9 +224,9 @@ body_class: inner-page
 
   function updateUI() {
     var water = document.getElementById('cb-water');
-    if (water) water.parentElement.querySelector('.checklist-item-qty').textContent = (householdSize * 3) + ' gallons / household';
+    if (water) window.PNECLocale.text(water.parentElement.querySelector('.checklist-item-qty'), 'checklist.waterQuantity', '{count} gallons / household', {count:householdSize * 3});
     var food = document.getElementById('cb-food');
-    if (food) food.parentElement.querySelector('.checklist-item-qty').textContent = '3-day supply for ' + householdSize;
+    if (food) window.PNECLocale.text(food.parentElement.querySelector('.checklist-item-qty'), 'checklist.foodQuantity', '3-day supply for {count}', {count:householdSize});
     var n = checkedCount();
     document.getElementById('kit-count').textContent = n;
     document.getElementById('kit-denom').textContent = '/ ' + TOTAL;
@@ -298,6 +298,7 @@ body_class: inner-page
       sec.appendChild(items);
       container.appendChild(sec);
     });
+    window.PNECLocale.scanStatic(container);
   }
 
   // Tip of the day
@@ -320,7 +321,7 @@ body_class: inner-page
   };
 
   window.pnecResetKit = function() {
-    if (!confirm('Reset all kit items? This cannot be undone.')) return;
+    if (!confirm(window.PNECLocale.t('Reset all kit items? This cannot be undone.'))) return;
     state = {};
     ITEMS.forEach(function(cat) { cat.items.forEach(function(item) { state[item.id] = false; pending[item.id] = false; pendingVersions[item.id] = ++editVersion; }); });
     save();

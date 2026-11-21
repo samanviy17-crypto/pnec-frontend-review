@@ -157,15 +157,16 @@ function startQuiz() {
 function renderQuestion(idx) {
   const s = SCENARIOS[idx];
   document.getElementById('q-emoji').textContent = s.emoji;
-  document.getElementById('q-headline').textContent = s.headline;
-  document.getElementById('q-context').textContent = s.context;
+  window.PNECLocale.text(document.getElementById('q-headline'), s.headline);
+  window.PNECLocale.text(document.getElementById('q-context'), s.context);
 
   const grid = document.getElementById('choices-grid');
   grid.innerHTML = '';
   s.choices.forEach(c => {
     const btn = document.createElement('button');
     btn.className = 'choice-btn';
-    btn.innerHTML = `<span class="choice-icon">${c.icon}</span><span class="choice-text">${c.text}</span>`;
+    btn.innerHTML = `<span class="choice-icon">${c.icon}</span><span class="choice-text"></span>`;
+    window.PNECLocale.text(btn.querySelector('.choice-text'), c.text);
     btn.addEventListener('click', () => pick(c.tag, idx));
     grid.appendChild(btn);
   });
@@ -176,7 +177,7 @@ function renderQuestion(idx) {
 function updateProgress(idx) {
   const pct = Math.round((idx / SCENARIOS.length) * 100);
   document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('progress-text').textContent = `Question ${idx + 1} of ${SCENARIOS.length}`;
+  window.PNECLocale.text(document.getElementById('progress-text'), 'quiz.progress', 'Question {number} of {total}', {number:idx+1,total:SCENARIOS.length});
   document.getElementById('progress-pct').textContent = pct + '%';
 
   for (let i = 0; i < SCENARIOS.length; i++) {
@@ -226,8 +227,8 @@ async function showResult() {
   const r = ROLES[role] || ROLES.community;
 
   document.getElementById('result-emoji').textContent = r.emoji;
-  document.getElementById('result-role').textContent = r.name;
-  document.getElementById('result-tagline').textContent = r.tagline;
+  window.PNECLocale.text(document.getElementById('result-role'), r.name);
+  window.PNECLocale.text(document.getElementById('result-tagline'), r.tagline);
 
   const descEl = document.getElementById('result-description');
   descEl.classList.add('loading');

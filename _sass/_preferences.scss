@@ -1,10 +1,10 @@
 // Palette family adapted from OCS SitePreferences.PRESETS. PNEC retains its
 // default palette; Light/Sepia use readable text, and Sunset is a PNEC extension.
 $pnec-presets: (
-  site-default: (bg: #f7f9fb, surface: #fff, text: #10213a, accent: #066b76),
+  site-default: (bg: $pnec-default-bg, surface: $pnec-default-surface, text: $pnec-default-text, accent: $pnec-default-accent),
   midnight: (bg: #0b1220, surface: #142035, text: #e6eef8, accent: #81b4ff),
   light: (bg: #fff, surface: #f6f8fc, text: #0f172a, accent: #2563eb),
-  green: (bg: #154734, surface: #1a533e, text: #e6f6ef, accent: #78efc2),
+  green: (bg: #154734, surface: #1a533e, text: #e6f6ef, accent: #83ee92),
   sepia: (bg: #f4ecd8, surface: #fff8e8, text: #3b2f2f, accent: #8b3d06),
   cyberpunk: (bg: #0a0a0f, surface: #1b1628, text: #f0f0f0, accent: #ff76b7),
   ocean: (bg: #0c1929, surface: #14283b, text: #e0f2fe, accent: #67e8f9),
@@ -15,7 +15,7 @@ $pnec-presets: (
   html[data-appearance-preset="#{$name}"] {
     @if $name != site-default {
       --pnec-bg: #{$bg}; --pnec-surface: #{map-get($palette, surface)};
-      --pnec-text: #{$text}; --pnec-muted: #{$text}; --pnec-accent: #{$accent};
+      --pnec-tint: #{map-get($palette, surface)}; --pnec-text: #{$text}; --pnec-muted: #{$text}; --pnec-accent: #{$accent};
       --pnec-line: #{mix($text, $bg, 40%)};
       &[data-appearance-background="soft"] { --pnec-bg: #{mix($accent, $bg, 8%)}; }
     }
@@ -27,7 +27,12 @@ html[data-appearance-button="square"] body.pnec-site { --pnec-button-radius: 0; 
 html[data-appearance-button="pill"] body.pnec-site { --pnec-button-radius: 999px; }
 body.pnec-site {
   .ocs-button { font-family: var(--pnec-font); font-size: 1em; border-radius: var(--pnec-button-radius); }
-  .ocs-button.primary { background: var(--pnec-accent); color: var(--pnec-button-text, #fff); border-color: var(--pnec-accent); }
+  .ocs-button.primary, .community-tools button,
+  .auth-submit, .auth-button[type="submit"], .vol-submit {
+    background: var(--pnec-action-fill, var(--pnec-brand));
+    color: var(--pnec-action-ink, var(--pnec-brand-ink));
+    border-color: var(--pnec-accent);
+  }
   .pnec-preference-sections { @include inline-container(flex, $spacing-sm); flex-wrap: wrap; margin-bottom: $spacing-xl; a { padding: $spacing-xs $spacing-lg; background: var(--pnec-surface); border: 1px solid var(--pnec-line); border-radius: $radius-sm; } }
   .pnec-preferences-stack { display: grid; gap: $spacing-xl; }
   .pnec-preference-card { @include main-container($spacing-xl); @include responsive-padding($spacing-xl, $spacing-xs); min-width: 0; &:hover { box-shadow: none; } }

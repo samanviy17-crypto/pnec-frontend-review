@@ -229,7 +229,7 @@ try:
         expect(feedback).to_contain_text('Thank you for your feedback.')
         feedback.get_by_label('Your unanswered question (at least 10 characters)').fill('Where can my household join the next local training?')
         feedback.get_by_role('button',name='Send question to staff',exact=True).click()
-        expect(feedback.get_by_role('status').last).to_have_text('Saved.')
+        expect(feedback.get_by_role('status').last).to_have_text('Se guardaron los cambios.')
         resident.evaluate('''async () => {
             const helper = await import('/assets/js/chatbot/api.js');
             return helper.submitToStaff({name:'Browser resident',email:'resident@example.test',question:'Can PNEC help review my household meeting point?'});
@@ -245,6 +245,12 @@ try:
         resident.set_viewport_size({'width':390,'height':844})
         expect(area(resident,'Community FAQ feedback').get_by_role('button',name='Search FAQs',exact=True)).to_be_visible()
         assert not resident.locator('.community-error').count(), 'Community tools reported an error'
+        visit(resident,'/pages/checklist.html')
+        spanish_plan = area(resident, 'El plan de su hogar')
+        expect(spanish_plan.get_by_label('Punto de encuentro', exact=True)).to_have_value('Community library')
+        spanish_quiz = area(resident, 'Evaluación de preparación')
+        expect(spanish_quiz.get_by_label('¿Tiene listo un kit de emergencia?', exact=True)).to_have_value('yes')
+        expect(spanish_quiz.get_by_role('status').first).to_contain_text('100 %')
         print('PASS: offline/reload checklist recovery, bearer chatbot association, checklist/plan/quiz persistence, check-in/hazard coordination, shift claims, supply receipts, multilingual risk, weekly tips and FAQ/staff queue')
         browser.close()
 finally:

@@ -4,18 +4,18 @@
 
 /* ── Admin Dashboard Styles ─────────────────────────────────────────────── */
 :root {
-  --adm-bg:        #0a1628;
-  --adm-surface:   #0f1e36;
-  --adm-surface2:  #152540;
-  --adm-border:    rgba(255,255,255,0.10);
-  --adm-text:      #e8f0fb;
-  --adm-muted:     #8ba3c7;
-  --adm-navy:      #0a1628;
+  --adm-bg:        var(--pnec-bg);
+  --adm-surface:   var(--pnec-surface);
+  --adm-surface2:  var(--pnec-tint);
+  --adm-border:    var(--pnec-line);
+  --adm-text:      var(--pnec-text);
+  --adm-muted:     var(--pnec-muted);
+  --adm-navy:      var(--pnec-bg);
   --adm-red:       #c0392b;
   --adm-green:     #27ae60;
   --adm-amber:     #e67e22;
   --adm-blue:      #2980b9;
-  --adm-accent:    #3b82f6;
+  --adm-accent:    var(--pnec-accent);
 }
 
 * { box-sizing: border-box; }
@@ -28,7 +28,7 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sa
 #adm-shell.visible { display: block; }
 
 /* Gate card */
-.adm-gate-card { width: min(420px,100%); background: var(--adm-surface); border: 1px solid var(--adm-border); border-radius: 20px; padding: 36px; box-shadow: 0 32px 64px rgba(0,0,0,.35); }
+.adm-gate-card { width: min(420px,100%); background: var(--adm-surface); border: 1px solid var(--adm-border); border-radius: 20px; padding: 36px; box-shadow: 0 6px 24px rgba(23,62,42,.12); }
 .adm-gate-card h1 { margin: 0 0 6px; font-size: 1.6rem; }
 .adm-gate-card p  { margin: 0 0 20px; color: var(--adm-muted); font-size: .95rem; }
 
@@ -90,21 +90,21 @@ table.adm-table tr:hover td { background: rgba(255,255,255,.03); }
 
 /* Chips */
 .chip { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: .76rem; font-weight: 700; }
-.chip-admin       { background: rgba(192,57,43,.18);  color: #e57373; border: 1px solid rgba(192,57,43,.35); }
-.chip-staff       { background: rgba(41,128,185,.18); color: #64b5f6; border: 1px solid rgba(41,128,185,.35); }
-.chip-coordinator { background: rgba(230,126,34,.18); color: #ffb74d; border: 1px solid rgba(230,126,34,.35); }
-.chip-resident    { background: rgba(39,174,96,.18);  color: #81c784; border: 1px solid rgba(39,174,96,.35); }
-.chip-active   { background: rgba(39,174,96,.18);  color: #81c784; border: 1px solid rgba(39,174,96,.35); }
-.chip-inactive { background: rgba(192,57,43,.18);  color: #e57373; border: 1px solid rgba(192,57,43,.35); }
-.chip-info    { background: rgba(41,128,185,.18); color: #64b5f6; border: 1px solid rgba(41,128,185,.35); }
-.chip-warning { background: rgba(230,126,34,.18); color: #ffb74d; border: 1px solid rgba(230,126,34,.35); }
-.chip-danger  { background: rgba(192,57,43,.18);  color: #e57373; border: 1px solid rgba(192,57,43,.35); }
+.chip-admin       { background: rgba(192,57,43,.18);  color: #962f27; border: 1px solid rgba(192,57,43,.35); }
+.chip-staff       { background: rgba(41,128,185,.18); color: #18588a; border: 1px solid rgba(41,128,185,.35); }
+.chip-coordinator { background: rgba(230,126,34,.18); color: #805118; border: 1px solid rgba(230,126,34,.35); }
+.chip-resident    { background: rgba(39,174,96,.18);  color: #206044; border: 1px solid rgba(39,174,96,.35); }
+.chip-active   { background: rgba(39,174,96,.18);  color: #206044; border: 1px solid rgba(39,174,96,.35); }
+.chip-inactive { background: rgba(192,57,43,.18);  color: #962f27; border: 1px solid rgba(192,57,43,.35); }
+.chip-info    { background: rgba(41,128,185,.18); color: #18588a; border: 1px solid rgba(41,128,185,.35); }
+.chip-warning { background: rgba(230,126,34,.18); color: #805118; border: 1px solid rgba(230,126,34,.35); }
+.chip-danger  { background: rgba(192,57,43,.18);  color: #962f27; border: 1px solid rgba(192,57,43,.35); }
 
 /* Buttons */
 .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; border: 0; cursor: pointer; font-size: .88rem; font-weight: 600; transition: opacity .15s, transform .1s; }
 .btn:hover { opacity: .85; transform: translateY(-1px); }
 .btn:active { transform: translateY(0); }
-.btn-primary  { background: var(--adm-accent);  color: $beasts-white; }
+.btn-primary  { background: var(--pnec-action-fill, var(--pnec-brand)); color: var(--pnec-action-ink, var(--pnec-brand-ink)); }
 .btn-danger   { background: var(--adm-red);    color: $beasts-white; }
 .btn-ghost    { background: rgba(255,255,255,.08); color: var(--adm-text); }
 .btn-sm       { padding: 5px 10px; font-size: .8rem; }
@@ -140,9 +140,9 @@ table.adm-table tr:hover td { background: rgba(255,255,255,.03); }
 .adm-config-save  { flex-shrink: 0; }
 
 /* Announcement level select */
-.ann-level-info    { color: #64b5f6; }
-.ann-level-warning { color: #ffb74d; }
-.ann-level-danger  { color: #e57373; }
+.ann-level-info    { color: #18588a; }
+.ann-level-warning { color: #805118; }
+.ann-level-danger  { color: #962f27; }
 
 /* Toast */
 .adm-toast { position: fixed; bottom: 24px; right: 24px; background: var(--adm-surface2); border: 1px solid var(--adm-border); padding: 12px 18px; border-radius: 10px; font-size: .88rem; z-index: 9999; box-shadow: 0 8px 24px rgba(0,0,0,.3); opacity: 0; transform: translateY(8px); transition: all .25s; pointer-events: none; }
@@ -168,4 +168,11 @@ table.adm-table tr:hover td { background: rgba(255,255,255,.03); }
   .adm-form-row { grid-template-columns: 1fr; }
   .adm-config-row { flex-wrap: wrap; }
   .adm-config-label { flex: 0 0 100%; }
+}
+
+html[data-appearance-resolved="dark"] {
+  .chip-admin, .chip-inactive, .chip-danger, .ann-level-danger { color: #ffb4ab; }
+  .chip-staff, .chip-info, .ann-level-info { color: #a7d4ff; }
+  .chip-coordinator, .chip-warning, .ann-level-warning { color: #ffcf83; }
+  .chip-resident, .chip-active { color: #a7e7bd; }
 }

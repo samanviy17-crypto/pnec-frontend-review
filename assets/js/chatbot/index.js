@@ -81,9 +81,18 @@ class HelperBot {
     if (prefs.panelMode === 'expanded') this.dom.panel.classList.add('is-expanded');
     if (prefs.panelMode === 'modal') this.dom.panel.classList.add('is-modal');
     if (prefs.railOpen) this.dom.panel.classList.add('is-rail-open');
-    this._applyLang(prefs.lang);
+    const siteLanguage = prefs.lang === 'tl' ? 'tl' : (window.PNECLocale?.language || prefs.lang);
+    this._applyLang(siteLanguage);
+    window.addEventListener('pnec:language-changed', event => {
+      this.voice?.stopSpeaking();
+      this._applyLang(event.detail);
+      this.dom.prefLang.value = event.detail;
+      this._updateGreeting();
+      this._renderEmptySuggestions();
+    });
     this._applyAppearance(prefs);
-    if (this.dom.prefLang)   this.dom.prefLang.value   = prefs.lang;
+    window.addEventListener('pnec:appearance-changed', () => this._applyAppearance(getPrefs()));
+    if (this.dom.prefLang)   this.dom.prefLang.value   = siteLanguage;
     if (this.dom.prefVoice)  this.dom.prefVoice.checked = !!prefs.voiceReplies;
     if (this.dom.prefMotion) this.dom.prefMotion.checked = !!prefs.reducedMotion;
     if (this.dom.prefContrast)    this.dom.prefContrast.checked    = !!prefs.highContrast;
@@ -220,6 +229,9 @@ class HelperBot {
 
     d.prefLang.addEventListener('change', (e) => {
       setPref('lang', e.target.value);
+      if (['en', 'es'].includes(e.target.value) && window.PNECPreferences) {
+        window.PNECPreferences.update({language:e.target.value});
+      }
       this._applyLang(e.target.value);
       // v3.7 FIX: re-render visible UI so the language switch is
       // immediately visible (greeting + suggestions chips). Was silent
@@ -355,30 +367,6 @@ class HelperBot {
       ? this.dom.panel.classList.toggle('is-settings-open')
       : this.dom.panel.classList.toggle('is-settings-open', force);
     return opened;
-  }
-
-  _maybeAutoOpen(prefs) {
-    // v3.25: never auto-open on phones. On a 375px screen the panel
-    // fills the entire viewport which covers everything else the user
-    // came to do. They can still tap the FAB to open it intentionally.
-    // Desktop behavior unchanged.
-    try {
-      if (typeof window !== 'undefined' && typeof window.matchMedia === 'function'
-          && window.matchMedia('(max-width: 767.98px)').matches) {
-        return;
-      }
-    } catch (_e) { /* fall through to old behavior */ }
-    const now = Date.now();
-    const lastDismiss = prefs.dismissedAt || 0;
-    const lastAuto    = prefs.autoOpenedAt || 0;
-    const dayMs       = 24 * 60 * 60 * 1000;
-    if (now - lastDismiss < dayMs) return;
-    if (now - lastAuto < 7 * dayMs && lastAuto !== 0) return;
-    setTimeout(() => {
-      if (!this.dom.panel.hidden) return;
-      this.open();
-      setPref('autoOpenedAt', now);
-    }, 1200);
   }
 
   // ─── Greeting + status ──────────────────────────────────────────
@@ -639,6 +627,7 @@ class HelperBot {
     const convo = getActiveConversation();
     if (!convo) return;
     const user = getCachedUser();
+    const lang = this.i18n?.langTag() || 'en-US';
     const systemPrompt = await buildSystemPrompt({ userMessage: userText, user, history: convo.messages });
     const history = formatHistory(convo.messages.slice(0, -1));   // exclude the just-added user msg
 
@@ -718,6 +707,7 @@ class HelperBot {
       const saved = appendMessage(this.activeConversationId, {
         role: 'assistant',
         content: displayText,
+        lang,
         toolCalls,
         citations
       });
@@ -725,7 +715,7 @@ class HelperBot {
       placeholderEl.replaceWith(buildMessageEl(saved, { userInitials: this._userInitials() }));
       // Voice readback
       if (this.voice && getPrefs().voiceReplies) {
-        try { this.voice.speak(displayText); } catch (_e) {}
+        this._speakReply(displayText, lang);
       }
     }
 
@@ -791,7 +781,7 @@ class HelperBot {
     } else if (action === 'copy') {
       navigator.clipboard?.writeText(msg.content || '').catch(() => {});
     } else if (action === 'speak') {
-      if (this.voice) this.voice.speak(msg.content || '');
+      this._speakReply(msg.content || '', msg.lang || this.i18n?.langTag());
     } else if (action === 'edit' && msg.role === 'user') {
       const newText = prompt(this.t('prompt.edit'), msg.content || '');
       if (newText && newText !== msg.content) {
@@ -964,18 +954,8 @@ class HelperBot {
     const html = document.documentElement;
     // Theme — set exactly one
     ['pb-theme-auto','pb-theme-light','pb-theme-dark'].forEach(c => html.classList.remove(c));
-    // v3.25: on phones, treat 'auto' as 'light'. Many iPhone users have
-    // system dark mode enabled all day; the auto-dark chat panel looked
-    // like a black void to the team. Desktop 'auto' behavior unchanged.
-    // If the user has EXPLICITLY chosen 'dark', we still honor it.
-    let effectiveTheme = prefs.theme || 'auto';
-    try {
-      if (effectiveTheme === 'auto'
-          && typeof window !== 'undefined' && typeof window.matchMedia === 'function'
-          && window.matchMedia('(max-width: 767.98px)').matches) {
-        effectiveTheme = 'light';
-      }
-    } catch (_e) { /* fall through */ }
+    const siteTheme = html.dataset.appearanceResolved || 'light';
+    const effectiveTheme = !prefs.theme || prefs.theme === 'auto' ? siteTheme : prefs.theme;
     html.classList.add(`pb-theme-${effectiveTheme}`);
     // Accent
     ['pb-accent-forest','pb-accent-sky','pb-accent-sunset','pb-accent-lavender'].forEach(c => html.classList.remove(c));
@@ -1033,6 +1013,14 @@ class HelperBot {
     }
   }
 
+  _speakReply(text, lang) {
+    if (!this.voice?.speak(text, lang)) {
+      const language = lang || 'en-US';
+      const message = 'No compatible voice was found ({language}). Add a voice in your device accessibility settings, then reopen the browser.';
+      this._setStatus('idle', window.PNECLocale?.t('speech.noVoice', message, {language}) || message.replace('{language}', language));
+    }
+  }
+
   _applyLang(lang) {
     if (this.i18n && typeof this.i18n.setLang === 'function') this.i18n.setLang(lang);
   }
@@ -1083,14 +1071,3 @@ if (document.readyState === 'loading') {
 } else {
   boot();
 }
-
-// Auto-open when injected into a static page
-// Auto-open on every page load, whether booted via inject or Jekyll layout
-// Auto-open only on the home page
-window.addEventListener('load', function () {
-  var path = window.location.pathname;
-  var isHome = path === '/' || path === '/_includes/poway-live-body.html';
-  if (!isHome) return;
-  var fab = document.getElementById('pnec-bot-fab');
-  if (fab) fab.click();
-}, { once: true });

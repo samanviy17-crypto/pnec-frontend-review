@@ -12,25 +12,25 @@
 
 /* ─── Tokens ───────────────────────────────────────────────────── */
 :root {
-  --pb-bg-fab:        linear-gradient(135deg, #1e8449 0%, #145a32 100%);
+  --pb-bg-fab:        var(--pnec-brand, #61CF70);
   /* v3.7: panel + rail + glass surfaces are now FULLY opaque since
      backdrop-filter blurs were removed for perf. The translucent
      versions are kept around as comments for future reference but
      the live values are solid colors. */
-  --pb-bg-panel:       rgba(255, 255, 255, 0.96);  /* docked panel */
+  --pb-bg-panel:       #ffffff; /* docked panel */
   --pb-bg-panel-solid: #ffffff;                    /* full-opacity for modal/expanded */
-  --pb-bg-rail:        #f8f5f0;                    /* was rgba(248,245,240,0.85) */
-  --pb-bg-glass:       #fafaf6;                    /* was rgba(255,255,255,0.72) */
+  --pb-bg-rail:        #F4FAF6;                    /* was rgba(248,245,240,0.85) */
+  --pb-bg-glass:       #F4FAF6;                    /* was rgba(255,255,255,0.72) */
   --pb-bg-input:      #ffffff;
-  --pb-bg-bot-msg:    #f4f7f5;
-  --pb-bg-user-msg:   linear-gradient(135deg, #1e8449 0%, #145a32 100%);
-  --pb-fg:            #0a1628;
+  --pb-bg-bot-msg:    #F4FAF6;
+  --pb-bg-user-msg:   var(--pb-bg-fab);
+  --pb-fg:            #173E2A;
   /* v3.19 a11y: darkened muted + faint so contrast ratio passes WCAG AA
      against the cream/white surfaces. Was #5a6975 / #8b96a1 — failed
      contrast 2.77:1 on settings help text and segmented buttons. */
   --pb-fg-muted:      #475569;
   --pb-fg-faint:      #5a6470;
-  --pb-fg-on-green:   #ffffff;
+  --pb-fg-on-green:   var(--pnec-brand-ink, #102719);
   --pb-fg-link:       #145a32;
   --pb-border:        rgba(15, 30, 25, 0.10);
   --pb-border-strong: rgba(15, 30, 25, 0.18);
@@ -45,7 +45,7 @@
   --pb-shadow-panel:  0 1px 0 rgba(255,255,255,0.65) inset, 0 8px 22px rgba(0,0,0,0.10), 0 28px 56px rgba(0,0,0,0.18), 0 48px 96px rgba(0,0,0,0.14);
   --pb-radius-panel:  20px;
   --pb-radius-msg:    16px;
-  --pb-font:          'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --pb-font:          var(--pnec-font, 'DM Sans'), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --pb-z-fab:         9990;
   --pb-z-panel:       9995;
   --pb-z-backdrop:    9994;
@@ -101,7 +101,7 @@
 }
 .pnec-bot-fab:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 22px rgba(20, 90, 50, 0.42), 0 18px 40px rgba(20, 90, 50, 0.32), 0 1px 0 rgba(255,255,255,0.32) inset; }
 .pnec-bot-fab:active { transform: translateY(0) scale(0.98); }
-.pnec-bot-fab:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.pnec-bot-fab:focus-visible { outline: 3px solid var(--pnec-accent, #216234); outline-offset: 3px; }
 .pnec-bot-fab[aria-expanded="true"] { transform: scale(0); opacity: 0; pointer-events: none; }
 
 .pnec-bot-fab-icon {
@@ -112,7 +112,7 @@
   border-radius: 50%;
   flex-shrink: 0;
 }
-.pnec-bot-fab-icon svg { width: 16px; height: 16px; color: $beasts-white; }
+.pnec-bot-fab-icon svg { width: 16px; height: 16px; color: inherit; }
 
 .pnec-bot-fab-pulse {
   position: absolute; top: -4px; right: -4px;
@@ -280,7 +280,7 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
   font-size: 0.84rem;
   font-weight: 700;
   color: var(--pb-fg-on-green);
-  background: linear-gradient(135deg, var(--pb-green) 0%, var(--pb-green-deep) 100%);
+  background: var(--pb-bg-fab);
   border: 0;
   border-radius: 9px;
   cursor: pointer;
@@ -825,8 +825,8 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
   color: var(--pb-fg-on-green);
   box-shadow: 0 1px 2px rgba(20, 90, 50, 0.25);
 }
-.pnec-bot-msg.is-user .pnec-bot-msg-bubble a { color: #b9f6ca; }
-.pnec-bot-msg.is-user .pnec-bot-msg-bubble code { background: rgba(255,255,255,0.20); color: $beasts-white; }
+.pnec-bot-msg.is-user .pnec-bot-msg-bubble a { color: inherit; text-decoration: underline; }
+.pnec-bot-msg.is-user .pnec-bot-msg-bubble code { background: rgba(255,255,255,0.20); color: inherit; }
 
 .pnec-bot-msg-bubble p { margin: 0 0 8px; }
 .pnec-bot-msg-bubble p:last-child { margin: 0; }
@@ -1691,18 +1691,21 @@ html.pb-text-large .pnec-bot-transcript {
    ═══════════════════════════════════════════════════════════════════ */
 html.pb-accent-sky .pnec-bot-panel,
 html.pb-accent-sky .pnec-bot-fab {
+  --pb-bg-fab:     #93c5fd;
   --pb-green:       #3b82f6;
   --pb-green-deep:  #1e40af;
   --pb-green-soft:  #dbeafe;
 }
 html.pb-accent-sunset .pnec-bot-panel,
 html.pb-accent-sunset .pnec-bot-fab {
+  --pb-bg-fab:     #fdba74;
   --pb-green:       #e07a3f;
   --pb-green-deep:  #b8531d;
   --pb-green-soft:  #fdebd3;
 }
 html.pb-accent-lavender .pnec-bot-panel,
 html.pb-accent-lavender .pnec-bot-fab {
+  --pb-bg-fab:     #c4b5fd;
   --pb-green:       #8b5cf6;
   --pb-green-deep:  #6d28d9;
   --pb-green-soft:  #ede9fe;
@@ -1711,11 +1714,12 @@ html.pb-accent-lavender .pnec-bot-fab {
 /* ═══════════════════════════════════════════════════════════════════
    HIGH CONTRAST + ALWAYS-ON LABELS
    ═══════════════════════════════════════════════════════════════════ */
-html.pb-high-contrast .pnec-bot-panel {
-  --pb-fg:        #000000;
-  --pb-fg-soft:   #0a0a0a;
-  --pb-fg-faint:  #2a2a2a;
-  --pb-border:    rgba(0, 0, 0, 0.40);
+html.pb-high-contrast .pnec-bot-panel,
+html.pb-high-contrast .pnec-bot-panel * {
+  --pb-fg-soft: var(--pb-fg);
+  --pb-fg-muted: var(--pb-fg);
+  --pb-fg-faint: var(--pb-fg);
+  --pb-border: currentColor;
 }
 html.pb-high-contrast .pnec-bot-panel * { font-weight: 600 !important; }
 html.pb-high-contrast .pnec-bot-segmented,

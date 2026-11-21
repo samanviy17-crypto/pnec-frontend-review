@@ -1,47 +1,90 @@
-// OCS tokens and layout mixins, with scoped PNEC photography/readability extensions.
-$hero-ink: #051421;
-$hero-text: #fff;
-$hero-link: #c0f2f2;
+// Keep the photograph in its own column so the copy uses normal theme contrast.
+body.pnec-home { background: var(--pnec-surface); }
 .pnec-hero {
-  position: relative;
-  isolation: isolate;
-  background: $hero-ink;
-  color: $hero-text;
-  &::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba($hero-ink, .92), rgba($hero-ink, .48)); pointer-events: none; }
+  @include base-grid(2, $spacing-xl);
+  @include responsive-padding($spacing-xl, $spacing-lg);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  max-width: 1440px;
+  margin: 0 auto;
+  background: var(--pnec-bg);
 }
 .pnec-hero-backgrounds {
-  position: absolute; inset: 0; z-index: -2; overflow: hidden;
-  img { position: absolute; inset: 0; width: 100%; height: 100% !important; object-fit: cover; object-position: center; opacity: 0; transition: opacity $transition-slow * 4 ease; }
+  position: relative;
+  min-height: 250px;
+  height: 100%;
+  overflow: hidden;
+  border-radius: $radius-xl;
+  background: var(--pnec-tint);
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100% !important;
+    object-fit: cover;
+    object-position: center 48%;
+    opacity: 0;
+    transition: opacity $transition-slow * 4 ease;
+  }
   img.is-current { opacity: 1; }
 }
 body.pnec-site .pnec-hero-copy {
-  @include main-container(0);
-  @include base-grid(1, $spacing-lg);
-  @include responsive-padding($spacing-xl * 1.5, $spacing-lg);
-  position: relative; max-width: 760px; min-height: 620px;
-  grid-template-columns: minmax(0, 1fr); justify-items: start; align-content: center;
-  h1, h2, h3, p, .pnec-eyebrow { color: $hero-text; margin: 0; }
-  h1 { font-size: clamp(2rem, 4vw, 3.375rem); }
-  h2 { @include responsive-text($text-xxl, 1); }
-  h3 { font-size: 1em; }
-  > p { max-width: 52ch; }
-  .pnec-hero-tip a { color: $hero-link; }
+  @include base-grid(1, $spacing-sm);
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: start;
+  h1, p { margin: 0; }
+  h1 { font-size: clamp(2rem, 3.8vw, 3.3rem); max-width: 18ch; line-height: 1.13; }
+  > p:not(.pnec-eyebrow) { max-width: 48ch; color: var(--pnec-muted); }
+  .pnec-hero-actions, .pnec-hero-tools { @include inline-container(flex, $spacing-sm); flex-wrap: wrap; }
 }
 .pnec-hero-tip {
   @include base-grid(1, $spacing-xxs);
   grid-template-columns: minmax(0, 1fr);
-  width: 100%; border-top: 1px solid rgba($hero-text, .4); padding-top: $spacing-lg;
+  width: 100%;
+  h2, p { margin: 0; }
+  align-content: start;
+  .pnec-hero-source { margin-block: $spacing-sm; }
   #weekly-tip-content { display: grid; gap: $spacing-xxs; overflow-wrap: anywhere; }
 }
 body.pnec-site .pnec-hero-source { font-size: $text-md; }
-body.pnec-site .pnec-hero-pause {
-  @include base-button;
-  background: transparent; color: $hero-text; border-color: rgba($hero-text, .6);
-  border-radius: $radius-sm; padding: $spacing-xxs $spacing-sm; min-height: 44px; font: inherit;
-  &:hover { background: rgba($hero-ink, .8); }
+body.pnec-site .pnec-hero-tools {
+  .pnec-hero-pause {
+    color: var(--pnec-accent);
+    padding-inline: $spacing-sm;
+    gap: $spacing-xs;
+    font-size: $text-md;
+    &:hover { background: var(--pnec-tint); }
+  }
+
+  .pnec-bot-fab-inline {
+    @include text-button;
+    position: relative;
+    inset: auto;
+    z-index: auto;
+    height: auto;
+    min-height: 44px;
+    padding: $spacing-xxs $spacing-sm;
+    gap: $spacing-xs;
+    color: var(--pnec-accent);
+    background: var(--pnec-surface);
+    border-color: var(--pnec-line);
+    box-shadow: none;
+    font-size: $text-md;
+
+    &:hover { background: var(--pnec-tint); transform: none; }
+    .pnec-bot-fab-label { display: inline; }
+    .pnec-bot-fab-pulse { display: none; }
+    .pnec-bot-fab-icon { background: var(--pnec-bg); }
+  }
 }
-body.pnec-site .pnec-photo-credit {
-  position: relative; margin: 0; padding: $spacing-sm $spacing-lg;
-  color: $hero-text; font-size: $text-sm; background: rgba($hero-ink, .7);
-  a { color: $hero-link; }
+.pnec-photo-credit {
+  margin-top: $spacing-lg;
+  font-size: $text-md;
+  color: var(--pnec-muted);
+  summary { width: fit-content; cursor: pointer; padding-block: $spacing-sm; }
+}
+@media (max-width: $breakpoint-mobile) {
+  .pnec-hero { grid-template-columns: minmax(0, 1fr); gap: $spacing-lg; }
+  .pnec-hero-backgrounds { min-height: 0; height: auto; aspect-ratio: 2 / 1; }
 }

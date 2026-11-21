@@ -37,7 +37,7 @@
   function closeMobile(restore = false) {
     const wasOpen = nav.classList.contains('is-open');
     mobile.setAttribute('aria-expanded', 'false');
-    mobile.setAttribute('aria-label', 'Open navigation');
+    window.PNECLocale.attribute(mobile,'aria-label','Open navigation');
     nav.classList.remove('is-open');
     header.removeAttribute('role'); header.removeAttribute('aria-modal'); header.removeAttribute('aria-label');
     backdrop.hidden = true;
@@ -50,9 +50,9 @@
     const opening = mobile.getAttribute('aria-expanded') !== 'true';
     closeMobile();
     if (opening) {
-      mobile.setAttribute('aria-expanded', 'true'); mobile.setAttribute('aria-label', 'Close navigation');
+      mobile.setAttribute('aria-expanded', 'true'); window.PNECLocale.attribute(mobile,'aria-label','Close navigation');
       nav.classList.add('is-open'); backdrop.hidden = false;
-      header.setAttribute('role', 'dialog'); header.setAttribute('aria-modal', 'true'); header.setAttribute('aria-label', 'Site navigation');
+      header.setAttribute('role', 'dialog'); header.setAttribute('aria-modal', 'true'); header.setAttribute('aria-label', window.PNECLocale.t('Site navigation'));
       document.body.classList.add('pnec-drawer-open');
       [...document.body.children].filter(node => node !== header && node !== backdrop && !['SCRIPT','STYLE','LINK'].includes(node.tagName)).forEach(node => {
         isolated.push([node, node.inert]); node.inert = true;

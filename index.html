@@ -13,20 +13,17 @@ body_class: pnec-home
     <p>PNEC is a volunteer, community-based organization that promotes emergency preparedness, response, and recovery for the Poway community.</p>
     <a class="ocs-button primary" href="{{ '/pages/about.html' | relative_url }}">Learn More <span aria-hidden="true">→</span></a>
   </section>
-  <section class="ocs-card">
-    <p class="pnec-eyebrow">Choose your next step</p><h2>Preparedness starts here</h2>
-    <p>Build your kit, make a household plan, or find your neighborhood.</p>
-    <a href="{{ '/pages/checklist.html' | relative_url }}">Open your preparedness tools →</a>
-  </section>
+  {% include weekly-preparedness-tip.html %}
 </div>
 <section class="pnec-container pnec-home-resources" aria-labelledby="resources-title">
   <h2 id="resources-title">Stay connected. Stay prepared.</h2>
   <div class="pnec-resource-grid">
-    <a class="ocs-card" href="{{ '/pages/community-events-and-activities.html' | relative_url }}"><h3>Community Events</h3><p>Find current PNEC activities and participation information.</p><span aria-hidden="true">→</span></a>
-    <a class="ocs-card" href="{{ '/pages/preparedness-resources.html' | relative_url }}"><h3>Emergency Resources</h3><p>Explore household planning guides and local safety information.</p><span aria-hidden="true">→</span></a>
-    <a class="ocs-card" href="{{ '/pages/find-your-neighborhood.html' | relative_url }}"><h3>Your Neighborhood</h3><p>Find neighborhood information and connect with local resources.</p><span aria-hidden="true">→</span></a>
+    <a class="ocs-card" href="{{ '/pages/community-events-and-activities.html' | relative_url }}"><svg class="pnec-resource-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 7h16v13H4zM4 11h16M8 4v5m8-5v5"/></svg><h3>Community Events</h3><p>Find current PNEC activities and participation information.</p><span aria-hidden="true">→</span></a>
+    <a class="ocs-card" href="{{ '/pages/preparedness-resources.html' | relative_url }}"><svg class="pnec-resource-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 6v15m0-15C9 4 5 4 2 5v14c3-1 7-1 10 2 3-3 7-3 10-2V5c-3-1-7-1-10 1z"/></svg><h3>Emergency Resources</h3><p>Explore household planning guides and local safety information.</p><span aria-hidden="true">→</span></a>
+    <a class="ocs-card" href="{{ '/pages/find-your-neighborhood.html' | relative_url }}"><svg class="pnec-resource-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0zM14 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/></svg><h3>Your Neighborhood</h3><p>Find neighborhood information and connect with local resources.</p><span aria-hidden="true">→</span></a>
   </div>
   <p class="pnec-account-note">Saving household plans, quiz results, volunteer signups, and hazard reports requires an account.</p>
+  {% include home-photo-credits.html %}
 </section>
 
 {% include reading-controls.html class="pnec-container" %}

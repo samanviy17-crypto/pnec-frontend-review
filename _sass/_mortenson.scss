@@ -1,13 +1,21 @@
 // Extends the existing OCS dashboard-like card/grid shell, no parallel framework.
+$pnec-default-surface: #FFFFFF;
+$pnec-default-bg: #F4FAF6;
+$pnec-default-text: #173E2A;
+$pnec-default-accent: #247347;
+
 html {
-  --pnec-surface: #fff; --pnec-bg: #f7f9fb; --pnec-text: #10213a;
-  --pnec-muted: #43566b; --pnec-line: #cbd9df; --pnec-accent: #066b76;
+  color-scheme: light;
+  --pnec-brand: #61CF70; --pnec-brand-ink: #{$pnec-default-text};
+  --pnec-surface: #{$pnec-default-surface}; --pnec-bg: #{$pnec-default-bg}; --pnec-text: #{$pnec-default-text};
+  --pnec-tint: #DDF2FA;
+  --pnec-muted: #1B4332; --pnec-line: #b7ccbf; --pnec-accent: #{$pnec-default-accent};
   --pnec-font: Arial, sans-serif; --pnec-size: 16px; --pnec-leading: 1.6;
 }
 html[data-appearance-resolved="dark"] {
   color-scheme: dark;
-  --pnec-surface: #172638; --pnec-bg: #0d1928; --pnec-text: #edf5fb;
-  --pnec-muted: #bdccdc; --pnec-line: #52677d; --pnec-accent: #8bdfdf;
+  --pnec-tint: #142e40; --pnec-surface: #172638; --pnec-bg: #0d1928; --pnec-text: #edf5fb;
+  --pnec-muted: #bdccdc; --pnec-line: #52677d; --pnec-accent: var(--pnec-brand);
 }
 html[data-appearance-background="soft"] { --pnec-bg: #eaf4f3; }
 html[data-appearance-resolved="dark"][data-appearance-background="soft"] { --pnec-bg: #102b30; }
@@ -31,8 +39,8 @@ body.pnec-site {
     &:hover { background: var(--pnec-surface); }
   }
   .pnec-resource-grid p, .pnec-account-note, .pnec-action p { color: var(--pnec-muted); }
-  .pnec-actions { --panel: var(--pnec-surface); --panel-mid: var(--pnec-bg); --ui-border: var(--pnec-line); --pref-text-color: var(--pnec-text); --pref-accent-color: var(--pnec-accent); background: transparent; font-family: inherit; }
-  .pnec-action { background: var(--pnec-surface); }
+  .pnec-actions { --panel: var(--pnec-surface); --panel-mid: var(--pnec-bg); --ui-border: var(--pnec-line); --pref-text-color: var(--pnec-text); --pref-accent-color: var(--pnec-accent); font-family: inherit; }
+
   .pnec-footer strong, .pnec-eyebrow { color: var(--pnec-accent); }
   .page-hero, .vol-hero { padding: 24px $spacing-lg; margin: 0 0 $spacing-lg; background: var(--pnec-surface); color: var(--pnec-text); }
   .page-hero p, .vol-hero p, .vol-hero h1 { color: var(--pnec-text); }

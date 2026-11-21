@@ -2,7 +2,8 @@
 // no OCS account endpoints, Google Translate cookies, or unrelated business logic.
 (() => {
   const key = 'pnec_appearance_v1';
-  const defaults = {theme:'system',preset:'site-default',background:'plain',font:'sans',size:'standard',button:'rounded',spacing:false,motion:false,bgColor:'',textColor:'',accentColor:'',language:'en',audio:{enabled:false,voice:'',rate:1,pitch:1,volume:1}};
+  // A missing scheme is light. Only a saved, explicit system setting follows the OS.
+  const defaults = {theme:'light',preset:'site-default',background:'plain',font:'sans',size:'standard',button:'rounded',spacing:false,motion:false,bgColor:'',textColor:'',accentColor:'',language:'en',audio:{enabled:false,voice:'',rate:1,pitch:1,volume:1}};
   const presets = ['site-default','midnight','light','green','sepia','cyberpunk','ocean','sunset'];
   const choices = {theme:['system','light','dark'],preset:presets,background:['plain','soft','grid'],font:['sans','serif','mono'],size:['standard','large','extra'],button:['rounded','square','pill'],language:['en','es']};
   const root = document.documentElement;
@@ -39,48 +40,27 @@
     // User-picked colors are validated hex-only custom-property values; all layout
     // and preset styling stays in Sass. Color previews require runtime tokens.
     Object.entries(colors).forEach(([name,prop]) => {root.style.removeProperty(prop); if (current[name]) root.style.setProperty(prop,current[name]);});
-    root.style.removeProperty('--pnec-surface'); root.style.removeProperty('--pnec-muted');
-    if (current.bgColor) root.style.setProperty('--pnec-surface',current.bgColor);
+    root.style.removeProperty('--pnec-tint'); root.style.removeProperty('--pnec-surface'); root.style.removeProperty('--pnec-muted');
+    if (current.bgColor) { root.style.setProperty('--pnec-surface',current.bgColor); root.style.setProperty('--pnec-tint',current.bgColor); }
     if (current.textColor) root.style.setProperty('--pnec-muted',current.textColor);
     let p = palette();
     if(Object.keys(colors).some(name=>current[name]) && (contrast(p.bgColor,p.textColor)<4.5 || contrast(p.bgColor,p.accentColor)<4.5)) {
       // Invalid/corrupt persisted palettes fall back to the selected preset.
       Object.entries(colors).forEach(([name,prop])=>{current[name]='';root.style.removeProperty(prop);});
-      root.style.removeProperty('--pnec-surface');root.style.removeProperty('--pnec-muted');p=palette();
+      root.style.removeProperty('--pnec-surface');root.style.removeProperty('--pnec-muted');root.style.removeProperty('--pnec-tint');p=palette();
     }
-    root.style.setProperty('--pnec-button-text',contrast(p.accentColor,'#ffffff') >= 4.5 ? '#ffffff' : '#111111');
-    applyLanguage();
+    const buttonText = contrast(p.accentColor,'#ffffff') >= 4.5 ? '#ffffff' : '#000000';
+    const customAccent = current.accentColor || current.preset !== 'site-default';
+    root.style.setProperty('--pnec-action-fill', customAccent ? p.accentColor : 'var(--pnec-brand)');
+    root.style.setProperty('--pnec-action-ink', customAccent ? buttonText : 'var(--pnec-brand-ink)');
+    window.PNECLocale.setLanguage(current.language);
     window.dispatchEvent(new CustomEvent('pnec:appearance-changed', {detail:structuredClone(current)}));
-  }
-  const translations = {
-    Login:'Entrar',Account:'Cuenta',Home:'Inicio',Prepare:'Preparación',Resources:'Recursos',Community:'Comunidad',Profile:'Perfil',
-    'Home Overview':'Resumen de inicio','About PNEC':'Acerca de PNEC','Weekly Preparedness Tip':'Consejo semanal','Our Story':'Nuestra historia','Contact PNEC':'Contacto',
-    'Preparedness Dashboard':'Panel de preparación','Preparedness Checklist':'Lista de preparación','Emergency Kit':'Kit de emergencia','Preparedness Quiz':'Cuestionario de preparación','Household Planning':'Plan del hogar','Find Your PNEC Role':'Encuentre su función',
-    'Resource Library':'Biblioteca de recursos','Fire Safety':'Seguridad contra incendios','Earthquake Safety':'Seguridad ante terremotos','Hazard Information':'Información sobre peligros','Programs and Services':'Programas y servicios','Past Events and Articles':'Eventos y artículos anteriores','Security and Privacy':'Seguridad y privacidad',
-    'Community Events':'Eventos comunitarios','Volunteer Opportunities':'Oportunidades de voluntariado','Volunteer Shifts':'Turnos de voluntariado','Supply Drives':'Colectas de suministros','Neighborhood Resources':'Recursos vecinales','Report a Hazard':'Informar de un peligro','Community Gallery':'Galería comunitaria','News and Updates':'Noticias','Support PNEC':'Apoyar a PNEC',
-    Dashboard:'Panel',Preferences:'Preferencias','Account Settings':'Ajustes de cuenta','Log In / Sign Up':'Iniciar sesión / Registrarse','Account tools':'Herramientas de cuenta',
-    'Your PNEC':'Su PNEC',Appearance:'Apariencia',Language:'Idioma',Audio:'Audio','Pick a starting point':'Elija un punto de partida','Fine-tune':'Personalizar','Color scheme':'Modo de color','Font family':'Tipo de letra','Text size':'Tamaño del texto','Background pattern':'Patrón de fondo','Background color':'Color de fondo','Text color':'Color del texto','Accent color':'Color de acento','Button style':'Estilo de botón','More line spacing':'Más espacio entre líneas','Reduce motion':'Reducir movimiento','Live preview':'Vista previa','Save preferences':'Guardar preferencias','Reset to defaults':'Restablecer valores','Site language':'Idioma del sitio','Save language':'Guardar idioma','Reset to English':'Restablecer inglés',
-    'Enable text-to-speech':'Activar lectura en voz alta',Voice:'Voz','Speech speed':'Velocidad',Pitch:'Tono',Volume:'Volumen','Test text':'Texto de prueba','Test Voice':'Probar voz','Save audio':'Guardar audio','Reset audio':'Restablecer audio',Listen:'Escuchar','Read page':'Leer página','Read selected text':'Leer texto seleccionado','Pause speech':'Pausar voz','Stop speech':'Detener voz',
-    'preferences-intro':'Personalice PNEC. Estas preferencias se guardan en este navegador y están disponibles sin una cuenta.',
-    'theme-intro':'Elija un tema y personalícelo. Las opciones se guardan automáticamente; los colores personalizados se muestran primero en la vista previa y se aplican con Guardar preferencias.',
-    'language-coverage':'El idioma se aplica a las etiquetas revisadas de navegación y preferencias. Las guías, el contenido de usuarios, los formularios y los mensajes de la API conservan su idioma original. No se ofrece traducción automática de páginas.',
-    'audio-intro':'Escuche el texto seleccionado o el contenido principal de una página cuando usted lo decida. El audio nunca comienza automáticamente. Las voces disponibles dependen del navegador y del sistema operativo.'
-  };
-  const english = new WeakMap();
-  function applyLanguage() {
-    root.dataset.siteLanguage = current.language;
-    // Main content retains lang=en; mark only the reviewed translated labels.
-    document.querySelectorAll('[data-i18n]').forEach(node => {
-      if (!english.has(node)) english.set(node,node.textContent);
-      node.textContent = current.language === 'es' ? translations[node.dataset.i18n] || english.get(node) : english.get(node);
-      node.lang = current.language === 'es' && translations[node.dataset.i18n] ? 'es' : 'en';
-    });
   }
   function save(statusId='appearance-status', message='Preferences saved in this browser.') {
     apply();
     try {localStorage.setItem(key,JSON.stringify(current));}
     catch {message = 'Preferences applied for this page. Browser storage is unavailable.';}
-    const status=document.getElementById(statusId); if (status) status.textContent=message;
+    const status=document.getElementById(statusId); if (status) window.PNECLocale.text(status,message);
   }
   let form, colorDraft = null;
   function sync() {
@@ -88,7 +68,13 @@
     Object.keys(choices).concat(['spacing','motion']).forEach(name => {const control=form.elements.namedItem(name); if (control) {if (control.type==='checkbox') control.checked=current[name]; else control.value=current[name];}});
     const p=colorDraft || palette();
     Object.keys(colors).forEach(name => {form.elements.namedItem(name).value=colorDraft ? p[name] : current[name] || p[name];});
-    document.querySelectorAll('[data-theme]').forEach(button => button.setAttribute('aria-pressed',String(button.dataset.theme===current.preset)));
+    const defaultActive = current.theme === defaults.theme && current.background === defaults.background
+      && !Object.keys(colors).some(name => current[name]);
+    document.querySelectorAll('[data-theme]').forEach(button => {
+      const active = button.dataset.theme === current.preset &&
+        (current.preset !== 'site-default' || defaultActive);
+      button.setAttribute('aria-pressed', String(active));
+    });
     const check=document.getElementById('appearance-contrast');
     const textRatio=contrast(p.bgColor,p.textColor), accentRatio=contrast(p.bgColor,p.accentColor);
     check.textContent=`Text: ${textRatio.toFixed(2)}:1. Accent: ${accentRatio.toFixed(2)}:1. ` + (textRatio>=4.5 && accentRatio>=4.5 ? 'Good contrast.' : 'Low contrast: choose more distinct colors before saving.');
@@ -105,7 +91,8 @@
     document.querySelectorAll('[data-theme]').forEach(button=>button.addEventListener('click',()=>{
       colorDraft=null;document.querySelector('.pnec-live-preview').removeAttribute('style');
       current.preset=button.dataset.theme;
-      current.theme=current.preset==='site-default'?'system':['light','sepia','sunset'].includes(current.preset)?'light':'dark';
+      current.theme=['site-default','light','sepia','sunset'].includes(current.preset)?'light':'dark';
+      if (current.preset === 'site-default') current.background = defaults.background;
       current.font=current.preset==='sepia'?'serif':current.preset==='cyberpunk'?'mono':'sans';
       Object.keys(colors).forEach(name=>{current[name]='';});save();sync();
     }));
@@ -115,7 +102,8 @@
         colorDraft=Object.fromEntries(Object.keys(colors).map(key=>[key,form.elements.namedItem(key).value]));
         const preview=document.querySelector('.pnec-live-preview');
         Object.entries(colors).forEach(([key,prop])=>preview.style.setProperty(prop,colorDraft[key]));
-        preview.style.setProperty('--pnec-button-text',contrast(colorDraft.accentColor,'#ffffff')>=4.5?'#ffffff':'#111111');
+        preview.style.setProperty('--pnec-action-fill',colorDraft.accentColor);
+        preview.style.setProperty('--pnec-action-ink',contrast(colorDraft.accentColor,'#ffffff')>=4.5?'#ffffff':'#000000');
         sync();
       }
     });

@@ -30,6 +30,7 @@ function renderKitCategories(categories, state) {
       </div>
     </div>`
   ).join('');
+  window.PNECLocale?.scanStatic(grid);
 }
 
 /**

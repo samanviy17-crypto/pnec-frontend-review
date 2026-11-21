@@ -16,14 +16,14 @@ html { scroll-padding-top: $pnec-top-height + $spacing-lg; }
   .site-nav { flex: 1; display: block; float: none; position: static; min-width: 0; background: transparent; border: 0; }
   .pnec-primary { @include inline-container(flex, $spacing-xxs); }
   .page-link { @include text-button; min-height: 48px; height: auto; margin: 0; padding: $spacing-xs $spacing-sm; background: transparent; color: var(--pnec-text); font: 700 1.1rem/1.4 var(--pnec-font); text-decoration: none; border: 0; }
-  .page-link:hover, .page-link[aria-current] { background: var(--pnec-bg); color: var(--pnec-accent); transform: none; opacity: 1; box-shadow: inset 0 -3px var(--pnec-accent); }
+  .page-link:hover, .page-link[aria-current] { background: var(--pnec-bg); color: var(--pnec-accent); transform: none; opacity: 1; box-shadow: inset 0 -3px var(--pnec-action-fill, var(--pnec-brand)); }
   .pnec-context { position: fixed; inset: $pnec-top-height auto 0 0; width: $pnec-sidebar-width; overflow-y: auto; padding: $spacing-xl $spacing-md; border-right: 1px solid var(--pnec-line); background: var(--pnec-surface); }
   .pnec-context h2 { font-size: $text-xl; margin: 0 0 $spacing-md; color: var(--pnec-text); }
   .pnec-context ul { list-style: none; padding: 0; margin: 0; }
   .pnec-context li { list-style: none; padding: 0; margin: 0; }
   .pnec-context a, .pnec-context button, .pnec-context summary { display: block; width: 100%; min-height: 44px; padding: $spacing-xs $spacing-sm; border: 0; border-radius: $radius-sm; color: var(--pnec-text); background: transparent; font: inherit; font-size: .95em; text-align: left; text-decoration: none; white-space: normal; overflow-wrap: anywhere; cursor: pointer; }
   .pnec-context summary { display: list-item; margin-left: $spacing-md; width: calc(100% - #{$spacing-md}); }
-  .pnec-context a:hover, .pnec-context button:hover, .pnec-context a[aria-current] { background: var(--pnec-bg); color: var(--pnec-accent); box-shadow: inset 3px 0 var(--pnec-accent); }
+  .pnec-context a:hover, .pnec-context button:hover, .pnec-context a[aria-current] { background: var(--pnec-bg); color: var(--pnec-accent); box-shadow: inset 3px 0 var(--pnec-action-fill, var(--pnec-brand)); }
   .pnec-context details ul { padding-left: $spacing-sm; border-left: 1px solid var(--pnec-line); }
   .pnec-context .pnec-account, .pnec-reading-tools { border-top: 1px solid var(--pnec-line); margin-top: $spacing-lg; padding-top: $spacing-lg; }
   .pnec-reading-tools p { font-size: $text-sm; }
