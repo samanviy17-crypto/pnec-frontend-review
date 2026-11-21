@@ -624,5 +624,7 @@
   "tip.general": "Orientación general de preparación. Esta sección no muestra condiciones ni alertas en tiempo real.",
   "tip.fema": "Guía de FEMA para preparar un kit de emergencia",
   "tip.published.week": "Orientación de PNEC para la semana del {date}. Esta sección no muestra condiciones ni alertas en tiempo real.",
-  "tip.published": "Orientación de preparación de PNEC. Esta sección no muestra condiciones ni alertas en tiempo real."
+  "tip.published": "Orientación de preparación de PNEC. Esta sección no muestra condiciones ni alertas en tiempo real.",
+  "Answer each question to see your score and suggested next steps.": "Responda cada pregunta para ver su puntuación y los próximos pasos sugeridos.",
+  "Record your household size, meeting point and evacuation needs in your PNEC account.": "Registre cuántas personas viven en su hogar, su punto de encuentro y sus necesidades de evacuación en su cuenta de PNEC."
 }

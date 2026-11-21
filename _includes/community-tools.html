@@ -1,3 +1,9 @@
 <section class="community-tools" data-community-tools="{{ include.features }}" aria-label="Community preparedness tools">
+  {% if include.preparedness_builder %}
+    {% assign assessment = site.data.pnec_assessment.sections[0].cells[0].blocks[0].settings %}
+    {% assign household = site.data.pnec_household_plan.sections[0].cells[0].blocks[0].settings %}
+    <template data-preparedness-presentation="quiz" data-title="{{ assessment.text | escape }}" data-description="{{ assessment.subtitle | escape }}"></template>
+    <template data-preparedness-presentation="household" data-title="{{ household.text | escape }}" data-description="{{ household.subtitle | escape }}"></template>
+  {% endif %}
   <p class="community-loading" role="status">Loading community tools…</p>
 </section>

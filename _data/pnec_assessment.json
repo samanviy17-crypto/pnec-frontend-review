@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "kind": "ocs-ui-page",
+  "page": {
+    "title": "Preparedness assessment",
+    "description": "Synthetic PNEC component preview. No resident data.",
+    "course": "csp",
+    "width": "contained"
+  },
+  "sections": [
+    {
+      "type": "stack",
+      "settings": {
+        "style": "tint"
+      },
+      "cells": [
+        {
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "text": "Preparedness assessment",
+                "level": "2",
+                "subtitle": "Answer each question to see your score and suggested next steps."
+              }
+            },
+            {
+              "type": "keypoints",
+              "settings": {
+                "items": [
+                  {
+                    "title": "Example question",
+                    "text": "Do you have a ready emergency kit?"
+                  },
+                  {
+                    "title": "Example answer",
+                    "text": "Yes. This sample does not submit an answer or calculate a score."
+                  }
+                ]
+              }
+            },
+            {
+              "type": "link_cards",
+              "settings": {
+                "items": [
+                  {
+                    "kicker": "PNEC",
+                    "title": "Open assessment",
+                    "text": "Open the PNEC website to sign in and use the secure tool.",
+                    "url": "https://powaynec.opencodingsociety.com/pages/checklist.html#preparedness-quiz"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

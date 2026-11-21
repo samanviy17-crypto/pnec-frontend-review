@@ -70,8 +70,15 @@
     link.href = (window.PNEC_SITE_BASE || '') + '/pages/register.html?next=' + encodeURIComponent(location.pathname + location.hash) + '#login';
   };
 
-  async function household(parent) {
-    const node = section(parent, 'Your household plan');
+  function preparednessSection(parent, feature, fallbackTitle, presentations) {
+    const presentation = presentations[feature];
+    const node = section(parent, presentation?.title || fallbackTitle);
+    if (presentation?.description) el('p', presentation.description, node);
+    return node;
+  }
+
+  async function household(parent, presentations) {
+    const node = preparednessSection(parent, 'household', 'Your household plan', presentations);
     if (!user) return loginNote(node);
     const record = await api('/preparedness');
     const f = form(node, 'Save household plan', async data => {
@@ -85,8 +92,8 @@
     f.finish(); el('p', 'Your plan is private to your account. Review your neighborhood resources before making a plan.', node);
   }
 
-  async function quiz(parent) {
-    const node = section(parent, 'Preparedness assessment');
+  async function quiz(parent, presentations) {
+    const node = preparednessSection(parent, 'quiz', 'Preparedness assessment', presentations);
     node.id = 'preparedness-quiz';
     if (location.hash === '#preparedness-quiz') node.scrollIntoView({block: 'center'});
     if (!user) {loginNote(node); return;}
@@ -321,9 +328,13 @@
     try { neighborhoods = await fetchNeighborhoodsForSelect(); } catch (_) { /* individual tools show their scoped errors */ }
     const builders = {household, quiz, tasks, checkins, hazards, drives, weekly, feedback, language, coordination, 'tips-admin':tipsAdmin};
     for (const root of roots) {
+      const presentations = Object.fromEntries(
+        Array.from(root.querySelectorAll('template[data-preparedness-presentation]'), node =>
+          [node.dataset.preparednessPresentation, {title: node.dataset.title, description: node.dataset.description}])
+      );
       root.replaceChildren();
       for (const name of root.dataset.communityTools.split(' ')) {
-        try {await builders[name]?.(root);} catch(error) {const message = status(root); message.textContent = `Could not load ${name}: ${error.message} Use Reload to try again.`; message.className = 'community-error'; message.setAttribute('role','alert'); button(root,'Reload these tools',()=>location.reload());}
+        try {await builders[name]?.(root, presentations);} catch(error) {const message = status(root); message.textContent = `Could not load ${name}: ${error.message} Use Reload to try again.`; message.className = 'community-error'; message.setAttribute('role','alert'); button(root,'Reload these tools',()=>location.reload());}
       }
     }
   }
