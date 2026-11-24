@@ -5,7 +5,7 @@
 const API_BASE = (
   location.hostname === 'localhost' || location.hostname === '127.0.0.1'
 )
-  ? 'http://127.0.0.1:8425'
+  ? (window.PNEC_API_BASE || `http://${location.hostname}:8425`)
   : (window.PNEC_API_BASE || 'https://api.pnec-review.invalid');
 
 // ─── Error type enum ──────────────────────────────────────────────────────────
@@ -26,8 +26,8 @@ const ERROR_MESSAGES = Object.freeze({
   [ERROR_TYPES.NOT_FOUND]:      'The requested resource was not found.',
   [ERROR_TYPES.INVALID_DATA]:   'Please check your information and try again.',
   [ERROR_TYPES.HTTP_ERROR]:     'Something went wrong. Please try again.',
-  [ERROR_TYPES.NETWORK_ERROR]:  'Unable to connect. Check your internet connection.',
-  [ERROR_TYPES.SERVER_ERROR]:   'An unexpected error occurred. Please try again later.',
+  [ERROR_TYPES.NETWORK_ERROR]:  ((location.hostname === 'localhost' || location.hostname === '127.0.0.1') ? `Cannot reach the local PNEC backend at ${API_BASE}. It may be stopped or blocked by CORS. Start the disposable local backend, then retry.` : 'Cannot reach the PNEC service. The service or network may be unavailable; retry shortly.'),
+  [ERROR_TYPES.SERVER_ERROR]:   'The PNEC backend is unavailable or returned a server error. Please retry shortly.',
   DEFAULT:                      'Something went wrong. Please try again.',
 });
 

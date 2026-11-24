@@ -7,7 +7,7 @@ export const baseurl = "{{ site.baseurl }}";
 
 export var pythonURI;
 if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-    pythonURI = "http://localhost:8425";  // Same URI for localhost or 127.0.0.1
+    pythonURI = (window.PNEC_API_BASE || `http://${location.hostname}:8425`);  // Same-site cookies on either loopback hostname.
 } else {
     pythonURI = window.PNEC_API_BASE || "https://api.pnec-review.invalid";
 

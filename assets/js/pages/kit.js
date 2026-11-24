@@ -155,6 +155,7 @@ function bindItemClicks() {
 
   // Keyboard support
   grid.addEventListener('keydown', event => {
+    if (event.target.closest('.kit-item-expand')) return;
     if (event.key === 'Enter' || event.key === ' ') {
       const itemEl = event.target.closest('.kit-item');
       if (itemEl) { event.preventDefault(); handleItemToggle(itemEl.dataset.itemId); }

@@ -1,0 +1,9 @@
+{%- comment -%}Shared route-to-section classification, including non-menu routes.{%- endcomment -%}
+{% assign active_category = 'resources' %}
+{% for group in site.data.ocs_navigation %}{% for item in group.links %}{% assign item_path = item.url | split: '#' | first %}{% if page.url == item_path %}{% assign active_category = group.id %}{% endif %}{% endfor %}{% endfor %}
+{% if page.url == '/pages/blog-post.html' %}{% assign active_category = 'community' %}{% endif %}
+{% if page.url == '/pages/onboarding.html' %}{% assign active_category = 'profile' %}{% endif %}
+{% if page.url == '/pages/fire-safety.html' %}{% assign active_category = 'resources' %}{% endif %}
+{% if page.url == '/pages/checklist.html' %}{% assign active_category = 'prepare' %}{% endif %}
+{% if page.url contains '/pages/admin' or page.url == '/pages/dashboard.html' or page.url == '/pages/upload.html' or page.url == '/pages/manage-events.html' or page.url contains 'password' or page.url == '/pages/register.html' %}{% assign active_category = 'profile' %}{% endif %}
+{{- active_category -}}

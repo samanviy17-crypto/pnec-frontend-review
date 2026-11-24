@@ -1,0 +1,6 @@
+Release inputs: frontend=/private/tmp/pnec-111326-main; backend=/Users/samanviyachareni/PNEC-Workspace/pnec-backend-review; site=/private/var/folders/_g/p61_lz8s2935chrz1ck2lhk40000gp/T/pnec-frontend-release-3y70tr7g/site
+Traceback (most recent call last):
+  File "/private/tmp/pnec-111326-main/scripts/test-production-contract.py", line 18, in <module>
+    assert not (FRONTEND_ROOT / '_config.pages.yml').exists()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

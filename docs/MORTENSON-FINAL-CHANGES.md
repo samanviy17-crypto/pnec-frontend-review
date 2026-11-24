@@ -1,0 +1,84 @@
+# Exact changes since 3f41a99
+
+Baseline: `3f41a99e8bb459e9f4d6ae5a754cd73b878aeb18` on the existing feature branch.
+
+- Fix duplicated resources tools and a stale navbar-response race affecting new authentication.
+- Repair test artifact API origin and update obsolete video/config assertions to the documented redesign/review contract; retain authorization assertions.
+- Restore Pages API validation for conditional local runtime configuration.
+- Fix keyboard/ARIA/contrast findings in kit, Profile, resources, map, registration, volunteer and legacy links with shared Sass tokens and accessible semantics.
+- Add explicit disposable-backend resume and announcement compatibility support; supply and independently test a backend registration/migration/readiness patch without editing backend main.
+- Add real multi-resident privacy, volunteer and notice journeys; three native browser engines; anonymous/authenticated axe audits; current screenshots and a Mortenson demonstration/release guide.
+- Preserve five top categories, conditional sidebars, three-photo hero, weekly tip, existing PNEC authentication/security, sources and all routes.
+
+The complete file inventory below includes evidence. Run `git diff --stat 3f41a99..HEAD`
+for the final committed comparison. No main, merge, deployment or production-credential changes.
+
+- `README.md`
+- `_includes/poway-neighborhood-map.html`
+- `_includes/runtime-config.html`
+- `_sass/_ocs-pnec.scss`
+- `_sass/_review-accessibility.scss`
+- `assets/js/api/auth-api.js`
+- `assets/js/pages/kit.js`
+- `assets/js/pages/navbar.js`
+- `assets/js/ui/kit-ui.js`
+- `docs/MORTENSON-DEMO.md`
+- `docs/MORTENSON-FINAL-CHANGES.md`
+- `docs/MORTENSON-REDESIGN.md`
+- `docs/MORTENSON-RELEASE-AUDIT.md`
+- `docs/backend-patches/register-announcements.patch`
+- `docs/mortenson-final-review/README.md`
+- `docs/mortenson-final-review/accessibility-results.json`
+- `docs/mortenson-final-review/authenticated-accessibility-results.json`
+- `docs/mortenson-final-review/backend-patch-results.json`
+- `docs/mortenson-final-review/backend-patch-run.txt`
+- `docs/mortenson-final-review/backend-tests.txt`
+- `docs/mortenson-final-review/browser-engine-results.json`
+- `docs/mortenson-final-review/checklist-1280.png`
+- `docs/mortenson-final-review/checklist-390.png`
+- `docs/mortenson-final-review/community-events-and-activities-1280.png`
+- `docs/mortenson-final-review/community-events-and-activities-390.png`
+- `docs/mortenson-final-review/fire-safety-1280.png`
+- `docs/mortenson-final-review/fire-safety-390.png`
+- `docs/mortenson-final-review/home-1280.png`
+- `docs/mortenson-final-review/home-390.png`
+- `docs/mortenson-final-review/integration-results.json`
+- `docs/mortenson-final-review/integration-run.txt`
+- `docs/mortenson-final-review/javascript-tests.txt`
+- `docs/mortenson-final-review/preparedness-live-results.json`
+- `docs/mortenson-final-review/preparedness-resources-1280.png`
+- `docs/mortenson-final-review/preparedness-resources-390.png`
+- `docs/mortenson-final-review/profile-1280.png`
+- `docs/mortenson-final-review/profile-390.png`
+- `docs/mortenson-final-review/project-build.txt`
+- `docs/mortenson-final-review/redesign-fire-login-ui-results.json`
+- `docs/mortenson-final-review/redesign-mortenson-results.json`
+- `docs/mortenson-final-review/redesign-profile-preferences-results.json`
+- `docs/mortenson-final-review/redesign-results.json`
+- `docs/mortenson-final-review/redesign-run.txt`
+- `docs/mortenson-final-review/register-1280.png`
+- `docs/mortenson-final-review/register-390.png`
+- `docs/mortenson-final-review/settings-1280.png`
+- `docs/mortenson-final-review/settings-390.png`
+- `docs/mortenson-final-review/stakeholder-live-results.json`
+- `docs/mortenson-final-review/volunteer-1280.png`
+- `docs/mortenson-final-review/volunteer-390.png`
+- `pages/about.html`
+- `pages/checklist.html`
+- `pages/community-events-and-activities.html`
+- `pages/donate.html`
+- `pages/kit.html`
+- `pages/preparedness-resources.html`
+- `pages/profile.html`
+- `scripts/build-pages.py`
+- `scripts/local-review-backend.py`
+- `scripts/run-release-tests.py`
+- `scripts/test-account-regression.py`
+- `scripts/test-announcement-backend-patch.py`
+- `scripts/test-authenticated-accessibility.py`
+- `scripts/test-browser-review.py`
+- `scripts/test-mortenson-redesign.py`
+- `scripts/test-production-contract.py`
+- `scripts/test-responsive.py`
+- `scripts/test-review-accessibility.py`
+- `scripts/test-stakeholder-live.py`

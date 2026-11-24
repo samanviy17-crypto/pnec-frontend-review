@@ -1,3 +1,10 @@
+> Current feature-branch review: see [Mortenson demo guide](docs/MORTENSON-DEMO.md),
+> [release audit](docs/MORTENSON-RELEASE-AUDIT.md) and [current evidence](docs/mortenson-final-review/README.md).
+> The full integration runner now passes 10/10. Stakeholder review is ready with
+> disclosed limitations; merging/production deployment is not approved. Historical
+> snapshot/deployment notes below are superseded where the current review guide
+> and REVIEW_DEPLOYMENT.md explicitly say so.
+
 # PNEC isolated review snapshot
 
 This directory contains source only, with no Git history, production secrets,

@@ -1,0 +1,42 @@
+[
+  {
+    "script": "test-pnec-scss.py",
+    "exit_code": 0
+  },
+  {
+    "script": "test-request-worker.py",
+    "exit_code": 0
+  },
+  {
+    "script": "test-quiz.py",
+    "exit_code": 0
+  },
+  {
+    "script": "test-account-regression.py",
+    "exit_code": 0
+  },
+  {
+    "script": "test-profile.py",
+    "exit_code": 1
+  },
+  {
+    "script": "test-community-tools.py",
+    "exit_code": 1
+  },
+  {
+    "script": "test-responsive.py",
+    "exit_code": 1
+  },
+  {
+    "script": "test-production-contract.py",
+    "exit_code": 1
+  },
+  {
+    "script": "test-admin-security.py",
+    "exit_code": 1
+  },
+  {
+    "script": "test-media-release.py",
+    "exit_code": 1
+  }
+]
