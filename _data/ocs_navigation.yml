@@ -1,27 +1,53 @@
-- title: Prepare
+# Five primary categories; all links reuse existing PNEC routes.
+- id: home
+  title: Home
+  url: /
   links:
-    - {title: Preparedness Checklist, url: /pages/checklist.html}
+    - {title: Home Overview, url: /}
+    - {title: About PNEC, url: '/#about-pnec'}
+    - {title: Weekly Preparedness Tip, url: '/#weekly-tip-heading'}
+    - {title: Our Story, url: /pages/about.html}
+    - {title: Contact PNEC, url: /pages/contact.html}
+- id: prepare
+  title: Prepare
+  url: /pages/checklist.html
+  links:
+    - {title: Preparedness Journey, url: '/pages/preparedness-resources.html#preparedness-journey'}
+    - {title: Preparedness Dashboard, url: /pages/checklist.html}
+    - {title: Preparedness Checklist, url: '/pages/checklist.html#kit-checklist'}
+    - {title: Emergency Kit, url: /pages/kit.html}
     - {title: Preparedness Quiz, url: '/pages/checklist.html#preparedness-quiz'}
-    - {title: Household Planning, url: /pages/checklist.html}
-    - {title: Emergency Kit Guide, url: /pages/kit.html}
+    - {title: Household Planning, url: '/pages/checklist.html#household-plan'}
+    - {title: Trees Near Your Home, url: /pages/fire-safety.html}
     - {title: Find Your PNEC Role, url: /role-quiz/}
-- title: Community
+- id: resources
+  title: Resources
+  url: /pages/preparedness-resources.html
   links:
-    - {title: Volunteer Shifts, url: /pages/volunteer.html}
+    - {title: Resource Library, url: /pages/preparedness-resources.html}
+    - {title: Fire Safety, url: /pages/fire-safety.html}
+    - {title: Earthquake Safety, url: '/pages/preparedness-resources.html#earthquake-safety'}
+    - {title: Hazard Information, url: '/pages/preparedness-resources.html#poway-risk-context'}
+    - {title: Programs and Services, url: /pages/programs-and-services.html}
+    - {title: Past Events and Articles, url: /pages/events-archive.html}
+    - {title: Security and Privacy, url: /pages/security.html}
+- id: community
+  title: Community
+  url: /pages/community-events-and-activities.html
+  links:
     - {title: Community Events, url: /pages/community-events-and-activities.html}
+    - {title: Volunteer Opportunities, url: '/pages/volunteer.html#volunteer-opportunities'}
+    - {title: Volunteer Shifts, url: '/pages/volunteer.html#volunteer-shifts'}
+    - {title: Supply Drives, url: '/donation-form/#supply-drives'}
+    - {title: Neighborhood Resources, url: /pages/find-your-neighborhood.html}
     - {title: Report a Hazard, url: '/pages/checklist.html#hazard-reporting'}
-    - {title: Find Your Neighborhood, url: /pages/find-your-neighborhood.html}
     - {title: Community Gallery, url: /pages/gallery.html}
     - {title: News and Updates, url: /pages/blog.html}
     - {title: Support PNEC, url: /donation-form/}
-- title: Resources
+- id: profile
+  title: Profile
+  url: /pages/profile.html
   links:
-    - {title: Preparedness Resources, url: /pages/preparedness-resources.html}
-    - {title: Programs and Services, url: /pages/programs-and-services.html}
-    - {title: Poway Risk Context, url: '/pages/preparedness-resources.html#poway-risk-context'}
-    - {title: Past Events and Articles, url: /pages/events-archive.html}
-    - {title: Security and Privacy, url: /pages/security.html}
-- title: About
-  links:
-    - {title: About PNEC, url: /pages/about.html}
-    - {title: Contact, url: /pages/contact.html}
+    - {title: Dashboard, url: /pages/profile.html}
+    - {title: Preferences, url: /pages/settings.html}
+    - {title: Account Settings, url: '/pages/profile.html#account-settings'}

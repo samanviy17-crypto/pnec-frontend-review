@@ -1,0 +1,113 @@
+// Extends the existing OCS dashboard-like card/grid shell, no parallel framework.
+$pnec-default-surface: #FFFFFF;
+$pnec-default-bg: #F4FAF6;
+$pnec-default-text: #173E2A;
+$pnec-default-accent: #247347;
+
+html {
+  color-scheme: light;
+  --pnec-brand: #61CF70; --pnec-brand-ink: #{$pnec-default-text};
+  --pnec-surface: #{$pnec-default-surface}; --pnec-bg: #{$pnec-default-bg}; --pnec-text: #{$pnec-default-text};
+  --pnec-tint: #DDF2FA;
+  --pnec-muted: #1B4332; --pnec-line: #b7ccbf; --pnec-accent: #{$pnec-default-accent};
+  --pnec-font: Arial, sans-serif; --pnec-size: 16px; --pnec-leading: 1.6;
+}
+html[data-appearance-resolved="dark"] {
+  color-scheme: dark;
+  --pnec-tint: #142e40; --pnec-surface: #172638; --pnec-bg: #0d1928; --pnec-text: #edf5fb;
+  --pnec-muted: #bdccdc; --pnec-line: #52677d; --pnec-accent: var(--pnec-brand);
+}
+html[data-appearance-background="soft"] { --pnec-bg: #eaf4f3; }
+html[data-appearance-resolved="dark"][data-appearance-background="soft"] { --pnec-bg: #102b30; }
+html[data-appearance-font="serif"] { --pnec-font: Georgia, serif; }
+html[data-appearance-font="mono"] { --pnec-font: ui-monospace, monospace; }
+html[data-appearance-size="large"] { --pnec-size: 19px; }
+html[data-appearance-size="extra"] { --pnec-size: 22px; }
+html[data-appearance-spacing="true"] { --pnec-leading: 1.9; }
+body.pnec-site {
+  background: var(--pnec-bg); color: var(--pnec-text);
+  font-family: var(--pnec-font); font-size: var(--pnec-size); line-height: var(--pnec-leading);
+  --panel: var(--pnec-surface); --panel-mid: var(--pnec-bg); --ui-border: var(--pnec-line);
+  --pref-text-color: var(--pnec-text); --pref-bg-color: var(--pnec-surface); --pref-accent-color: var(--pnec-accent);
+  h1,h2,h3,h4,h5 { color: var(--pnec-text); }
+  a { color: var(--pnec-accent); }
+  p { font-size: 1em; }
+  :focus-visible { outline-color: var(--pnec-accent); }
+  .ocs-card, .card, .community-tools > section, .kit-category-card, .pnec-footer,
+  .pnec-about-preview, .vol-role-card, .vol-why-card {
+    background: var(--pnec-surface); color: var(--pnec-text); border-color: var(--pnec-line);
+    &:hover { background: var(--pnec-surface); }
+  }
+  .pnec-resource-grid p, .pnec-account-note, .pnec-action p { color: var(--pnec-muted); }
+  .pnec-actions { --panel: var(--pnec-surface); --panel-mid: var(--pnec-bg); --ui-border: var(--pnec-line); --pref-text-color: var(--pnec-text); --pref-accent-color: var(--pnec-accent); font-family: inherit; }
+
+  .pnec-footer strong, .pnec-eyebrow { color: var(--pnec-accent); }
+  .page-hero, .vol-hero { padding: 24px $spacing-lg; margin: 0 0 $spacing-lg; background: var(--pnec-surface); color: var(--pnec-text); }
+  .page-hero p, .vol-hero p, .vol-hero h1 { color: var(--pnec-text); }
+  .pnec-page-shell { min-height: calc(100vh - 140px); }
+  .pnec-page-heading { padding: 0 0 $spacing-lg; margin-bottom: $spacing-lg; }
+  input:not([type="checkbox"]):not([type="radio"]), textarea, select { background: var(--pnec-surface); color: var(--pnec-text); border: 1px solid var(--pnec-line); font-family: inherit; font-size: 1em; }
+  .pnec-legacy-content .elementor-heading-title { color: var(--pnec-text); }
+}
+html[data-appearance-background="grid"] body.pnec-site { background-image: linear-gradient(rgba(100,140,160,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(100,140,160,.12) 1px,transparent 1px); background-size: 36px 36px; }
+// Hero presentation lives in its own partial; only photo classes change at runtime.
+@import "redesign-hero";
+.pnec-settings-form { display: grid !important; gap: $spacing-sm; max-width: 680px; padding: 24px; select { width: 100%; min-height: 44px; } }
+.pnec-task-panel { @include grid-card-cell; padding: $spacing-lg; margin-bottom: $spacing-lg; background: var(--pnec-surface); color: var(--pnec-text); border-color: var(--pnec-line); summary { cursor: pointer; min-height: 44px; font-weight: 700; } }
+.pnec-task-links { display: flex; gap: $spacing-sm; flex-wrap: wrap; }
+.pnec-resource-search { display: block; max-width: 680px; margin-bottom: $spacing-lg; input { display: block; width: 100%; min-height: 44px; padding: $spacing-xs; } }
+body.pnec-site #pnec-alert-banner { position: static; margin: 0; }
+body.pnec-site .pnec-alert { display: flex; align-items: start; gap: 16px; padding: 16px 24px; color: var(--pnec-text); background: var(--pnec-surface); border-bottom: 2px solid var(--pnec-accent); }
+body.pnec-site .pnec-alert-warning { border-color: #ac6500; }
+body.pnec-site .pnec-alert-danger { border-color: #c43c39; }
+.pnec-alert-copy { flex: 1; }
+body.pnec-site .pnec-alert-dismiss { position: static; background: transparent; color: var(--pnec-text); border: 1px solid var(--pnec-line); min-height: 44px; min-width: 44px; }
+.pnec-alert-meta { display: block; font-size: .85em; }
+html[data-appearance-motion="true"] *, html[data-appearance-motion="true"] *::before, html[data-appearance-motion="true"] *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+@media print { #pnec-site-header, .pnec-drawer-backdrop { display: none !important; } body.pnec-site { padding: 0; } }
+body.pnec-site .ama-topbar { flex-wrap: wrap; }
+body.pnec-site .ama-topbar > div { min-width: 0; }
+body.pnec-site .ama-actions { max-width: 100%; }
+// Neutralize the legacy main gradient and paragraph colors so personal tokens win.
+body.pnec-site #jupiterx-main { background: transparent; }
+body.pnec-site p { color: inherit; }
+body.pnec-site h1, body.pnec-site h2, body.pnec-site h3, body.pnec-site h4, body.pnec-site h5,
+body.pnec-site input, body.pnec-site textarea, body.pnec-site select, body.pnec-site button { font-family: var(--pnec-font); }
+html[data-appearance-resolved="dark"] #pnec-site-header.site-header .site-title img { filter: brightness(0) saturate(100%) invert(90%); }
+// Existing feature layouts opt into personal dark tokens without changing behavior.
+html[data-appearance-resolved="dark"] body.pnec-site {
+  .kit-progress, .checklist-category, .checklist-cat-header, .checklist-item,
+  .auth-form-stack, .auth-tabs, .vol-form-card, .vol-form-shell, .vol-role,
+  .community-tools, .profile-edit-section, .profile-status-section,
+  .profile-signout-section, .avatar-modal, .pnec-nmap-panel, .pnec-nmap-search,
+  .pnec-nmap-legend, .pnec-nmap-footer {
+    background: var(--pnec-surface); color: var(--pnec-text); border-color: var(--pnec-line);
+  }
+  .kit-item-name, .kit-item-why, .kit-progress-label, .checklist-cat-name,
+  .checklist-item-label, .checklist-item-qty, .form-field label, .auth-field label,
+  .auth-tagline, .auth-switch-row, .auth-help-foot, .vol-form label,
+  .vol-section-head p, .vol-role ul.role-meta li strong, .pnec-nmap-sub,
+  .pnec-nmap-search-label, .pnec-nmap-panel-tips, .profile-name,
+  .profile-bio-display { color: var(--pnec-text); }
+  .kit-item.checked .kit-item-name, .checklist-cat-count, .checklist-cat-chevron,
+  .checklist-item-note, .checklist-item-label.checked, .form-field small,
+  .vol-form label .opt, .profile-email { color: var(--pnec-muted); }
+  .kit-item:hover, .checklist-item:hover, .checklist-cat-header:hover { background: var(--pnec-bg); }
+  .auth-tab { color: var(--pnec-text); }
+  .auth-tab.is-active { background: #087c82; color: #fff; }
+  .btn-outline, .btn-ghost, .vol-role-pick { color: var(--pnec-accent); border-color: var(--pnec-line); }
+  .vol-eyebrow { color: var(--pnec-accent); background: var(--pnec-bg); }
+  .vol-section-head p[style], .raven-heading-title[style*="color"] { color: var(--pnec-text) !important; }
+  input::placeholder, textarea::placeholder { color: var(--pnec-muted); opacity: 1; }
+}
+html[data-appearance-resolved="dark"] body.pnec-site {
+  .vol-role p.role-blurb, .vol-role ul.role-meta li, .vol-final-cta p,
+  .auth-eyebrow, .auth-checkbox, .auth-field label { color: var(--pnec-text); }
+  .auth-field input:focus + label, .auth-field input:not(:placeholder-shown) + label,
+  .auth-field select + label { background: var(--pnec-surface); color: var(--pnec-accent); }
+  .pnec-nmap-panel-tips li, .pnec-nmap-foot, .pnec-nmap-suggestions { background: var(--pnec-surface); color: var(--pnec-text); }
+  .community-error { color: #ffb4ab; }
+  #dashboard-access-gate p, #dashboard-access-gate strong { color: var(--pnec-text) !important; }
+}
+html[data-appearance-resolved="dark"] body.pnec-site .pnec-nmap-foot strong { color: var(--pnec-text); }

@@ -21,7 +21,6 @@ let recognizer = null;
 let isListening = false;
 let listenStopTimer = null;
 let interimText = '';
-let cachedVoice = null;
 
 export function isAvailable() {
   return !!SR;
@@ -30,24 +29,18 @@ export function isSpeakAvailable() {
   return !!SS;
 }
 
-function pickVoice() {
-  if (!SS) return null;
-  if (cachedVoice) return cachedVoice;
-  const all = SS.getVoices();
-  if (!all || !all.length) return null;
-  // Prefer en-US natural voices in this order
-  const preferred = ['Google US English', 'Samantha', 'Karen', 'Microsoft Zira', 'Microsoft Aria'];
-  for (const name of preferred) {
-    const v = all.find(x => x.name === name);
-    if (v) { cachedVoice = v; return v; }
-  }
-  cachedVoice = all.find(v => /en-US/i.test(v.lang)) || all[0];
-  return cachedVoice;
+function normalizeTag(tag) {
+  return tag.replace(/_/g, '-').toLowerCase();
 }
 
-if (SS) {
-  // Voices may load async on first call
-  SS.addEventListener?.('voiceschanged', () => { cachedVoice = null; });
+function pickVoice(lang) {
+  const tag = normalizeTag(lang);
+  const language = tag.split('-')[0];
+  const voices = SS.getVoices().filter(voice => normalizeTag(voice.lang).split('-')[0] === language);
+  const exact = voices.filter(voice => normalizeTag(voice.lang) === tag);
+  return exact.find(voice => voice.default) || exact[0]
+    || (language === 'es' && voices.find(voice => /^es-(mx|us)$/.test(normalizeTag(voice.lang))))
+    || voices.find(voice => voice.default) || voices[0];
 }
 
 // ─── Public hooks called from index.js ────────────────────────────
@@ -127,8 +120,8 @@ function stopListen(bot, autoSubmit = false) {
 
 // Speak an assistant response
 let currentUtterance = null;
-export function speak(text) {
-  if (!SS || !text) return;
+export function speak(text, lang = 'en-US') {
+  if (!SS || !text) return false;
   // Stop any in-flight utterance
   try { SS.cancel(); } catch (_e) {}
   // Strip markdown that doesn't read aloud well
@@ -141,24 +134,21 @@ export function speak(text) {
     .replace(/[*_#>]/g, '')
     .replace(/\s+/g, ' ')
     .trim();
-  if (!clean) return;
+  if (!clean) return false;
   const u = new SpeechSynthesisUtterance(clean);
-  const v = pickVoice();
-  if (v) u.voice = v;
+  const v = pickVoice(lang);
+  if (!v) return false;
+  u.voice = v;
+  u.lang = v.lang.replace(/_/g, '-');
   u.rate = 1.02;
   u.pitch = 1.0;
   u.volume = 1.0;
   currentUtterance = u;
-  try { SS.speak(u); } catch (_e) {}
+  try { SS.speak(u); return true; } catch (_e) { return false; }
 }
 
 export function stopSpeaking() {
   if (!SS) return;
   try { SS.cancel(); } catch (_e) {}
   currentUtterance = null;
-}
-
-export function langTag() {
-  // Used by Phase 4 i18n to set recognition language.
-  return 'en-US';
 }

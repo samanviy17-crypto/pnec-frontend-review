@@ -1,0 +1,90 @@
+// Keep the photograph in its own column so the copy uses normal theme contrast.
+body.pnec-home { background: var(--pnec-surface); }
+.ocs__band--photo {
+  @include base-grid(2, $spacing-xl);
+  @include responsive-padding($spacing-xl, $spacing-lg);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  max-width: 1440px;
+  margin: 0 auto;
+  background: var(--pnec-bg);
+}
+.pnec-hero-backgrounds {
+  position: relative;
+  min-height: 250px;
+  height: 100%;
+  overflow: hidden;
+  border-radius: $radius-xl;
+  background: var(--pnec-tint);
+
+  .ocs__band-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100% !important;
+    object-fit: cover;
+    object-position: center 48%;
+    opacity: 0;
+    transition: opacity $transition-slow * 4 ease;
+  }
+  .ocs__band-photo.is-current { opacity: 1; }
+}
+body.pnec-site .ocs__band-panel {
+  @include base-grid(1, $spacing-sm);
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: start;
+  h1, p { margin: 0; }
+  h1 { font-size: clamp(2rem, 3.8vw, 3.3rem); max-width: 18ch; line-height: 1.13; }
+  > p:not(.pnec-eyebrow) { max-width: 48ch; color: var(--pnec-muted); }
+  .pnec-hero-actions, .pnec-hero-tools { @include inline-container(flex, $spacing-sm); flex-wrap: wrap; }
+}
+.pnec-hero-tip {
+  @include base-grid(1, $spacing-xxs);
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  h2, p { margin: 0; }
+  align-content: start;
+  .pnec-hero-source { margin-block: $spacing-sm; }
+  #weekly-tip-content { display: grid; gap: $spacing-xxs; overflow-wrap: anywhere; }
+}
+body.pnec-site .pnec-hero-source { font-size: $text-md; }
+body.pnec-site .pnec-hero-tools {
+  .pnec-hero-pause {
+    color: var(--pnec-accent);
+    padding-inline: $spacing-sm;
+    gap: $spacing-xs;
+    font-size: $text-md;
+    &:hover { background: var(--pnec-tint); }
+  }
+
+  .pnec-bot-fab-inline {
+    @include text-button;
+    position: relative;
+    inset: auto;
+    z-index: auto;
+    height: auto;
+    min-height: 44px;
+    padding: $spacing-xxs $spacing-sm;
+    gap: $spacing-xs;
+    color: var(--pnec-accent);
+    background: var(--pnec-surface);
+    border-color: var(--pnec-line);
+    box-shadow: none;
+    font-size: $text-md;
+
+    &:hover { background: var(--pnec-tint); transform: none; }
+    .pnec-bot-fab-label { display: inline; }
+    .pnec-bot-fab-pulse { display: none; }
+    .pnec-bot-fab-icon { background: var(--pnec-bg); }
+  }
+}
+.pnec-photo-credit {
+  margin-top: $spacing-lg;
+  font-size: $text-md;
+  color: var(--pnec-muted);
+  summary { width: fit-content; cursor: pointer; padding-block: $spacing-sm; }
+}
+@media (max-width: $breakpoint-mobile) {
+  .ocs__band--photo { grid-template-columns: minmax(0, 1fr); gap: $spacing-lg; }
+  .pnec-hero-backgrounds { min-height: 0; height: auto; aspect-ratio: 2 / 1; }
+}

@@ -145,7 +145,8 @@ export function appendMessage(conversationId, message) {
     citations: message.citations || null,
     toolCalls: message.toolCalls || null,
     attachments: message.attachments || null,
-    feedback: message.feedback || null
+    feedback: message.feedback || null,
+    ...(message.lang && {lang: message.lang})
   };
   convo.messages.push(msg);
   if (convo.messages.length > MAX_MESSAGES_PER_CONVO) {

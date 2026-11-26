@@ -66,7 +66,7 @@ try:
             # Keep browser verification local; inherited CDN widgets may be unavailable.
             context.route('**/*', lambda route: route.continue_() if route.request.url.startswith((PREVIEW_URL + '/', 'http://127.0.0.1:' + str(backend.server_port) + '/')) else route.abort())
             if backend.server_port != 8425:
-                context.route('http://127.0.0.1:8425/**', lambda route: route.continue_(url=route.request.url.replace(':8425', ':'+str(backend.server_port), 1)))
+                context.route('http://{localhost,127.0.0.1}:8425/**', lambda route: route.continue_(url=route.request.url.replace(':8425', ':'+str(backend.server_port), 1)))
             page = context.new_page()
             return context, page
         resident_context, resident = account('resident')
@@ -82,6 +82,8 @@ try:
         resident.locator('#cb-water').check()
         expect(resident.locator('#kit-sync-status')).to_have_text('Saved to your account.')
         plan = area(resident,'Your household plan')
+        expect(plan).to_contain_text('Record your household size, meeting point and evacuation needs in your PNEC account.')
+        expect(plan).not_to_contain_text('Example: Community library entrance')
         plan.get_by_label('People in your household').fill('4')
         plan.get_by_label('Meeting point',exact=True).fill('Community library')
         plan.get_by_label('Household evacuation plan and access needs').fill('Review our neighborhood map together')
@@ -89,6 +91,7 @@ try:
         expect(plan.get_by_role('status')).to_have_text('Saved.')
         expect(resident.locator('#cb-water').locator('..').locator('.checklist-item-qty')).to_have_text('12 gallons / household')
         quiz = area(resident,'Preparedness assessment')
+        expect(quiz).to_contain_text('Answer each question to see your score and suggested next steps.')
         for choice in quiz.locator('select').all(): choice.select_option('yes')
         quiz.get_by_role('button',name='Save assessment',exact=True).click()
         expect(quiz.get_by_role('status').first).to_contain_text('100%')
@@ -229,7 +232,7 @@ try:
         expect(feedback).to_contain_text('Thank you for your feedback.')
         feedback.get_by_label('Your unanswered question (at least 10 characters)').fill('Where can my household join the next local training?')
         feedback.get_by_role('button',name='Send question to staff',exact=True).click()
-        expect(feedback.get_by_role('status').last).to_have_text('Saved.')
+        expect(feedback.get_by_role('status').last).to_have_text('Se guardaron los cambios.')
         resident.evaluate('''async () => {
             const helper = await import('/assets/js/chatbot/api.js');
             return helper.submitToStaff({name:'Browser resident',email:'resident@example.test',question:'Can PNEC help review my household meeting point?'});
@@ -245,6 +248,14 @@ try:
         resident.set_viewport_size({'width':390,'height':844})
         expect(area(resident,'Community FAQ feedback').get_by_role('button',name='Search FAQs',exact=True)).to_be_visible()
         assert not resident.locator('.community-error').count(), 'Community tools reported an error'
+        visit(resident,'/pages/checklist.html')
+        spanish_plan = area(resident, 'El plan de su hogar')
+        expect(spanish_plan.get_by_label('Punto de encuentro', exact=True)).to_have_value('Community library')
+        expect(spanish_plan).to_contain_text('Registre cuántas personas viven en su hogar')
+        spanish_quiz = area(resident, 'Evaluación de preparación')
+        expect(spanish_quiz).to_contain_text('Responda cada pregunta para ver su puntuación')
+        expect(spanish_quiz.get_by_label('¿Tiene listo un kit de emergencia?', exact=True)).to_have_value('yes')
+        expect(spanish_quiz.get_by_role('status').first).to_contain_text('100 %')
         print('PASS: offline/reload checklist recovery, bearer chatbot association, checklist/plan/quiz persistence, check-in/hazard coordination, shift claims, supply receipts, multilingual risk, weekly tips and FAQ/staff queue')
         browser.close()
 finally:

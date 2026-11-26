@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "kind": "ocs-ui-page",
+  "page": {
+    "title": "PNEC homepage actions",
+    "description": "The four primary homepage links.",
+    "course": "csp",
+    "width": "contained"
+  },
+  "sections": [
+    {
+      "type": "stack",
+      "settings": {
+        "style": "tint"
+      },
+      "cells": [
+        {
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "text": "Prepare with PNEC",
+                "level": "2",
+                "subtitle": ""
+              }
+            },
+            {
+              "type": "link_cards",
+              "settings": {
+                "items": [
+                  {
+                    "kicker": "",
+                    "title": "Preparedness Checklist",
+                    "text": "Build your household emergency plan.",
+                    "url": "https://powaynec.opencodingsociety.com/pages/checklist.html"
+                  },
+                  {
+                    "kicker": "",
+                    "title": "Preparedness Quiz",
+                    "text": "Test your knowledge and learn key skills.",
+                    "url": "https://powaynec.opencodingsociety.com/pages/checklist.html#preparedness-quiz"
+                  },
+                  {
+                    "kicker": "",
+                    "title": "Volunteer Shifts",
+                    "text": "Sign up for upcoming PNEC events and tasks.",
+                    "url": "https://powaynec.opencodingsociety.com/pages/volunteer.html"
+                  },
+                  {
+                    "kicker": "",
+                    "title": "Report a Hazard",
+                    "text": "Share local hazards to help keep Poway safe.",
+                    "url": "https://powaynec.opencodingsociety.com/pages/checklist.html#hazard-reporting"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

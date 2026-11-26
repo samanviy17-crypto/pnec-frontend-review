@@ -1,0 +1,44 @@
+Release inputs: frontend=/private/tmp/pnec-111326-main; backend=/Users/samanviyachareni/PNEC-Workspace/pnec-backend-review; site=/private/var/folders/_g/p61_lz8s2935chrz1ck2lhk40000gp/T/pnec-frontend-release-3y70tr7g/site
+Traceback (most recent call last):
+  File "/private/tmp/pnec-111326-main/scripts/test-responsive.py", line 85, in <module>
+    main()
+    ~~~~^^
+  File "/private/tmp/pnec-111326-main/scripts/test-responsive.py", line 56, in main
+    row = page.evaluate('''() => ({viewport:innerWidth,
+        scroll:document.documentElement.scrollWidth,
+        videoRight:document.getElementById('pnec-homepage-video').getBoundingClientRect().right,
+        videoMargin:getComputedStyle(document.querySelector('.elementor-element-7bddfff > .elementor-widget-container')).marginRight})''')
+  File "/private/tmp/pnec-preview-check-8766-venv/lib/python3.14/site-packages/playwright/sync_api/_generated.py", line 16876, in evaluate
+    self._sync(
+    ~~~~~~~~~~^
+        self._impl_obj.evaluate(expression=expression, arg=mapping.to_impl(arg))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/private/tmp/pnec-preview-check-8766-venv/lib/python3.14/site-packages/playwright/_impl/_sync_base.py", line 124, in _sync
+    return task.result()
+           ~~~~~~~~~~~^^
+  File "/private/tmp/pnec-preview-check-8766-venv/lib/python3.14/site-packages/playwright/_impl/page.py", line 894, in evaluate
+    return await self._main_frame.evaluate(expression=expression, arg=arg)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/pnec-preview-check-8766-venv/lib/python3.14/site-packages/playwright/_impl/frame.py", line 380, in evaluate
+    result = await self._channel.evaluateExpression(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/private/tmp/pnec-preview-check-8766-venv/lib/python3.14/site-packages/playwright/_impl/channel_owner.py", line 398, in _mapped
+    return mapper(await awaitable)
+                  ^^^^^^^^^^^^^^^
+  File "/private/tmp/pnec-preview-check-8766-venv/lib/python3.14/site-packages/playwright/_impl/channel_owner.py", line 387, in finish
+    raise e from None
+  File "/private/tmp/pnec-preview-check-8766-venv/lib/python3.14/site-packages/playwright/_impl/channel_owner.py", line 352, in finish
+    result = await zone.run_async(lambda: awaitable)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/pnec-preview-check-8766-venv/lib/python3.14/site-packages/playwright/_impl/utils/zones.py", line 58, in run_async
+    return await func()
+           ^^^^^^^^^^^^
+playwright._impl._errors.Error: Page.evaluate: TypeError: Cannot read properties of null (reading 'getBoundingClientRect')
+    at eval (eval at evaluate (:370:30), <anonymous>:3:74)
+    at UtilityScript.evaluate (<anonymous>:377:18)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)

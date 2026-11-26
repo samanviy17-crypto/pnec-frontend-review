@@ -65,7 +65,7 @@ with tempfile.TemporaryDirectory(prefix='pnec-profile-test-') as directory:
             browser = play.chromium.launch()
             context = browser.new_context()
             context.route('**/*', lambda route: route.continue_() if route.request.url.startswith(PREVIEW_URL + '/') else route.abort())
-            context.route('http://127.0.0.1:8425/**', lambda route: route.continue_(
+            context.route('http://{localhost,127.0.0.1}:8425/**', lambda route: route.continue_(
                 url=route.request.url.replace(':8425', ':' + str(server.server_port), 1)))
             page = context.new_page()
             messages = []
@@ -170,7 +170,11 @@ with tempfile.TemporaryDirectory(prefix='pnec-profile-test-') as directory:
             assert not any(password in message or (token and token in message) for message in messages)
             page.locator('#profile-signout-btn').click(); page.wait_for_url(base + '/')
             page.goto(base + '/pages/profile.html', wait_until='domcontentloaded')
-            page.wait_for_url('**/pages/register.html?**')
+            # The public Profile Dashboard now prompts for login instead of redirecting.
+            expect(page.locator('.pnec-profile-welcome')).to_be_visible()
+            expect(page.locator('#edit-email')).to_have_count(0)
+            expect(page.get_by_role('link',name='Open Preferences',exact=True)).to_be_visible()
+            assert '/pages/register.html?next=' in page.locator('.pnec-profile-welcome a').first.get_attribute('href')
             browser.close()
         print('PASS: registration, cookie/bearer login/logout, edit/cancel/validation, direct database checks, reload/new-email login, Flask restart persistence, calendar and all eight navigation links, ownership and protected profile.')
     finally:

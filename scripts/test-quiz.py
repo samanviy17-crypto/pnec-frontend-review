@@ -82,7 +82,7 @@ def main():
                 context = browser.new_context()
                 context.route('**/*', lambda route: route.continue_()
                               if route.request.url.startswith(base + '/') else route.abort())
-                context.route('http://127.0.0.1:8425/**', api_route)
+                context.route('http://{localhost,127.0.0.1}:8425/**', api_route)
                 context.add_init_script('localStorage.setItem("pnec_token", ' + json.dumps(token) + ');')
                 page = context.new_page()
                 page.goto(base + '/pages/checklist.html', wait_until='domcontentloaded')

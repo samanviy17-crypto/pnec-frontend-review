@@ -1,9 +1,11 @@
 /* Extend existing pages with account-backed community features. */
 (() => {
+  const locale = window.PNECLocale;
   const api = (...args) => window.pnecCommunityRequest(...args);
-  const el = (tag, text, parent) => {
+  const el = (tag, text, parent, translate = true) => {
     const node = document.createElement(tag);
-    if (text !== undefined) node.textContent = text;
+    if (text !== undefined && translate) locale.text(node, text);
+    else if (text !== undefined) {node.textContent = text; node.setAttribute('translate','no');}
     if (parent) parent.append(node);
     return node;
   };
@@ -19,8 +21,11 @@
   };
   let fieldId = 0;
   const field = (form, name, title, type = 'text', options = {}) => {
-    const label = el('label', title, form);
-    const input = el(type === 'textarea' ? 'textarea' : type === 'select' ? 'select' : 'input', undefined, form);
+    const group = form.classList.contains('pnec-preparedness-form')
+      ? el('div', undefined, form) : form;
+    if (group !== form && type === 'textarea') group.className = 'pnec-field-wide';
+    const label = el('label', title, group);
+    const input = el(type === 'textarea' ? 'textarea' : type === 'select' ? 'select' : 'input', undefined, group);
     input.id = 'community-field-' + (++fieldId);
     label.htmlFor = input.id;
     input.name = name;
@@ -30,7 +35,7 @@
     if (type === 'number') { input.min = options.min || 1; input.max = options.limit || 1000000; input.step = 1; }
     if (type === 'select') {
       el('option', 'Choose…', input).value = '';
-      (options.choices || []).forEach(([value, text]) => {el('option', text, input).value = value;});
+      (options.choices || []).forEach(([value, text]) => {el('option', text, input, name !== 'neighborhood_id').value = value;});
     }
     if (options.value !== undefined) input.value = options.value;
     return input;
@@ -39,53 +44,79 @@
     const node = el('form', undefined, parent); const message = status(parent);
     const send = el('button', title); send.type = 'submit';
     node.addEventListener('submit', async event => {
-      event.preventDefault(); send.disabled = true; message.textContent = 'Saving…';
-      try {await submit(Object.fromEntries(new FormData(node))); message.textContent = 'Saved.';}
+      event.preventDefault(); send.disabled = true; locale.text(message,'Saving…');
+      try {await submit(Object.fromEntries(new FormData(node))); locale.text(message,'Saved.');}
       catch(error) {message.textContent = error.message; message.className = 'community-error';}
       finally {send.disabled = false;}
     });
     // Add fields before the submit button, then call finish().
-    node.finish = () => node.append(send); return node;
+    node.finish = () => {
+      const parent = node.classList.contains('pnec-preparedness-form') ? el('div', undefined, node) : node;
+      if (parent !== node) parent.className = 'pnec-form-actions';
+      parent.append(send);
+    }; return node;
   };
   const numberData = (data, keys) => {keys.forEach(k => {data[k] = data[k] === '' ? null : Number(data[k]);}); return data;};
-  let user = null, neighborhoods = [];
+  let user = null, neighborhoods = [], identityFailure = null;
   const managing = () => user && ['coordinator', 'staff', 'admin'].includes(user.role);
   const staff = () => user && ['staff', 'admin'].includes(user.role);
   const neighborhoodField = (node, optional = false) => field(node, 'neighborhood_id', 'Neighborhood', 'select', {
     required: !optional, value: user?.neighborhood_id || '', choices: neighborhoods.map(n => [n.id, n.name])
   });
   const neighborhoodName = id => neighborhoods.find(n => n.id === id)?.name || 'Citywide';
-  const loginNote = parent => el('p', 'Sign in using the site account menu to save and manage your information.', parent);
+  const loginNote = parent => {
+    el('p', identityFailure ? `Your account could not be checked. ${identityFailure.message}` : 'Sign in to save and manage your information.', parent);
+    const link = el('a', 'Log in to PNEC', parent);
+    link.href = (window.PNEC_SITE_BASE || '') + '/pages/register.html?next=' + encodeURIComponent(location.pathname + location.hash) + '#login';
+  };
 
-  async function household(parent) {
-    const node = section(parent, 'Your household plan');
+  function preparednessSection(parent, feature, fallbackTitle, presentations) {
+    const presentation = presentations[feature];
+    const node = section(parent, presentation?.title || fallbackTitle);
+    if (presentation?.description) el('p', presentation.description, node);
+    return node;
+  }
+
+  async function household(parent, presentations) {
+    const node = preparednessSection(parent, 'household', 'Your household plan', presentations);
     if (!user) return loginNote(node);
     const record = await api('/preparedness');
     const f = form(node, 'Save household plan', async data => {
       const saved = await api('/preparedness', 'PATCH', numberData(data, ['household_size']));
       window.dispatchEvent(new CustomEvent('pnec-household-saved', {detail:saved}));
     });
+    f.className = 'pnec-preparedness-form';
     field(f, 'household_size', 'People in your household', 'number', {limit:50, value:record.household_size});
     field(f, 'meeting_point', 'Meeting point', 'text', {max:300, required:false, value:record.meeting_point});
     field(f, 'evacuation_plan', 'Household evacuation plan and access needs', 'textarea', {max:2000, required:false, value:record.evacuation_plan});
     f.finish(); el('p', 'Your plan is private to your account. Review your neighborhood resources before making a plan.', node);
   }
 
-  async function quiz(parent) {
-    const node = section(parent, 'Preparedness assessment');
+  async function quiz(parent, presentations) {
+    const node = preparednessSection(parent, 'quiz', 'Preparedness assessment', presentations);
     node.id = 'preparedness-quiz';
     if (location.hash === '#preparedness-quiz') node.scrollIntoView({block: 'center'});
+    if (!user) {loginNote(node); return;}
     const {questions} = await api('/preparedness/quiz');
+    if (!Array.isArray(questions) || !questions.length) {el('p','No assessment questions are available yet.',node);return;}
     const result = status(node);
-    if (!user) return loginNote(node);
     const record = await api('/preparedness');
-    const show = data => {result.textContent = `Preparedness score: ${data.score}%\n${data.recommendations.join('\n') || 'Review and practice your plan regularly.'}`;};
+    const show = data => {
+      result.replaceChildren();
+      const score = el('span', undefined, result);
+      locale.text(score, 'assessment.score', 'Preparedness score: {score}%', {score: data.score});
+      for (const recommendation of data.recommendations.length ? data.recommendations : ['Review and practice your plan regularly.']) {
+        result.append(document.createTextNode('\n'));
+        el('span', recommendation, result);
+      }
+    };
     if (record.assessment) show(record.assessment);
     const f = form(node, 'Save assessment', async data => {
       const answers = Object.fromEntries(Object.entries(data).map(([k,v]) => [k, v === 'yes']));
       show(await api('/preparedness/quiz', 'POST', {answers}));
     });
-    questions.forEach(q => field(f, q.id, q.question, 'select', {choices:[['yes','Yes'],['no','No']], value:record.quiz_answers[q.id] === undefined ? '' : record.quiz_answers[q.id] ? 'yes' : 'no'}));
+    f.className = 'pnec-preparedness-form';
+    questions.forEach(q => field(f, q.id, q.question, 'select', {choices:[['yes','Yes'],['no','No']], value:record.quiz_answers?.[q.id] === undefined ? '' : record.quiz_answers?.[q.id] ? 'yes' : 'no'}));
     f.finish();
   }
 
@@ -96,7 +127,7 @@
       const data = await api('/volunteer/tasks'); list.replaceChildren();
       if (!data.tasks.length) el('p', 'No shifts have been posted yet.', list);
       data.tasks.forEach(t => {
-        const card = el('article', undefined, list); el('h3', t.title, card); el('p', t.description, card);
+        const card = el('article', undefined, list); el('h3', t.title, card, false); el('p', t.description, card, false);
         el('p', `${new Date(t.starts_at).toLocaleString()} · ${neighborhoodName(t.neighborhood_id)} · ${t.claimed_count}/${t.capacity} slots claimed${t.closed ? ' · Closed' : ''}`, card);
         if (user && t.signed_up) button(card, 'Cancel my signup', async () => {await api(`/volunteer/tasks/${t.id}/signup`, 'DELETE'); await refresh();});
         else if (user && !t.closed && t.claimed_count < t.capacity && new Date(t.starts_at) > new Date()) button(card, 'Claim a slot', async () => {await api(`/volunteer/tasks/${t.id}/signup`, 'POST', {}); await refresh();});
@@ -132,10 +163,11 @@
       data.check_ins.forEach(c => {
         const card = el('article', undefined, list);
         el('h3', `${c.name}: ${c.status === 'safe' ? 'Safe' : 'Need help'}`, card);
-        el('p', `${neighborhoodName(c.neighborhood_id)} · Updated ${new Date(c.updated_at).toLocaleString()}`, card); el('p', c.note, card);
+        el('p', `${neighborhoodName(c.neighborhood_id)} · Updated ${new Date(c.updated_at).toLocaleString()}`, card); el('p', c.note, card, false);
       });
     }
     await refresh();
+    if (!user.neighborhood_id) {el('p','Set your neighborhood in Account Settings before submitting a check-in.',node);const link=el('a','Open Account Settings',node);link.href=(window.PNEC_SITE_BASE || '')+'/pages/profile.html#account-settings';return;}
     const f = form(node, 'Update my status', async data => {await api('/check-ins', 'PUT', data); await refresh();});
     field(f, 'status', 'My status', 'select', {choices:[['safe','Safe'],['need_help','Need help']]});
     field(f, 'note', 'Details for your coordinator', 'textarea', {max:1000, required:false}); f.finish();
@@ -155,7 +187,7 @@
       data.hazards.forEach(h => {
         const card = el('article', undefined, list); el('h3', `${h.location} · ${h.status}`, card);
         el('p', `${neighborhoodName(h.neighborhood_id)} · ${h.category} · ${h.name} · ${new Date(h.created_at).toLocaleString()}`, card);
-        el('p', h.description, card);
+        el('p', h.description, card, false);
         if (managing()) ['open','reviewing','resolved'].filter(s => s !== h.status).forEach(s => button(card, `Mark ${s}`, async () => {await api(`/hazards/${h.id}`, 'PATCH', {status:s}); await refresh();}));
       });
     }
@@ -174,7 +206,7 @@
       const data = await api('/supply-drives'); list.replaceChildren();
       if (!data.drives.length) el('p', 'No supply drives have been posted yet.', list);
       for (const d of data.drives) {
-        const card = el('article', undefined, list); el('h3', d.title, card); el('p', d.description, card);
+        const card = el('article', undefined, list); el('h3', d.title, card, false); el('p', d.description, card, false);
         el('p', `${d.received} / ${d.goal} ${d.unit} received (${d.progress}%). ${d.pledged} ${d.unit} pledged, awaiting delivery.${d.closed ? ' Drive closed.' : ''}`, card);
         const progress = el('progress', undefined, card); progress.max = d.goal; progress.value = d.received; progress.setAttribute('aria-label', d.title + ' received supplies');
         if (user && !d.closed) {
@@ -203,9 +235,9 @@
     const node = section(parent, 'This week: preparedness and community learning');
     const data = await api('/preparedness/weekly');
     el('p', `Week of ${data.week_start} · ${data.risk_available ? `${data.threat} focus${data.risk_is_stale ? ' (cached risk data)' : ''}` : 'Live risk data unavailable; showing general preparedness tips.'}`, node);
-    data.tips.forEach(t => {const card = el('article', undefined, node); el('h3', t.title, card); el('p', t.body, card);});
+    data.tips.forEach(t => {const card = el('article', undefined, node); el('h3', t.title, card, false); el('p', t.body, card, false);});
     if (!data.events.length) el('p', 'No community learning events scheduled for the next seven days.', node);
-    data.events.forEach(e => {const card = el('article', undefined, node); el('h3', e.title, card); el('p', `${new Date(e.date).toLocaleString()} · ${e.location || ''}`, card); el('p', e.description || '', card);});
+    data.events.forEach(e => {const card = el('article', undefined, node); el('h3', e.title, card, false); el('p', `${new Date(e.date).toLocaleString()} · ${e.location || ''}`, card); el('p', e.description || '', card, false);});
   }
 
   async function tipsAdmin(parent) {
@@ -225,7 +257,7 @@
       const results = await searchFaqItems(data.q); list.replaceChildren();
       if (!results.length) el('p', 'No matching answers. Submit your question below.', list);
       results.forEach(item => {
-        const card = el('article', undefined, list); el('h3', item.question, card); el('p', item.answer, card);
+        const card = el('article', undefined, list); el('h3', item.question, card, false); el('p', item.answer, card, false);
         const voted = status(card);
         const vote = async helpful => {await submitFaqHelpfulVote(item.id, helpful); voted.textContent = 'Thank you for your feedback.';};
         button(card, 'Helpful', () => vote(true)); button(card, 'Not helpful', () => vote(false));
@@ -245,16 +277,16 @@
       tl: {title:'Paghahanda sa emerhensiya', body:'Suriin ang emergency kit at plano sa paglikas ng inyong sambahayan. Hanapin ang inyong kapitbahayan para sa lokal na impormasyon. Ipinapakita ng Risk Watch ang panganib ng sunog, baha at init. Sundin ang opisyal na lokal na mga alerto at tagubilin sa paglikas.', risk:'Kasalukuyang panganib', fire:'Sunog', flood:'Baha', heat:'Init', unavailable:'Hindi available ang kasalukuyang datos ng panganib.', links:['Checklist ng sambahayan','Impormasyon ng kapitbahayan at paglikas','Mga sanggunian sa paghahanda'], bot:'Sasagot ang Helper Bot sa Tagalog.'}
     };
     const i18n = await import('../chatbot/i18n.js');
-    const selector = field(node, 'language', 'Language / Idioma / Wika', 'select', {choices:[['en','English'],['es','Español'],['tl','Tagalog']], value:i18n.getLang()});
+    const selector = field(node, 'language', 'Language / Idioma / Wika', 'select', {choices:[['en','English'],['es','Español'],['tl','Tagalog']], value:i18n.getLang() === 'tl' ? 'tl' : locale.language});
     const blockSelect = field(node, 'selected_neighborhood', 'Neighborhood / Vecindario / Kapitbahayan', 'select', {
       required:false, value:user?.neighborhood_id || '', choices:neighborhoods.map(n => [n.id,n.name])
     });
     const content = el('div', undefined, node);
-    let risk = null; try {risk = await api('/risk');} catch (_) { /* show unavailable */ }
+    let risk = null;
     const levels = {en:{LOW:'Low',MODERATE:'Moderate',HIGH:'High',CRITICAL:'Critical'},es:{LOW:'Bajo',MODERATE:'Moderado',HIGH:'Alto',CRITICAL:'Crítico'},tl:{LOW:'Mababa',MODERATE:'Katamtaman',HIGH:'Mataas',CRITICAL:'Kritikal'}};
     const render = () => {
       const lang = selector.value || 'en', text = copy[lang]; content.replaceChildren(); content.lang = lang;
-      el('h3', text.title, content); el('p', text.body, content);
+      el('h3', text.title, content, false); el('p', text.body, content, false);
       const block = neighborhoods.find(n => String(n.id) === blockSelect.value);
       if (block) {
         const labels = {en:['Neighborhood','Evacuation zone','Coordinator','Not listed'],es:['Vecindario','Zona de evacuación','Coordinador','No indicado'],tl:['Kapitbahayan','Sona ng paglikas','Koordinator','Walang nakalista']}[lang];
@@ -264,8 +296,16 @@
       const paths = ['/pages/checklist.html','/pages/find-your-neighborhood.html','/pages/preparedness-resources.html'];
       text.links.forEach((label,index) => {const p = el('p', undefined, content); const a = el('a', label, p); a.href = (window.PNEC_SITE_BASE || '') + paths[index];}); el('p', text.bot, content);
     };
-    selector.addEventListener('change', () => {i18n.setLang(selector.value || 'en'); render();});
-    blockSelect.addEventListener('change', render); render();
+    selector.addEventListener('change', () => {
+      const language = selector.value || 'en';
+      i18n.setLang(language);
+      if (language !== 'tl') window.PNECPreferences.update({language});
+      render();
+    });
+    window.addEventListener('pnec:language-changed', event => {selector.value = event.detail; render();});
+    blockSelect.addEventListener('change', render);
+    render();
+    try {risk = await api('/risk'); render();} catch (_) { /* show unavailable */ }
   }
 
   async function coordination(parent) {
@@ -284,12 +324,17 @@
   async function init() {
     const roots = [...document.querySelectorAll('[data-community-tools]')];
     if (!roots.length) return;
-    try { user = await fetchCurrentUser(); neighborhoods = await fetchNeighborhoodsForSelect(); } catch (_) { /* individual tools show errors */ }
+    try { user = await fetchCurrentUser({strict:true}); } catch (error) {identityFailure=error;}
+    try { neighborhoods = await fetchNeighborhoodsForSelect(); } catch (_) { /* individual tools show their scoped errors */ }
     const builders = {household, quiz, tasks, checkins, hazards, drives, weekly, feedback, language, coordination, 'tips-admin':tipsAdmin};
     for (const root of roots) {
+      const presentations = Object.fromEntries(
+        Array.from(root.querySelectorAll('template[data-preparedness-presentation]'), node =>
+          [node.dataset.preparednessPresentation, {title: node.dataset.title, description: node.dataset.description}])
+      );
       root.replaceChildren();
       for (const name of root.dataset.communityTools.split(' ')) {
-        try {await builders[name]?.(root);} catch(error) {const message = status(root); message.textContent = `Could not load ${name}: ${error.message} Reload to retry.`; message.className = 'community-error';}
+        try {await builders[name]?.(root, presentations);} catch(error) {const message = status(root); message.textContent = `Could not load ${name}: ${error.message} Use Reload to try again.`; message.className = 'community-error'; message.setAttribute('role','alert'); button(root,'Reload these tools',()=>location.reload());}
       }
     }
   }

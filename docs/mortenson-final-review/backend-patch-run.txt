@@ -1,0 +1,1 @@
+PASS: proposed backend patch applies and migrates fresh isolated SQLite; actual HTTP auth/CSRF/admin/resident decisions passed; no backend checkout changes.

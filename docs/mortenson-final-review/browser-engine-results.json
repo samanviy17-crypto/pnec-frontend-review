@@ -1,0 +1,97 @@
+{
+  "checks": [
+    {
+      "engine": "chromium",
+      "version": "159.0.8154.6",
+      "width": 390,
+      "native_audio_detection": {
+        "supported": true,
+        "voices": 191
+      },
+      "audio_note": "opt-in/stop controls checked; no audible playback assertion"
+    },
+    {
+      "engine": "chromium",
+      "version": "159.0.8154.6",
+      "width": 768,
+      "native_audio_detection": {
+        "supported": true,
+        "voices": 191
+      },
+      "audio_note": "opt-in/stop controls checked; no audible playback assertion"
+    },
+    {
+      "engine": "chromium",
+      "version": "159.0.8154.6",
+      "width": 1280,
+      "native_audio_detection": {
+        "supported": true,
+        "voices": 191
+      },
+      "audio_note": "opt-in/stop controls checked; no audible playback assertion"
+    },
+    {
+      "engine": "firefox",
+      "version": "159.0",
+      "width": 390,
+      "native_audio_detection": {
+        "supported": true,
+        "voices": 64
+      },
+      "audio_note": "opt-in/stop controls checked; no audible playback assertion"
+    },
+    {
+      "engine": "firefox",
+      "version": "159.0",
+      "width": 768,
+      "native_audio_detection": {
+        "supported": true,
+        "voices": 64
+      },
+      "audio_note": "opt-in/stop controls checked; no audible playback assertion"
+    },
+    {
+      "engine": "firefox",
+      "version": "159.0",
+      "width": 1280,
+      "native_audio_detection": {
+        "supported": true,
+        "voices": 64
+      },
+      "audio_note": "opt-in/stop controls checked; no audible playback assertion"
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2",
+      "width": 390,
+      "native_audio_detection": {
+        "supported": true,
+        "voices": 223
+      },
+      "audio_note": "opt-in/stop controls checked; no audible playback assertion"
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2",
+      "width": 768,
+      "native_audio_detection": {
+        "supported": true,
+        "voices": 223
+      },
+      "audio_note": "opt-in/stop controls checked; no audible playback assertion"
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2",
+      "width": 1280,
+      "native_audio_detection": {
+        "supported": true,
+        "voices": 223
+      },
+      "audio_note": "opt-in/stop controls checked; no audible playback assertion"
+    }
+  ],
+  "route_viewport_checks": 72,
+  "page_errors": [],
+  "passed": true
+}

@@ -1,0 +1,125 @@
+{
+  "transport": "real PNEC UI login; no identity/API mocks",
+  "checks": [
+    {
+      "route": "pages/profile.html",
+      "theme": "site-default",
+      "violations": []
+    },
+    {
+      "route": "pages/checklist.html",
+      "theme": "site-default",
+      "violations": []
+    },
+    {
+      "route": "pages/volunteer.html",
+      "theme": "site-default",
+      "violations": []
+    },
+    {
+      "route": "pages/profile.html",
+      "theme": "midnight",
+      "violations": []
+    },
+    {
+      "route": "pages/checklist.html",
+      "theme": "midnight",
+      "violations": []
+    },
+    {
+      "route": "pages/volunteer.html",
+      "theme": "midnight",
+      "violations": []
+    },
+    {
+      "route": "pages/profile.html",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "route": "pages/checklist.html",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "route": "pages/volunteer.html",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "route": "pages/profile.html",
+      "theme": "green",
+      "violations": []
+    },
+    {
+      "route": "pages/checklist.html",
+      "theme": "green",
+      "violations": []
+    },
+    {
+      "route": "pages/volunteer.html",
+      "theme": "green",
+      "violations": []
+    },
+    {
+      "route": "pages/profile.html",
+      "theme": "sepia",
+      "violations": []
+    },
+    {
+      "route": "pages/checklist.html",
+      "theme": "sepia",
+      "violations": []
+    },
+    {
+      "route": "pages/volunteer.html",
+      "theme": "sepia",
+      "violations": []
+    },
+    {
+      "route": "pages/profile.html",
+      "theme": "cyberpunk",
+      "violations": []
+    },
+    {
+      "route": "pages/checklist.html",
+      "theme": "cyberpunk",
+      "violations": []
+    },
+    {
+      "route": "pages/volunteer.html",
+      "theme": "cyberpunk",
+      "violations": []
+    },
+    {
+      "route": "pages/profile.html",
+      "theme": "ocean",
+      "violations": []
+    },
+    {
+      "route": "pages/checklist.html",
+      "theme": "ocean",
+      "violations": []
+    },
+    {
+      "route": "pages/volunteer.html",
+      "theme": "ocean",
+      "violations": []
+    },
+    {
+      "route": "pages/profile.html",
+      "theme": "sunset",
+      "violations": []
+    },
+    {
+      "route": "pages/checklist.html",
+      "theme": "sunset",
+      "violations": []
+    },
+    {
+      "route": "pages/volunteer.html",
+      "theme": "sunset",
+      "violations": []
+    }
+  ]
+}

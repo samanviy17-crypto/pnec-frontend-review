@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "kind": "ocs-ui-page",
+  "page": {
+    "title": "PNEC preparedness links",
+    "description": "Reusable links to preparedness tools and resources.",
+    "course": "csp",
+    "width": "contained"
+  },
+  "sections": [
+    {
+      "type": "stack",
+      "settings": {
+        "style": "tint"
+      },
+      "cells": [
+        {
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "text": "Preparedness Journey",
+                "level": "2",
+                "subtitle": "Start with the assessment, make a household plan, then gather supplies."
+              }
+            },
+            {
+              "type": "link_cards",
+              "settings": {
+                "items": [
+                  {
+                    "kicker": "Step 1",
+                    "title": "Check your readiness",
+                    "text": "Answer the preparedness assessment and review your recommendations.",
+                    "url": "https://powaynec.opencodingsociety.com/pages/checklist.html#preparedness-quiz"
+                  },
+                  {
+                    "kicker": "Step 2",
+                    "title": "Make a household plan",
+                    "text": "Choose a meeting point and plan for evacuation and access needs.",
+                    "url": "https://powaynec.opencodingsociety.com/pages/checklist.html#household-plan"
+                  },
+                  {
+                    "kicker": "Step 3",
+                    "title": "Build your emergency kit",
+                    "text": "Use the checklist to track your supplies and review what you still need.",
+                    "url": "https://powaynec.opencodingsociety.com/pages/checklist.html#kit-checklist"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,3 +1,8 @@
+# 11/13/26 Redesign — current feature work
+
+See [the 11/13/26 Redesign implementation and review guide](MORTENSON-REDESIGN.md).
+The historical horizontal-header baseline and its verification follow below.
+
 # PNEC OCS redesign
 
 ## Source and scope

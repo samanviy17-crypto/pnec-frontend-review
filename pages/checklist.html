@@ -5,14 +5,15 @@ description: "Track your personal emergency preparedness kit — check off what 
 body_class: inner-page
 ---
 
-{% include community-tools.html features="household quiz checkins hazards" %}
+<span id="household-plan"></span>
+{% include community-tools.html features="household quiz checkins hazards" preparedness_builder=true %}
 
 
 <style>
 {{ '@import "beasts/inline/pages/pages-checklist-1";' | scssify }}
 </style>
 
-<div class="checklist-page">
+<div id="kit-checklist" class="checklist-page">
   <div class="checklist-hero">
     <div class="checklist-progress-ring">
       <svg width="90" height="90" viewBox="0 0 90 90">
@@ -42,7 +43,7 @@ body_class: inner-page
   <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:12px;">
     <button type="button" class="checklist-reset-btn" onclick="pnecResetKit()">↺ Reset all</button>
     <button type="button" class="checklist-reset-btn" onclick="pnecRetryKit()">Retry account save</button>
-    <a href="{{ '/' | relative_url }}" style="font-size:0.85rem;color:#9e9e9e;text-decoration:none;">← Back to Home</a>
+    <a href="{{ '/' | relative_url }}" class="checklist-back-link">← Back to Home</a>
   </div>
 </div>
 
@@ -223,9 +224,9 @@ body_class: inner-page
 
   function updateUI() {
     var water = document.getElementById('cb-water');
-    if (water) water.parentElement.querySelector('.checklist-item-qty').textContent = (householdSize * 3) + ' gallons / household';
+    if (water) window.PNECLocale.text(water.parentElement.querySelector('.checklist-item-qty'), 'checklist.waterQuantity', '{count} gallons / household', {count:householdSize * 3});
     var food = document.getElementById('cb-food');
-    if (food) food.parentElement.querySelector('.checklist-item-qty').textContent = '3-day supply for ' + householdSize;
+    if (food) window.PNECLocale.text(food.parentElement.querySelector('.checklist-item-qty'), 'checklist.foodQuantity', '3-day supply for {count}', {count:householdSize});
     var n = checkedCount();
     document.getElementById('kit-count').textContent = n;
     document.getElementById('kit-denom').textContent = '/ ' + TOTAL;
@@ -297,6 +298,7 @@ body_class: inner-page
       sec.appendChild(items);
       container.appendChild(sec);
     });
+    window.PNECLocale.scanStatic(container);
   }
 
   // Tip of the day
@@ -319,7 +321,7 @@ body_class: inner-page
   };
 
   window.pnecResetKit = function() {
-    if (!confirm('Reset all kit items? This cannot be undone.')) return;
+    if (!confirm(window.PNECLocale.t('Reset all kit items? This cannot be undone.'))) return;
     state = {};
     ITEMS.forEach(function(cat) { cat.items.forEach(function(item) { state[item.id] = false; pending[item.id] = false; pendingVersions[item.id] = ++editVersion; }); });
     save();

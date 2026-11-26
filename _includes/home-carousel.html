@@ -1,0 +1,25 @@
+<section class="pnec-hero ocs__band--photo" aria-labelledby="home-hero-title">
+  <div class="pnec-hero-copy ocs__band-panel">
+    <p class="pnec-eyebrow">Poway Neighborhood Emergency Corps</p>
+    <h1 id="home-hero-title">A safer, more prepared Poway.</h1>
+    <p>Neighbors helping neighbors through preparedness, response, and recovery.</p>
+    <div class="pnec-hero-actions">
+      <a class="ocs-button primary" href="{{ '/pages/preparedness-resources.html' | relative_url }}#preparedness-journey">Get Prepared</a>
+      <a class="ocs-button pnec-hero-secondary" href="{{ '/pages/volunteer.html' | relative_url }}">Volunteer with Us</a>
+    </div>
+    <div class="pnec-hero-tools">
+      <button class="ocs-button pnec-hero-pause" type="button" aria-controls="pnec-home-photographs" hidden>
+        <span class="pnec-photo-pause-icon" aria-hidden="true">Ⅱ</span>
+        <span class="pnec-photo-play-icon" aria-hidden="true" hidden>▶</span>
+        <span data-photo-action>Pause background photos</span>
+      </button>
+      {% unless page.skip_chatbot %}{% include chatbot/chatbot-launcher.html inline=true %}{% endunless %}
+    </div>
+  </div>
+  <div id="pnec-home-photographs" class="pnec-hero-backgrounds" aria-hidden="true">
+    <img class="ocs__band-photo is-current" src="{{ '/assets/images/hero-wildfire-prevention.jpg' | relative_url }}" alt="" fetchpriority="high" width="1000" height="667">
+    <img class="ocs__band-photo" src="{{ '/assets/images/hero-firefighting-exercise.jpg' | relative_url }}" alt="" decoding="async" width="1000" height="667">
+    <img class="ocs__band-photo" src="{{ '/assets/images/hero-fema.jpg' | relative_url }}" alt="" decoding="async" width="1440" height="966">
+  </div>
+</section>
+<script src="{{ '/assets/js/pages/home-carousel.js' | relative_url }}" defer></script>

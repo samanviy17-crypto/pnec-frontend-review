@@ -172,6 +172,7 @@ export function buildMessageEl(msg, ctx = {}) {
 
   const bubble = document.createElement('div');
   bubble.className = 'pnec-bot-msg-bubble';
+  if (msg.lang) bubble.lang = msg.lang;
   bubble.innerHTML = renderMarkdown(msg.content || '');
   body.appendChild(bubble);
 

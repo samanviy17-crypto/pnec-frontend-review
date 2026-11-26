@@ -15,7 +15,11 @@ ORIGIN = 'https://pnec-review.invalid'
 API = 'https://api.pnec-review.invalid'
 assert 'baseurl: ""' in (FRONTEND_ROOT / '_config.yml').read_text()
 assert not (FRONTEND_ROOT / 'CNAME').exists(), 'No active domain config in review snapshot'
-assert not (FRONTEND_ROOT / '_config.pages.yml').exists()
+# REVIEW_DEPLOYMENT.md explicitly authorizes a separate GitHub project config.
+review_config = (FRONTEND_ROOT / '_config.pages.yml').read_text()
+assert 'baseurl: "/pnec-frontend-review"' in review_config
+assert 'api_base_url: "https://api.pnec-review.invalid"' in review_config
+assert 'review_preview: true' in review_config
 assert not (SITE_ROOT / '.env').exists()
 for source in (FRONTEND_ROOT / 'assets').rglob('*.scss'):
     if source.read_text().startswith('---'):

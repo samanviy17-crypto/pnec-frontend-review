@@ -1,0 +1,5 @@
+# Optional repository-reviewed official notices. Empty until a real notice is verified.
+# Editors must provide id, message, source_url, updated_at, expires_at, and
+# verified: true. Use an official source listed in announcements.js. Never add
+# samples here: configured notices are visible to every visitor after publication.
+[]

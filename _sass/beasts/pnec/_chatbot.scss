@@ -12,25 +12,25 @@
 
 /* ─── Tokens ───────────────────────────────────────────────────── */
 :root {
-  --pb-bg-fab:        linear-gradient(135deg, #1e8449 0%, #145a32 100%);
+  --pb-bg-fab:        var(--pnec-brand, #61CF70);
   /* v3.7: panel + rail + glass surfaces are now FULLY opaque since
      backdrop-filter blurs were removed for perf. The translucent
      versions are kept around as comments for future reference but
      the live values are solid colors. */
-  --pb-bg-panel:       rgba(255, 255, 255, 0.96);  /* docked panel */
+  --pb-bg-panel:       #ffffff; /* docked panel */
   --pb-bg-panel-solid: #ffffff;                    /* full-opacity for modal/expanded */
-  --pb-bg-rail:        #f8f5f0;                    /* was rgba(248,245,240,0.85) */
-  --pb-bg-glass:       #fafaf6;                    /* was rgba(255,255,255,0.72) */
+  --pb-bg-rail:        #F4FAF6;                    /* was rgba(248,245,240,0.85) */
+  --pb-bg-glass:       #F4FAF6;                    /* was rgba(255,255,255,0.72) */
   --pb-bg-input:      #ffffff;
-  --pb-bg-bot-msg:    #f4f7f5;
-  --pb-bg-user-msg:   linear-gradient(135deg, #1e8449 0%, #145a32 100%);
-  --pb-fg:            #0a1628;
+  --pb-bg-bot-msg:    #F4FAF6;
+  --pb-bg-user-msg:   var(--pb-bg-fab);
+  --pb-fg:            #173E2A;
   /* v3.19 a11y: darkened muted + faint so contrast ratio passes WCAG AA
      against the cream/white surfaces. Was #5a6975 / #8b96a1 — failed
      contrast 2.77:1 on settings help text and segmented buttons. */
   --pb-fg-muted:      #475569;
   --pb-fg-faint:      #5a6470;
-  --pb-fg-on-green:   #ffffff;
+  --pb-fg-on-green:   var(--pnec-brand-ink, #102719);
   --pb-fg-link:       #145a32;
   --pb-border:        rgba(15, 30, 25, 0.10);
   --pb-border-strong: rgba(15, 30, 25, 0.18);
@@ -45,7 +45,7 @@
   --pb-shadow-panel:  0 1px 0 rgba(255,255,255,0.65) inset, 0 8px 22px rgba(0,0,0,0.10), 0 28px 56px rgba(0,0,0,0.18), 0 48px 96px rgba(0,0,0,0.14);
   --pb-radius-panel:  20px;
   --pb-radius-msg:    16px;
-  --pb-font:          'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --pb-font:          var(--pnec-font, 'DM Sans'), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --pb-z-fab:         9990;
   --pb-z-panel:       9995;
   --pb-z-backdrop:    9994;
@@ -101,7 +101,7 @@
 }
 .pnec-bot-fab:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 22px rgba(20, 90, 50, 0.42), 0 18px 40px rgba(20, 90, 50, 0.32), 0 1px 0 rgba(255,255,255,0.32) inset; }
 .pnec-bot-fab:active { transform: translateY(0) scale(0.98); }
-.pnec-bot-fab:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.pnec-bot-fab:focus-visible { outline: 3px solid var(--pnec-accent, #216234); outline-offset: 3px; }
 .pnec-bot-fab[aria-expanded="true"] { transform: scale(0); opacity: 0; pointer-events: none; }
 
 .pnec-bot-fab-icon {
@@ -112,7 +112,7 @@
   border-radius: 50%;
   flex-shrink: 0;
 }
-.pnec-bot-fab-icon svg { width: 16px; height: 16px; color: $beasts-white; }
+.pnec-bot-fab-icon svg { width: 16px; height: 16px; color: inherit; }
 
 .pnec-bot-fab-pulse {
   position: absolute; top: -4px; right: -4px;
@@ -165,7 +165,8 @@
   height: 600px;
   max-height: calc(100vh - 60px);
   display: grid;
-  grid-template-columns: 0fr 1fr 0fr;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
   /* v3.7 PERF: was running `background: rgba(255,255,255,0.92)` +
      `backdrop-filter: blur(20px) saturate(150%)`. The 20px blur + 1.5x
      saturation on a panel that fills 92% of the viewport in modal mode
@@ -214,13 +215,17 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
   transition: none !important;
 }
 
+/* The compact panel adds a history column only when the rail is open. */
+.pnec-bot-panel.is-rail-open {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+}
+
 /* Expanded mode — wider docked panel with rail visible */
 .pnec-bot-panel.is-expanded {
   width: 720px;
   height: 740px;
   grid-template-columns: 240px 1fr 0fr;
 }
-.pnec-bot-panel.is-expanded.is-rail-open { grid-template-columns: 240px 1fr 0fr; }
 
 /* Modal mode — centered, large */
 .pnec-bot-panel.is-modal {
@@ -232,7 +237,13 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
   grid-template-columns: 280px 1fr 0fr;
   border-radius: 24px;
 }
-.pnec-bot-panel.is-settings-open { grid-template-columns: 0fr 1fr 280px; }
+// Docked settings replace the conversation. Wider modes keep their side drawer.
+.pnec-bot-panel.is-settings-open:not(.is-expanded):not(.is-modal) {
+  grid-template-columns: minmax(0, 1fr);
+
+  .pnec-bot-main,
+  .pnec-bot-rail { display: none; }
+}
 .pnec-bot-panel.is-modal.is-settings-open { grid-template-columns: 280px 1fr 320px; }
 .pnec-bot-panel.is-expanded.is-settings-open { grid-template-columns: 240px 1fr 280px; }
 
@@ -240,18 +251,22 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
 @media (max-width: 720px) {
   .pnec-bot-panel,
   .pnec-bot-panel.is-expanded,
-  .pnec-bot-panel.is-modal {
+  .pnec-bot-panel.is-modal,
+  .pnec-bot-panel.is-rail-open,
+  .pnec-bot-panel.is-expanded.is-settings-open,
+  .pnec-bot-panel.is-modal.is-settings-open {
     inset: 12px 8px 8px;
     right: 8px;
     bottom: 8px;
     width: auto;
     height: auto;
     max-height: calc(100vh - 20px);
-    grid-template-columns: 0fr 1fr 0fr;
+    grid-template-columns: minmax(0, 1fr);
     border-radius: 18px;
   }
-  .pnec-bot-panel.is-rail-open { grid-template-columns: 1fr 0fr 0fr; }
-  .pnec-bot-panel.is-settings-open { grid-template-columns: 0fr 0fr 1fr; }
+  // Only the active pane participates in grid placement on mobile.
+  .pnec-bot-panel:not(.is-rail-open) .pnec-bot-rail,
+  .pnec-bot-panel.is-settings-open .pnec-bot-rail,
   .pnec-bot-panel.is-rail-open .pnec-bot-main,
   .pnec-bot-panel.is-settings-open .pnec-bot-main { display: none; }
 }
@@ -280,7 +295,7 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
   font-size: 0.84rem;
   font-weight: 700;
   color: var(--pb-fg-on-green);
-  background: linear-gradient(135deg, var(--pb-green) 0%, var(--pb-green-deep) 100%);
+  background: var(--pb-bg-fab);
   border: 0;
   border-radius: 9px;
   cursor: pointer;
@@ -825,8 +840,8 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
   color: var(--pb-fg-on-green);
   box-shadow: 0 1px 2px rgba(20, 90, 50, 0.25);
 }
-.pnec-bot-msg.is-user .pnec-bot-msg-bubble a { color: #b9f6ca; }
-.pnec-bot-msg.is-user .pnec-bot-msg-bubble code { background: rgba(255,255,255,0.20); color: $beasts-white; }
+.pnec-bot-msg.is-user .pnec-bot-msg-bubble a { color: inherit; text-decoration: underline; }
+.pnec-bot-msg.is-user .pnec-bot-msg-bubble code { background: rgba(255,255,255,0.20); color: inherit; }
 
 .pnec-bot-msg-bubble p { margin: 0 0 8px; }
 .pnec-bot-msg-bubble p:last-child { margin: 0; }
@@ -886,7 +901,11 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
   opacity: 0;
   transition: opacity 160ms ease;
 }
-.pnec-bot-msg:hover .pnec-bot-msg-actions { opacity: 1; }
+.pnec-bot-msg:hover .pnec-bot-msg-actions,
+.pnec-bot-msg:focus-within .pnec-bot-msg-actions { opacity: 1; }
+@media (hover: none) {
+  .pnec-bot-msg-actions { opacity: 1; }
+}
 .pnec-bot-msg-action-btn {
   width: 22px; height: 22px;
   display: inline-grid; place-items: center;
@@ -1298,6 +1317,7 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
 
 .pnec-bot-settings-head {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: space-between;
   padding: 12px 14px;
@@ -1311,9 +1331,11 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
 }
 .pnec-bot-settings-body {
   flex: 1;
+  min-height: 0;
   padding: 10px 14px;
   overflow-y: auto;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
 }
 .pnec-bot-settings-row {
@@ -1421,6 +1443,7 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
 /* ─── Segmented control (3-button radio group) ─────────────── */
 .pnec-bot-segmented {
   display: inline-flex;
+  flex-wrap: wrap;
   width: 100%;
   background: var(--pb-bg-rail);
   border: 1px solid var(--pb-border);
@@ -1429,7 +1452,9 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
   gap: 2px;
 }
 .pnec-bot-segmented .pb-seg {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
   background: transparent;
   border: 0;
   padding: 7px 10px;
@@ -1556,9 +1581,10 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
 .pnec-bot-settings-about {
   margin: 0 0 10px;
   display: grid;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: fit-content(45%) minmax(0, 1fr);
   gap: 4px 12px;
   font-size: 0.84rem;
+  overflow-wrap: anywhere;
 }
 .pnec-bot-settings-about dt {
   font-weight: 700;
@@ -1691,18 +1717,21 @@ html.pb-text-large .pnec-bot-transcript {
    ═══════════════════════════════════════════════════════════════════ */
 html.pb-accent-sky .pnec-bot-panel,
 html.pb-accent-sky .pnec-bot-fab {
+  --pb-bg-fab:     #93c5fd;
   --pb-green:       #3b82f6;
   --pb-green-deep:  #1e40af;
   --pb-green-soft:  #dbeafe;
 }
 html.pb-accent-sunset .pnec-bot-panel,
 html.pb-accent-sunset .pnec-bot-fab {
+  --pb-bg-fab:     #fdba74;
   --pb-green:       #e07a3f;
   --pb-green-deep:  #b8531d;
   --pb-green-soft:  #fdebd3;
 }
 html.pb-accent-lavender .pnec-bot-panel,
 html.pb-accent-lavender .pnec-bot-fab {
+  --pb-bg-fab:     #c4b5fd;
   --pb-green:       #8b5cf6;
   --pb-green-deep:  #6d28d9;
   --pb-green-soft:  #ede9fe;
@@ -1711,11 +1740,12 @@ html.pb-accent-lavender .pnec-bot-fab {
 /* ═══════════════════════════════════════════════════════════════════
    HIGH CONTRAST + ALWAYS-ON LABELS
    ═══════════════════════════════════════════════════════════════════ */
-html.pb-high-contrast .pnec-bot-panel {
-  --pb-fg:        #000000;
-  --pb-fg-soft:   #0a0a0a;
-  --pb-fg-faint:  #2a2a2a;
-  --pb-border:    rgba(0, 0, 0, 0.40);
+html.pb-high-contrast .pnec-bot-panel,
+html.pb-high-contrast .pnec-bot-panel * {
+  --pb-fg-soft: var(--pb-fg);
+  --pb-fg-muted: var(--pb-fg);
+  --pb-fg-faint: var(--pb-fg);
+  --pb-border: currentColor;
 }
 html.pb-high-contrast .pnec-bot-panel * { font-weight: 600 !important; }
 html.pb-high-contrast .pnec-bot-segmented,

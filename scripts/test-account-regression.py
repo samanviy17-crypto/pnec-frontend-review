@@ -50,7 +50,7 @@ with tempfile.TemporaryDirectory(prefix='pnec-account-regression-') as temp:
             browser = play.chromium.launch()
             context = browser.new_context()
             context.route('**/*', lambda r: r.continue_() if r.request.url.startswith(PREVIEW_URL + '/') else r.abort())
-            context.route('http://127.0.0.1:8425/**', lambda r: r.continue_(
+            context.route('http://{localhost,127.0.0.1}:8425/**', lambda r: r.continue_(
                 url=r.request.url.replace(':8425', ':' + str(server.server_port), 1)))
             page = context.new_page()
             # The form must handle submission while startup session requests wait.
@@ -61,10 +61,18 @@ with tempfile.TemporaryDirectory(prefix='pnec-account-regression-') as temp:
             page.locator('#login-password').fill('wrong-password')
             page.locator('#login-submit-btn').click()
             expect(page.locator('#login-error')).to_contain_text('Incorrect email or password')
+            # Deterministic race: an account result is stored while a PREVIOUS
+            # navbar identity check is still pending. This storage fixture is not
+            # an authentication claim; the navbar must remain unverified.
+            page.evaluate("_storeAuthResult({token:'synthetic-newer-result',user:{id:999,role:'resident'}})")
             context.unroute('**/api/auth/me')
             for route in held:
                 route.fulfill(status=401, json={'message': 'Not signed in.'})
-            checks.append('Login handles submission while initial session lookup is pending')
+            page.wait_for_timeout(200)
+            assert page.evaluate("localStorage.getItem('pnec_token')") == 'synthetic-newer-result', 'Stale identity response erased newer credentials'
+            expect(page.locator('#navbar-auth-logged-in')).not_to_be_visible()
+            page.evaluate("localStorage.removeItem('pnec_token');localStorage.removeItem('pnec_user')")
+            checks.append('Submission during pending lookup; stale identity rejection cannot erase a newer auth result or present unverified Account')
 
             email = 'account-' + secrets.token_hex(6) + '@example.test'
             password = secrets.token_urlsafe(24)

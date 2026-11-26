@@ -1,0 +1,73 @@
+// Palette family adapted from OCS SitePreferences.PRESETS. PNEC retains its
+// default palette; Light/Sepia use readable text, and Sunset is a PNEC extension.
+$pnec-presets: (
+  site-default: (bg: $pnec-default-bg, surface: $pnec-default-surface, text: $pnec-default-text, accent: $pnec-default-accent),
+  midnight: (bg: #0b1220, surface: #142035, text: #e6eef8, accent: #81b4ff),
+  light: (bg: #fff, surface: #f6f8fc, text: #0f172a, accent: #2563eb),
+  green: (bg: #154734, surface: #1a533e, text: #e6f6ef, accent: #83ee92),
+  sepia: (bg: #f4ecd8, surface: #fff8e8, text: #3b2f2f, accent: #8b3d06),
+  cyberpunk: (bg: #0a0a0f, surface: #1b1628, text: #f0f0f0, accent: #ff76b7),
+  ocean: (bg: #0c1929, surface: #14283b, text: #e0f2fe, accent: #67e8f9),
+  sunset: (bg: #fff1e9, surface: #fff9f4, text: #49243b, accent: #a42b48)
+);
+@each $name, $palette in $pnec-presets {
+  $bg: map-get($palette, bg); $text: map-get($palette, text); $accent: map-get($palette, accent);
+  html[data-appearance-preset="#{$name}"] {
+    @if $name != site-default {
+      --pnec-bg: #{$bg}; --pnec-surface: #{map-get($palette, surface)};
+      --pnec-tint: #{map-get($palette, surface)}; --pnec-text: #{$text}; --pnec-muted: #{$text}; --pnec-accent: #{$accent};
+      --pnec-line: #{mix($text, $bg, 40%)};
+      &[data-appearance-background="soft"] { --pnec-bg: #{mix($accent, $bg, 8%)}; }
+    }
+  }
+  .ocs__prefs-swatch[data-theme="#{$name}"] { --sample-bg: #{$bg}; --sample-text: #{$text}; --sample-accent: #{$accent}; }
+}
+body.pnec-site { --pref-font-family: var(--pnec-font); --pref-font-size: var(--pnec-size); --pnec-button-radius: #{$radius-sm}; }
+html[data-appearance-button="square"] body.pnec-site { --pnec-button-radius: 0; }
+html[data-appearance-button="pill"] body.pnec-site { --pnec-button-radius: 999px; }
+body.pnec-site {
+  .ocs-button { font-family: var(--pnec-font); font-size: 1em; border-radius: var(--pnec-button-radius); }
+  .ocs-button.primary, .community-tools button,
+  .auth-submit, .auth-button[type="submit"], .vol-submit {
+    background: var(--pnec-action-fill, var(--pnec-brand));
+    color: var(--pnec-action-ink, var(--pnec-brand-ink));
+    border-color: var(--pnec-accent);
+  }
+  .pnec-preference-sections { @include inline-container(flex, $spacing-sm); flex-wrap: wrap; margin-bottom: $spacing-xl; a { padding: $spacing-xs $spacing-lg; background: var(--pnec-surface); border: 1px solid var(--pnec-line); border-radius: $radius-sm; } }
+  .pnec-preferences-stack { display: grid; gap: $spacing-xl; }
+  .pnec-preference-card { @include main-container($spacing-xl); @include responsive-padding($spacing-xl, $spacing-xs); min-width: 0; &:hover { box-shadow: none; } }
+  .pnec-preferences-stack .pnec-preference-card { margin-bottom: 0; }
+  .pnec-preferences-stack { margin-bottom: $spacing-xl; }
+  .pnec-preference-heading { @include inline-container(flex, $spacing-md); margin-bottom: $spacing-lg; }
+  .pnec-step { display: grid; place-items: center; flex: 0 0 36px; height: 36px; border-radius: 50%; background: var(--pnec-bg); border: 1px solid var(--pnec-line); color: var(--pnec-accent); font-weight: 700; }
+  .pnec-theme-grid { @include base-grid(4, $spacing-md); grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  // OCS swatch structure: sample panel, accent bar, label, selected state.
+  .ocs__prefs-swatch { @include base-button; position: relative; display: block; min-width: 0; padding: $spacing-xxs; border: 2px solid var(--pnec-line); border-radius: $radius-lg; background: var(--pnec-surface); color: var(--pnec-text); text-align: left; &:hover { transform: none; border-color: var(--pnec-accent); } }
+  .ocs__prefs-swatch[aria-pressed="true"] { border-color: var(--pnec-accent); box-shadow: 0 0 0 2px var(--pnec-bg); }
+  .ocs__prefs-swatch-sample { display: flex; height: 94px; background: var(--sample-bg); color: var(--sample-text); border: 1px solid var(--sample-accent); border-radius: $radius-xs; overflow: hidden; }
+  .pnec-mini-nav { width: 20%; border-right: 1px solid var(--sample-accent); background: var(--sample-accent); opacity: .4; }
+  .pnec-mini-content { @include base-grid(1, $spacing-xxs); flex: 1; padding: $spacing-sm; font: 700 24px/1 system-ui, sans-serif; }
+  .ocs__prefs-swatch-bar { width: 55%; height: 8px; border-radius: $radius-xxs; background: var(--sample-accent); }
+  .pnec-mini-line { width: 80%; height: 3px; background: var(--sample-text); }
+  .ocs__prefs-swatch-name { display: block; overflow-wrap: anywhere; padding: $spacing-sm 0; font: 700 1em/1.4 var(--pnec-font); }
+  .pnec-theme-selected { display: none; position: absolute; right: $spacing-sm; bottom: $spacing-sm; color: var(--pnec-accent); font-weight: 700; }
+  .ocs__prefs-swatch[aria-pressed="true"] .pnec-theme-selected { display: inline; }
+  .pnec-customize-layout { @include base-grid(2, $spacing-xl); grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: start; }
+  .pnec-preference-fields { @include base-grid(2, $spacing-lg); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pnec-preference-card label { display: block; font-weight: 600; }
+  .pnec-preference-card select, .pnec-preference-card input:not([type="checkbox"]), .pnec-preference-card textarea { display: block; width: 100%; max-width: 100%; min-height: 44px; padding: $spacing-xxs; margin-top: $spacing-xxs; border: 1px solid var(--pnec-line); border-radius: $radius-sm; }
+  .pnec-preference-card input[type="color"] { padding: 4px; cursor: pointer; background: var(--pnec-surface); }
+  .pnec-preference-card input[type="range"] { padding: 0; accent-color: var(--pnec-accent); }
+  .pnec-preference-card .pnec-check { @include inline-container(flex, $spacing-xs); align-items: center; min-height: 44px; input { width: 20px; height: 20px; flex-shrink: 0; } }
+  .pnec-live-preview { @include grid-card-cell; background: var(--pnec-bg); color: var(--pnec-text); border-color: var(--pnec-line); h3 { color: inherit; } &:hover { transform: none; background: var(--pnec-bg); } .ocs-button { margin-top: $spacing-md; } }
+  .pnec-preference-actions { @include inline-container(flex, $spacing-sm); flex-wrap: wrap; margin-top: $spacing-lg; }
+  .pnec-actions a.pnec-action > div { min-width: 0; overflow-wrap: anywhere; }
+  .pnec-profile-welcome { display: grid; gap: $spacing-lg; justify-items: start; }
+  .profile-page { max-width: 1100px; margin: 0 auto; padding: 0; }
+  #appearance-contrast, #appearance-status, #language-status, #audio-status { margin-top: $spacing-md; overflow-wrap: anywhere; }
+}
+@media (max-width: 1250px) { body.pnec-site .pnec-customize-layout { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: $breakpoint-mobile) {
+  body.pnec-site .pnec-theme-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 420px) { body.pnec-site .pnec-preference-fields { grid-template-columns: minmax(0, 1fr); } }
