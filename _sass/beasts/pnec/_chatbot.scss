@@ -165,7 +165,8 @@
   height: 600px;
   max-height: calc(100vh - 60px);
   display: grid;
-  grid-template-columns: 0fr 1fr 0fr;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
   /* v3.7 PERF: was running `background: rgba(255,255,255,0.92)` +
      `backdrop-filter: blur(20px) saturate(150%)`. The 20px blur + 1.5x
      saturation on a panel that fills 92% of the viewport in modal mode
@@ -214,13 +215,17 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
   transition: none !important;
 }
 
+/* The compact panel adds a history column only when the rail is open. */
+.pnec-bot-panel.is-rail-open {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+}
+
 /* Expanded mode — wider docked panel with rail visible */
 .pnec-bot-panel.is-expanded {
   width: 720px;
   height: 740px;
   grid-template-columns: 240px 1fr 0fr;
 }
-.pnec-bot-panel.is-expanded.is-rail-open { grid-template-columns: 240px 1fr 0fr; }
 
 /* Modal mode — centered, large */
 .pnec-bot-panel.is-modal {
@@ -232,7 +237,13 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
   grid-template-columns: 280px 1fr 0fr;
   border-radius: 24px;
 }
-.pnec-bot-panel.is-settings-open { grid-template-columns: 0fr 1fr 280px; }
+// Docked settings replace the conversation. Wider modes keep their side drawer.
+.pnec-bot-panel.is-settings-open:not(.is-expanded):not(.is-modal) {
+  grid-template-columns: minmax(0, 1fr);
+
+  .pnec-bot-main,
+  .pnec-bot-rail { display: none; }
+}
 .pnec-bot-panel.is-modal.is-settings-open { grid-template-columns: 280px 1fr 320px; }
 .pnec-bot-panel.is-expanded.is-settings-open { grid-template-columns: 240px 1fr 280px; }
 
@@ -241,8 +252,7 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
   .pnec-bot-panel,
   .pnec-bot-panel.is-expanded,
   .pnec-bot-panel.is-modal,
-  .pnec-bot-panel.is-settings-open,
-  .pnec-bot-panel.is-expanded.is-rail-open,
+  .pnec-bot-panel.is-rail-open,
   .pnec-bot-panel.is-expanded.is-settings-open,
   .pnec-bot-panel.is-modal.is-settings-open {
     inset: 12px 8px 8px;
@@ -252,7 +262,6 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
     height: auto;
     max-height: calc(100vh - 20px);
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: minmax(0, 1fr);
     border-radius: 18px;
   }
   // Only the active pane participates in grid placement on mobile.
@@ -1308,6 +1317,7 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
 
 .pnec-bot-settings-head {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: space-between;
   padding: 12px 14px;
@@ -1321,9 +1331,11 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
 }
 .pnec-bot-settings-body {
   flex: 1;
+  min-height: 0;
   padding: 10px 14px;
   overflow-y: auto;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
 }
 .pnec-bot-settings-row {
@@ -1431,6 +1443,7 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
 /* ─── Segmented control (3-button radio group) ─────────────── */
 .pnec-bot-segmented {
   display: inline-flex;
+  flex-wrap: wrap;
   width: 100%;
   background: var(--pb-bg-rail);
   border: 1px solid var(--pb-border);
@@ -1439,7 +1452,9 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
   gap: 2px;
 }
 .pnec-bot-segmented .pb-seg {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
   background: transparent;
   border: 0;
   padding: 7px 10px;
@@ -1566,9 +1581,10 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
 .pnec-bot-settings-about {
   margin: 0 0 10px;
   display: grid;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: fit-content(45%) minmax(0, 1fr);
   gap: 4px 12px;
   font-size: 0.84rem;
+  overflow-wrap: anywhere;
 }
 .pnec-bot-settings-about dt {
   font-weight: 700;

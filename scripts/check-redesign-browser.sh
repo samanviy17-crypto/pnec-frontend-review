@@ -37,3 +37,4 @@ python3 scripts/test-navigation-redesign.py --base-url "$preview_url" --output-d
 python3 scripts/test-mortenson-redesign.py --base-url "$preview_url" --site "$site_dir" --output-dir "$evidence_dir"
 python3 scripts/test-profile-preferences.py --base-url "$preview_url" --output-dir "$evidence_dir"
 python3 scripts/test-fire-login-ui.py --base-url "$preview_url" --output-dir "$evidence_dir"
+python3 scripts/test-chatbot-voice-ui.py --base-url "$preview_url"

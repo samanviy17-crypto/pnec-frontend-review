@@ -1,4 +1,4 @@
-"""Verify mobile Helper Bot settings and speech with local fixtures."""
+"""Verify Helper Bot settings layouts and mobile speech with local fixtures."""
 import argparse
 
 from playwright.sync_api import expect, sync_playwright
@@ -21,8 +21,80 @@ def route_request(route):
         route.abort()
 
 
+def verify_settings_layout(browser, width, mode):
+    mobile = mode == 'mobile'
+    single_pane = mode in ('compact', 'mobile')
+    page = browser.new_page(viewport={'width': width, 'height': 640},
+                            has_touch=mobile, is_mobile=mobile, reduced_motion='reduce')
+    page.route('**/*', route_request)
+    page.goto(base)
+    page.locator('#pnec-bot-fab').click()
+    if mode == 'expanded':
+        page.locator('#pnec-bot-expand').click()
+    elif mode == 'maximized':
+        page.locator('#pnec-bot-modal').click()
+
+    panel = page.locator('#pnec-bot-panel')
+    settings = page.locator('#pnec-bot-settings')
+    close = page.locator('#pnec-bot-settings-close')
+    drawer = page.locator('#pnec-bot-settings-drawer')
+    body = drawer.locator('.pnec-bot-settings-body')
+    conversation = page.locator('.pnec-bot-main')
+    rail = page.locator('.pnec-bot-rail')
+    settings.click()
+    expect(close).to_be_focused()
+
+    panel_box = panel.bounding_box()
+    drawer_box = drawer.bounding_box()
+    inner_width = panel.evaluate('panel => panel.clientWidth')
+    expected_width = {'compact': 380, 'expanded': 720, 'maximized': width * .92, 'mobile': width - 16}
+    assert abs(panel_box['width'] - expected_width[mode]) <= 1, (mode, width, panel_box)
+    if single_pane:
+        expect(conversation).to_be_hidden()
+        expect(rail).to_be_hidden()
+        assert abs(drawer_box['width'] - inner_width) <= 1, (mode, width, drawer_box, inner_width)
+    else:
+        expect(conversation).to_be_visible()
+        expect(rail).to_be_visible()
+        rail_box = rail.bounding_box()
+        chat_box = conversation.bounding_box()
+        assert rail_box['x'] + rail_box['width'] <= chat_box['x'] + 1
+        assert chat_box['x'] + chat_box['width'] <= drawer_box['x'] + 1
+        assert abs(drawer_box['width'] - (280 if mode == 'expanded' else 320)) <= 1
+    assert abs(drawer_box['x'] + drawer_box['width'] - (panel_box['x'] + panel_box['width'])) <= 1
+
+    page.locator('#pnec-bot-pref-lang').select_option('es')
+    expect(page.locator('html')).to_have_attribute('lang', 'es-US')
+    voice = page.locator('#pnec-bot-pref-voice')
+    voice.tap() if mobile else voice.click()
+    expect(voice).to_be_checked()
+    assert body.evaluate('body => body.scrollHeight > body.clientHeight')
+    assert body.evaluate('body => body.scrollWidth <= body.clientWidth + 1'), (mode, width)
+    drawer.get_by_role('link').last.focus()
+    expect(drawer.get_by_role('link').last).to_be_in_viewport()
+    expect(close).to_be_in_viewport()
+    close.tap() if mobile else close.click()
+    expect(drawer).to_be_hidden()
+    expect(settings).to_be_focused()
+    expect(conversation).to_be_visible()
+    settings.press('Enter')
+    expect(close).to_be_focused()
+    page.keyboard.press('Escape')
+    expect(settings).to_be_focused()
+    expect(drawer).to_be_hidden()
+    page.close()
+    print(f'PASS {mode}: {width}px viewport, {panel_box["width"]:.0f}px chatbot, '
+          f'{drawer_box["width"]:.0f}px settings drawer')
+
+
 with sync_playwright() as play:
     browser = play.chromium.launch()
+    for width in (768, 1024, 1440):
+        for mode in ('compact', 'expanded', 'maximized'):
+            verify_settings_layout(browser, width, mode)
+    for width in (320, 390, 720):
+        verify_settings_layout(browser, width, 'mobile')
+
     for mode in ('mouse', 'touch', 'keyboard'):
         page = browser.new_page(viewport={'width': 390, 'height': 844},
                                 has_touch=mode == 'touch', is_mobile=mode == 'touch',
