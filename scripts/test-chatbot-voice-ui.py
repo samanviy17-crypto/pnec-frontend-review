@@ -47,23 +47,26 @@ def verify_settings_layout(browser, width, mode):
     panel_box = panel.bounding_box()
     drawer_box = drawer.bounding_box()
     inner_width = panel.evaluate('panel => panel.clientWidth')
-    # Fixed positioning uses the layout viewport. CSS vw insets can resolve
-    # against a different width when the browser reserves a scrollbar gutter.
-    layout_width, viewport_unit_width = page.evaluate("""() => {
-        const probe = document.createElement('div');
-        probe.style.cssText = 'position:fixed; width:100vw; visibility:hidden';
-        document.body.append(probe);
-        const viewportUnitWidth = probe.getBoundingClientRect().width;
-        probe.remove();
-        return [document.documentElement.clientWidth, viewportUnitWidth];
-    }""")
-    expected_width = {
-        'compact': 380,
-        'expanded': 720,
-        'maximized': layout_width - .08 * viewport_unit_width,
-        'mobile': layout_width - 16,
-    }
-    assert abs(panel_box['width'] - expected_width[mode]) <= 1, (mode, width, panel_box)
+    fixed_widths = {'compact': 380, 'expanded': 720}
+    if mode in fixed_widths:
+        assert abs(panel_box['width'] - fixed_widths[mode]) <= 1, (mode, width, panel_box)
+    else:
+        # A fixed reference box uses the same containing block as the panel.
+        # A stable scrollbar gutter can reduce it without changing viewport metrics.
+        inset = '8px' if mobile else '4vw'
+        bounds = panel.evaluate("""(panel, inset) => {
+            const probe = document.createElement('div');
+            Object.assign(probe.style, {
+                position: 'fixed', top: '0', left: inset, right: inset,
+                height: '0', visibility: 'hidden',
+            });
+            panel.after(probe);
+            const {left, right} = probe.getBoundingClientRect();
+            probe.remove();
+            return {left, right};
+        }""", inset)
+        assert abs(panel_box['x'] - bounds['left']) <= 1, (mode, width, panel_box, bounds)
+        assert abs(panel_box['x'] + panel_box['width'] - bounds['right']) <= 1, (mode, width, panel_box, bounds)
     if single_pane:
         expect(conversation).to_be_hidden()
         expect(rail).to_be_hidden()
