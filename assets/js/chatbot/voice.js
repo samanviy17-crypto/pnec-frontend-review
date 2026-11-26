@@ -29,12 +29,18 @@ export function isSpeakAvailable() {
   return !!SS;
 }
 
+function normalizeTag(tag) {
+  return tag.replace(/_/g, '-').toLowerCase();
+}
+
 function pickVoice(lang) {
-  const language = lang.toLowerCase().split('-')[0];
-  const voices = SS.getVoices().filter(voice => voice.lang.toLowerCase().split('-')[0] === language);
-  const exact = voices.filter(voice => voice.lang.toLowerCase() === lang.toLowerCase());
-  return (language === 'es' && voices.find(voice => /^es-(mx|us)$/i.test(voice.lang)))
-    || exact.find(voice => voice.default) || exact[0] || voices.find(voice => voice.default) || voices[0];
+  const tag = normalizeTag(lang);
+  const language = tag.split('-')[0];
+  const voices = SS.getVoices().filter(voice => normalizeTag(voice.lang).split('-')[0] === language);
+  const exact = voices.filter(voice => normalizeTag(voice.lang) === tag);
+  return exact.find(voice => voice.default) || exact[0]
+    || (language === 'es' && voices.find(voice => /^es-(mx|us)$/.test(normalizeTag(voice.lang))))
+    || voices.find(voice => voice.default) || voices[0];
 }
 
 // ─── Public hooks called from index.js ────────────────────────────
@@ -133,7 +139,7 @@ export function speak(text, lang = 'en-US') {
   const v = pickVoice(lang);
   if (!v) return false;
   u.voice = v;
-  u.lang = v.lang;
+  u.lang = v.lang.replace(/_/g, '-');
   u.rate = 1.02;
   u.pitch = 1.0;
   u.volume = 1.0;

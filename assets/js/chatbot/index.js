@@ -366,6 +366,8 @@ class HelperBot {
     const opened = force === undefined
       ? this.dom.panel.classList.toggle('is-settings-open')
       : this.dom.panel.classList.toggle('is-settings-open', force);
+    const focusTarget = opened ? this.dom.settingsClose : this.dom.settingsBtn;
+    focusTarget.focus({ preventScroll: true });
     return opened;
   }
 
@@ -691,6 +693,9 @@ class HelperBot {
     }
 
     placeholderEl.classList.remove('is-streaming');
+    this.streamingState = null;
+    this.activeImageForTurn = null;
+    this._setStatus('idle', this.t('status.ready'));
 
     // Persist the assistant message
     if (assistantText) {
@@ -713,15 +718,11 @@ class HelperBot {
       });
       // Replace the streaming element with the canonical rendered one
       placeholderEl.replaceWith(buildMessageEl(saved, { userInitials: this._userInitials() }));
-      // Voice readback
       if (this.voice && getPrefs().voiceReplies) {
         this._speakReply(displayText, lang);
       }
     }
 
-    this.streamingState = null;
-    this.activeImageForTurn = null;
-    this._setStatus('idle', this.t('status.ready'));
     this._renderRail();
 
     // Followup chips (cheap parallel call, non-blocking)

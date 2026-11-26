@@ -1,6 +1,6 @@
 // Keep the photograph in its own column so the copy uses normal theme contrast.
 body.pnec-home { background: var(--pnec-surface); }
-.pnec-hero {
+.ocs__band--photo {
   @include base-grid(2, $spacing-xl);
   @include responsive-padding($spacing-xl, $spacing-lg);
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -17,7 +17,7 @@ body.pnec-home { background: var(--pnec-surface); }
   border-radius: $radius-xl;
   background: var(--pnec-tint);
 
-  img {
+  .ocs__band-photo {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -27,9 +27,9 @@ body.pnec-home { background: var(--pnec-surface); }
     opacity: 0;
     transition: opacity $transition-slow * 4 ease;
   }
-  img.is-current { opacity: 1; }
+  .ocs__band-photo.is-current { opacity: 1; }
 }
-body.pnec-site .pnec-hero-copy {
+body.pnec-site .ocs__band-panel {
   @include base-grid(1, $spacing-sm);
   grid-template-columns: minmax(0, 1fr);
   justify-items: start;
@@ -85,6 +85,6 @@ body.pnec-site .pnec-hero-tools {
   summary { width: fit-content; cursor: pointer; padding-block: $spacing-sm; }
 }
 @media (max-width: $breakpoint-mobile) {
-  .pnec-hero { grid-template-columns: minmax(0, 1fr); gap: $spacing-lg; }
+  .ocs__band--photo { grid-template-columns: minmax(0, 1fr); gap: $spacing-lg; }
   .pnec-hero-backgrounds { min-height: 0; height: auto; aspect-ratio: 2 / 1; }
 }

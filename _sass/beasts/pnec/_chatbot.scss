@@ -240,18 +240,24 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
 @media (max-width: 720px) {
   .pnec-bot-panel,
   .pnec-bot-panel.is-expanded,
-  .pnec-bot-panel.is-modal {
+  .pnec-bot-panel.is-modal,
+  .pnec-bot-panel.is-settings-open,
+  .pnec-bot-panel.is-expanded.is-rail-open,
+  .pnec-bot-panel.is-expanded.is-settings-open,
+  .pnec-bot-panel.is-modal.is-settings-open {
     inset: 12px 8px 8px;
     right: 8px;
     bottom: 8px;
     width: auto;
     height: auto;
     max-height: calc(100vh - 20px);
-    grid-template-columns: 0fr 1fr 0fr;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
     border-radius: 18px;
   }
-  .pnec-bot-panel.is-rail-open { grid-template-columns: 1fr 0fr 0fr; }
-  .pnec-bot-panel.is-settings-open { grid-template-columns: 0fr 0fr 1fr; }
+  // Only the active pane participates in grid placement on mobile.
+  .pnec-bot-panel:not(.is-rail-open) .pnec-bot-rail,
+  .pnec-bot-panel.is-settings-open .pnec-bot-rail,
   .pnec-bot-panel.is-rail-open .pnec-bot-main,
   .pnec-bot-panel.is-settings-open .pnec-bot-main { display: none; }
 }
@@ -886,7 +892,11 @@ html.pb-reduced-motion [class*=" pnec-bot-"] {
   opacity: 0;
   transition: opacity 160ms ease;
 }
-.pnec-bot-msg:hover .pnec-bot-msg-actions { opacity: 1; }
+.pnec-bot-msg:hover .pnec-bot-msg-actions,
+.pnec-bot-msg:focus-within .pnec-bot-msg-actions { opacity: 1; }
+@media (hover: none) {
+  .pnec-bot-msg-actions { opacity: 1; }
+}
 .pnec-bot-msg-action-btn {
   width: 22px; height: 22px;
   display: inline-grid; place-items: center;
