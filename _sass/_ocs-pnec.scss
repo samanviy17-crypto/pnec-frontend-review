@@ -44,14 +44,6 @@ body.pnec-site .ocs-card {
 body.pnec-site .pnec-eyebrow { font-size: $text-sm; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #087c82; margin-bottom: $spacing-sm; }
 .pnec-button-row { @include inline-container(flex, $spacing-md); flex-wrap: wrap; }
 
-body.pnec-site .pnec-home-hero {
-  background: linear-gradient(90deg, rgba(13,34,57,.93), rgba(13,34,57,.55) 65%, rgba(13,34,57,.1)), url("../images/Poway_Image.webp") center 55% / cover;
-  color: #fff;
-  .pnec-container { padding-top: 48px; padding-bottom: 44px; }
-  h1 { color: #fff; font-size: clamp(32px,4vw,54px); max-width: 900px; margin-bottom: $spacing-lg; }
-  p:not(.pnec-eyebrow) { font-size: 20px; max-width: 670px; margin-bottom: $spacing-xl; }
-  .pnec-eyebrow { color: #fff; }
-}
 body.pnec-site .pnec-home-details { @include base-grid(2,$spacing-xl); padding-top: $spacing-lg; padding-bottom: $spacing-lg; }
 body.pnec-site .pnec-about-preview { padding: $spacing-lg; }
 body.pnec-site .pnec-tip { @include inline-container(flex,$spacing-lg); align-items: flex-start; padding: $spacing-xl; .pnec-tip-icon { color: #087c82; font-size: 44px; line-height: 1; } }
@@ -108,11 +100,9 @@ body.pnec-site .pnec-page-shell .checklist-page, body.pnec-site .pnec-page-shell
   body.pnec-site .pnec-container, body.pnec-site .pnec-page-shell { padding: $spacing-lg; }
   body.pnec-home .pnec-page-shell { padding: 0; }
   body.pnec-site .pnec-home-details, .pnec-resource-grid { grid-template-columns: minmax(0,1fr); }
-  body.pnec-site .pnec-home-hero .pnec-container { padding-top: $spacing-xl; padding-bottom: $spacing-xl; }
   body.pnec-site .pnec-legacy-content .elementor-container { gap: $spacing-lg; }
 }
 @media (prefers-reduced-motion: reduce) { body.pnec-site * { scroll-behavior: auto; } }
-body.pnec-site .pnec-home-hero p { color: #fff; }
 body.pnec-site .pnec-footer strong { color: #10213a; }
 
 body.pnec-site .checklist-page { padding: 20px 0 30px; }
