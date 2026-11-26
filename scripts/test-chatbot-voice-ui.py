@@ -47,7 +47,22 @@ def verify_settings_layout(browser, width, mode):
     panel_box = panel.bounding_box()
     drawer_box = drawer.bounding_box()
     inner_width = panel.evaluate('panel => panel.clientWidth')
-    expected_width = {'compact': 380, 'expanded': 720, 'maximized': width * .92, 'mobile': width - 16}
+    # Fixed positioning uses the layout viewport. CSS vw insets can resolve
+    # against a different width when the browser reserves a scrollbar gutter.
+    layout_width, viewport_unit_width = page.evaluate("""() => {
+        const probe = document.createElement('div');
+        probe.style.cssText = 'position:fixed; width:100vw; visibility:hidden';
+        document.body.append(probe);
+        const viewportUnitWidth = probe.getBoundingClientRect().width;
+        probe.remove();
+        return [document.documentElement.clientWidth, viewportUnitWidth];
+    }""")
+    expected_width = {
+        'compact': 380,
+        'expanded': 720,
+        'maximized': layout_width - .08 * viewport_unit_width,
+        'mobile': layout_width - 16,
+    }
     assert abs(panel_box['width'] - expected_width[mode]) <= 1, (mode, width, panel_box)
     if single_pane:
         expect(conversation).to_be_hidden()
