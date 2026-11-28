@@ -2,6 +2,11 @@ name: Deploy PNEC Production (GitHub Pages)
 
 on:
   workflow_dispatch:
+    inputs:
+      frontend_sha:
+        description: Full SHA of the approved frontend release or rollback commit
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -15,10 +20,65 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read
+      actions: read
+    env:
+      # The previously published frontend has historical PR CI but predates
+      # both post-merge CI on its SHA and the chatbot browser regression.
+      LEGACY_ROLLBACK_SHA: a1e1585c009c0f991225c550f26c7fa051f4748d
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Check out dispatch revision for ancestry verification
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
-          ref: a1e1585c009c0f991225c550f26c7fa051f4748d
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify release revision and required CI
+        id: release
+        shell: bash
+        env:
+          FRONTEND_SHA: ${{ inputs.frontend_sha }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [[ ! "$FRONTEND_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::Enter a full, lowercase 40-character commit SHA."
+            exit 1
+          fi
+          if ! git cat-file -e "${FRONTEND_SHA}^{commit}" ||
+             ! git merge-base --is-ancestor "$FRONTEND_SHA" "$GITHUB_SHA"; then
+            echo "::error::The release commit must be in main's history at dispatch."
+            exit 1
+          fi
+
+          if [[ "$FRONTEND_SHA" == "$LEGACY_ROLLBACK_SHA" ]]; then
+            # This exact rollback was published by production run 44446485059.
+            # Use its passing Frontend CI record from PR #1 against main.
+            ci_run=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/44440870456" |
+              jq -ce 'select(.event == "pull_request" and any(.pull_requests[]; .base.ref == "main"))')
+          else
+            ci_run=$(gh api --method GET "repos/$GITHUB_REPOSITORY/actions/workflows/frontend-ci.yml/runs" \
+              -f head_sha="$FRONTEND_SHA" -f branch=main -f event=push -F per_page=1 |
+              jq -c '.workflow_runs[0] | if .event == "push" and .head_branch == "main" then . else null end')
+          fi
+          if ! jq -e --arg sha "$FRONTEND_SHA" '
+            (.path // "" | split("@")[0]) == ".github/workflows/frontend-ci.yml" and
+            .head_sha == $sha and .status == "completed" and .conclusion == "success"
+          ' <<< "$ci_run" >/dev/null; then
+            echo "::error::The release commit needs a successful Frontend CI run."
+            exit 1
+          fi
+          ci_id=$(jq -er '.id' <<< "$ci_run")
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$ci_id/jobs" |
+            jq -e 'any(.jobs[]; .name == "Offline tests and Jekyll build" and
+              .status == "completed" and .conclusion == "success")' >/dev/null
+          printf 'sha=%s\n' "$FRONTEND_SHA" >> "$GITHUB_OUTPUT"
+          printf "Production source: \`%s\`\n\n[Passing Frontend CI run](%s/%s/actions/runs/%s)\n" \
+            "$FRONTEND_SHA" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$ci_id" >> "$GITHUB_STEP_SUMMARY"
+      - name: Check out approved release
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ steps.release.outputs.sha }}
           persist-credentials: false
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
@@ -40,6 +100,8 @@ jobs:
           python3 -m pip install playwright==1.65.1
           python3 -m playwright install --with-deps chromium
       - name: Verify production routes and interactions
+        env:
+          VERIFIED_SHA: ${{ steps.release.outputs.sha }}
         run: |
           site="$RUNNER_TEMP/pnec-production"
           evidence="$RUNNER_TEMP/pnec-browser"
@@ -52,11 +114,17 @@ jobs:
           python3 scripts/test-mortenson-redesign.py --base-url "$base_url" --site "$site" --output-dir "$evidence"
           python3 scripts/test-profile-preferences.py --base-url "$base_url" --output-dir "$evidence"
           python3 scripts/test-fire-login-ui.py --base-url "$base_url" --output-dir "$evidence"
+          if [[ "$VERIFIED_SHA" == "$LEGACY_ROLLBACK_SHA" ]]; then
+            echo "The previous production revision predates the chatbot browser test."
+          else
+            python3 scripts/test-chatbot-voice-ui.py --base-url "$base_url"
+          fi
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
           path: ${{ runner.temp }}/pnec-production
 
   deploy:
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 15
